@@ -1,0 +1,7 @@
+{
+  "name": "OmniFlow",
+  "identifier": "dev.carl.omniflow",
+  "version": "0.1.0",
+  "main": "./cmd/omniflow",
+  "icon": "resources/icon.png"
+}
