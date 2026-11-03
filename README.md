@@ -47,17 +47,22 @@ the window's acrylic is the system's own material showing through the view.
 Requires Go 1.27 and macOS.
 
 ```sh
-# Development window
-go run ./cmd/omniflow
+# Development window (signed, so macOS keeps permission grants)
+sh scripts/dev.sh
 
 # Tests and the native-UI checks
 go test ./...
 go tool mygo vet .
 
-# Packaged app bundle, ad-hoc signed, without a disk image
-go tool mygo build -skip-dmg -o out .
+# Packaged app bundle without a disk image, signed with the same identity
+sh scripts/build.sh
 open out/darwin-arm64/OmniFlow.app
 ```
+
+The scripts sign with the first `Apple Development` identity in your keychain
+(override with `MACOS_SIGNING_IDENTITY`), so macOS permission grants survive
+rebuilds. Elsewhere, `go run ./cmd/omniflow` and
+`go tool mygo build -skip-dmg -o out .` still work.
 
 The capture certificate and saved data live under
 `~/Library/Application Support/OmniFlow/`. The private key is written `0600`
