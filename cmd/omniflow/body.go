@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"mime"
 	"os"
 	"path"
@@ -14,6 +13,7 @@ import (
 
 	"github.com/CarlOpenLab/omniflow/internal/httpx"
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 // bodyShape is how a body is shown: read as text, looked at as a picture,
@@ -118,9 +118,9 @@ func (a *app) imageView(c *ui.Context, pal *uitokens.Palette, bmp *ui.Bitmap, bo
 	w, h := bmp.Size()
 	ui.Column(c).Fill().MinHeight(0).Background(pal.CodeBg).Children(func() {
 		ui.Box(c).Grow(1).MinHeight(0).Padding(16).Center().Children(func() {
-			ui.Image(c, bmp).Fill().Fit(ui.ScaleDown).Label("Image body")
+			ui.Image(c, bmp).Fill().Fit(ui.ScaleDown).Label(locales.BodyImageLabel())
 		})
-		a.bodyFoot(c, pal, fmt.Sprintf("%s · %d × %d px · %s", shortContentType(contentType), w, h,
+		a.bodyFoot(c, pal, locales.BodyImageMeta(shortContentType(contentType), w, h,
 			httpx.FormatBytes(int64(len(body)))), body, contentType, name, note)
 	})
 }
@@ -130,10 +130,10 @@ func (a *app) binaryView(c *ui.Context, pal *uitokens.Palette, body []byte, cont
 		ui.Box(c).Grow(1).MinHeight(0).Children(func() {
 			kind := shortContentType(contentType)
 			if kind == "" {
-				kind = "Binary data"
+				kind = locales.BodyBinaryData()
 			}
-			emptyState(c, pal, iconFile, "Binary body",
-				kind+", "+httpx.FormatBytes(int64(len(body)))+". It is not text, so it is not shown; save it to open it with another app.")
+			emptyState(c, pal, iconFile, locales.BodyBinaryTitle(),
+				locales.BodyBinaryHint(kind, httpx.FormatBytes(int64(len(body)))))
 		})
 		a.bodyFoot(c, pal, "", body, contentType, name, note)
 	})
@@ -149,7 +149,7 @@ func (a *app) bodyFoot(c *ui.Context, pal *uitokens.Palette, caption string, bod
 		if note != "" {
 			ui.Text(c, note).FontSize(10.5).TextColor(pal.Warning).SingleLine().Ellipsis("…").MinWidth(0)
 		}
-		if b := iconAction(c, pal, iconSave, "Save Body…"); b.Clicked() {
+		if b := iconAction(c, pal, iconSave, locales.BodySave()); b.Clicked() {
 			a.saveBody(body, fileNameFor(name, contentType))
 		}
 	})
@@ -213,21 +213,21 @@ func (a *app) saveBody(body []byte, name string) {
 	go func() {
 		dest, err := mygo.Dialog.Save(mygo.SaveDialogOptions{
 			Parent:      a.win,
-			Title:       "Save Body",
+			Title:       locales.BodySaveDialogTitle(),
 			DefaultPath: name,
-			ButtonLabel: "Save",
+			ButtonLabel: locales.CommonSave(),
 		})
 		if err != nil {
-			a.update(func() { a.setNotice("The body could not be saved: " + err.Error()) })
+			a.update(func() { a.setNotice(locales.BodySaveFailed(err.Error())) })
 			return
 		}
 		if dest == "" {
 			return
 		}
 		if err := os.WriteFile(dest, data, 0o644); err != nil {
-			a.update(func() { a.setNotice("The body could not be saved: " + err.Error()) })
+			a.update(func() { a.setNotice(locales.BodySaveFailed(err.Error())) })
 			return
 		}
-		a.update(func() { a.setNotice("Body saved to " + dest) })
+		a.update(func() { a.setNotice(locales.BodySaved(dest)) })
 	}()
 }

@@ -13,6 +13,7 @@ import (
 	"github.com/CarlOpenLab/omniflow/internal/httpx"
 	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 func paletteFor(c *ui.Context) *uitokens.Palette {
@@ -258,10 +259,10 @@ func searchField(c *ui.Context, pal *uitokens.Palette, focus *ui.Handle, value *
 	row.Children(func() {
 		ui.Icon(c, iconSearch).Size(11, 11).TextColor(pal.TextFaint)
 		in = ui.TextInputBase(c.Key("flow-search"), value).Grow(1).MinWidth(0).
-			FontSize(11.5).Placeholder(placeholder).Label("Filter traffic")
+			FontSize(11.5).Placeholder(placeholder).Label(locales.InspectorFilterTraffic())
 		in = in.Bind(focus)
 		if *value != "" {
-			if b := iconButton(c, pal, iconX, "Clear Filter", 16); b.Clicked() {
+			if b := iconButton(c, pal, iconX, locales.CommonClearFilter(), 16); b.Clicked() {
 				*value = ""
 				in.Focus()
 			}
@@ -273,7 +274,7 @@ func searchField(c *ui.Context, pal *uitokens.Palette, focus *ui.Handle, value *
 	case row.Hovered():
 		row.Border(1, pal.EdgeStrong)
 	}
-	row.Tooltip("Filter by method, host, path or type (⌘F)")
+	row.Tooltip(locales.InspectorFilterHint())
 	return row
 }
 
@@ -345,13 +346,13 @@ func kvEditor(c *ui.Context, pal *uitokens.Palette, rows *[]model.KV, keyHint, v
 				text = pal.TextFaint
 			}
 			row.Children(func() {
-				washCheckbox(c, pal, &kv.Enabled, "Send this row")
+				washCheckbox(c, pal, &kv.Enabled, locales.KvSendRow())
 				ui.TextInputBase(c.Key(kv.ID+"-k"), &kv.Key).Placeholder(keyHint).
 					Width(kvKeyWidth).Shrink(0).FontSize(12).Font("monospace").Padding(2, 4).TextColor(text)
 				ui.Box(c).Width(1).Height(18).Shrink(0).Background(pal.Divider)
 				ui.TextInputBase(c.Key(kv.ID+"-v"), &kv.Value).Placeholder(valueHint).
 					Grow(1).MinWidth(0).FontSize(12).Font("monospace").Padding(2, 4).TextColor(text)
-				removeButton(c, pal, "Remove row").OnClick(func() {
+				removeButton(c, pal, locales.KvRemoveRow()).OnClick(func() {
 					r := *rows
 					if idx >= 0 && idx < len(r) {
 						*rows = append(r[:idx], r[idx+1:]...)
@@ -365,7 +366,7 @@ func kvEditor(c *ui.Context, pal *uitokens.Palette, rows *[]model.KV, keyHint, v
 		}
 		add.Children(func() {
 			ui.Icon(c, iconPlus).Size(11, 11).TextColor(pal.TextFaint)
-			ui.Text(c, "Add row").FontSize(11.5).TextColor(pal.TextFaint)
+			ui.Text(c, locales.KvAddRow()).FontSize(11.5).TextColor(pal.TextFaint)
 		})
 		if add.Clicked() {
 			*rows = append(*rows, model.NewKV())
@@ -458,8 +459,7 @@ func clipText(text, note string) (string, string) {
 			cut--
 		}
 	}
-	more := "Showing the first " + httpx.FormatBytes(int64(cut)) + " of " +
-		httpx.FormatBytes(int64(len(text))) + "; Copy takes all of it."
+	more := locales.CommonShowingFirst(httpx.FormatBytes(int64(cut)), httpx.FormatBytes(int64(len(text))))
 	if note != "" {
 		more = note + " " + more
 	}
@@ -478,7 +478,7 @@ func codeView(c *ui.Context, pal *uitokens.Palette, text string, note string) ui
 				})
 			}
 			if strings.TrimSpace(text) == "" {
-				ui.Text(c, "(empty body)").Font("monospace").FontSize(11.5).
+				ui.Text(c, locales.CommonEmptyBody()).Font("monospace").FontSize(11.5).
 					TextColor(pal.TextFaint).Padding(2, 0)
 				return
 			}
@@ -593,10 +593,10 @@ func timingPhases(res *httpx.Result, pal *uitokens.Palette) []timingPhase {
 	}
 	return []timingPhase{
 		next("DNS", res.DNS, pal.Info),
-		next("Connect", res.Connect, pal.Accent),
+		next(locales.TimingConnect(), res.Connect, pal.Accent),
 		next("TLS", res.TLS, uitokens.MethodColor(pal, "PATCH")),
-		next("Waiting", res.Waiting(), pal.Warning),
-		next("Download", res.Download(), pal.Success),
+		next(locales.TimingWaiting(), res.Waiting(), pal.Warning),
+		next(locales.TimingDownload(), res.Download(), pal.Success),
 	}
 }
 
@@ -632,16 +632,16 @@ func timingRows(c *ui.Context, pal *uitokens.Palette, res *httpx.Result) ui.Elem
 		for i, p := range timingPhases(res, pal) {
 			value := httpx.FormatDuration(p.dur)
 			if reused && i < 3 {
-				value = "reused"
+				value = locales.TimingReused()
 			}
 			bar(p.name, p.start, p.dur, p.col, value, false)
 		}
 		ui.Box(c).Height(1).Shrink(0).Background(pal.Divider).Margin(2, 0)
-		bar("Total", 0, res.Duration, pal.TextMuted, httpx.FormatDuration(res.Duration), true)
+		bar(locales.TimingTotal(), 0, res.Duration, pal.TextMuted, httpx.FormatDuration(res.Duration), true)
 		ui.Spacer(c)
-		note := "Each phase starts where the one before it ended. A connection that is reused skips DNS, connect and TLS."
+		note := locales.TimingNote()
 		if reused {
-			note = "This request reused an open connection, so it spent no time on DNS, connect or TLS."
+			note = locales.TimingReusedNote()
 		}
 		ui.Text(c, note).FontSize(11).TextColor(pal.TextFaint).LineHeight(1.4).MaxWidth(460)
 	})

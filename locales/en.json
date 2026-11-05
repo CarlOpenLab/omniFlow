@@ -230,6 +230,133 @@
   "composerCanceledHint": "Nothing more will be read from it. Send it again when you are ready.",
   "composerSendAgain": "Send Again",
 
+  "commonCopy": "Copy",
+  "commonClearFilter": "Clear Filter",
+  "commonEmptyBody": "(empty body)",
+  "commonShowingFirst": "Showing the first {cut} of {total}; Copy takes all of it.",
+  "@commonShowingFirst": {
+    "placeholders": {
+      "cut": { "type": "String", "example": "1 MB" },
+      "total": { "type": "String", "example": "3 MB" }
+    }
+  },
+
+  "inspectorToggleCapture": "Start or stop capture",
+  "inspectorToggleCaptureHint": "Start or stop the capture proxy",
+  "inspectorStartCapture": "Start Capture",
+  "inspectorCopyAddr": "Copy proxy address",
+  "inspectorCopyAddrHint": "Copy {addr}",
+  "@inspectorCopyAddrHint": {
+    "placeholders": { "addr": { "type": "String", "example": "127.0.0.1:9090" } }
+  },
+  "inspectorAddrCopied": "Proxy address copied: {addr}",
+  "@inspectorAddrCopied": {
+    "placeholders": { "addr": { "type": "String", "example": "127.0.0.1:9090" } }
+  },
+  "inspectorFilterCount": "{shown} of {total}",
+  "@inspectorFilterCount": {
+    "placeholders": {
+      "shown": { "type": "int", "example": "4" },
+      "total": { "type": "int", "example": "12" }
+    }
+  },
+  "inspectorFilterTraffic": "Filter traffic",
+  "inspectorFilterHint": "Filter by method, host, path or type (⌘F)",
+  "inspectorFollow": "Follow new flows",
+  "inspectorFollowHint": "Follow new flows: choose each one as it arrives",
+  "inspectorExportHAR": "Export HAR",
+  "inspectorClearSession": "Clear Session",
+  "inspectorNoMatch": "No flows match this filter",
+  "inspectorClearFilters": "Clear Filters",
+  "inspectorColMethod": "Method",
+  "inspectorColStatus": "Status",
+  "inspectorFilterByStatus": "Filter by status",
+  "inspectorColHost": "Host",
+  "inspectorColPath": "Path",
+  "inspectorColSize": "Size",
+  "inspectorColTime": "Time",
+  "inspectorColAt": "At",
+  "inspectorStatusAll": "All Statuses",
+  "inspectorStatus2xx": "2xx · Success",
+  "inspectorStatus3xx": "3xx · Redirect",
+  "inspectorStatus4xx": "4xx · Client Error",
+  "inspectorStatus5xx": "5xx · Server Error",
+  "inspectorStatusErr": "Errors · no response",
+  "inspectorSendToComposer": "Send to Composer",
+  "inspectorShowOnly": "Show Only {host}",
+  "@inspectorShowOnly": {
+    "placeholders": { "host": { "type": "String", "example": "api.github.com" } }
+  },
+  "inspectorWaiting": "Waiting for traffic",
+  "inspectorWaitingHint": "Point an app or device at {addr}, or press Start Capture. HTTPS needs the Root CA installed and trusted.",
+  "@inspectorWaitingHint": {
+    "placeholders": { "addr": { "type": "String", "example": "127.0.0.1:9090" } }
+  },
+  "inspectorProxyPausedTitle": "The proxy is paused",
+  "inspectorPausedHint": "Start the capture, then set a client's HTTP proxy to {addr}. The flows appear here as they pass.",
+  "@inspectorPausedHint": {
+    "placeholders": { "addr": { "type": "String", "example": "127.0.0.1:9090" } }
+  },
+  "inspectorRootCA": "Root CA…",
+  "inspectorSelectFlow": "Select a flow",
+  "inspectorSelectFlowHint": "Click a row above to read its request and response. Double-click sends it to the Composer.",
+  "inspectorTabRequest": "Request",
+  "inspectorTabResponse": "Response",
+  "inspectorProxyError": "proxy error",
+  "inspectorResponseSize": "Response size",
+  "inspectorCopyReqHeaders": "Copy Request Headers",
+  "inspectorReqHeadersCopied": "Request headers copied",
+  "inspectorCopyRespHeaders": "Copy Response Headers",
+  "inspectorRespHeadersCopied": "Response headers copied",
+  "inspectorReplayHint": "Replay this request in the Composer",
+  "inspectorCopyBody": "Copy Body",
+  "inspectorBodyCopied": "Body copied",
+  "inspectorCopyHeaders": "Copy Headers",
+  "inspectorHeadersCopied": "Headers copied",
+  "inspectorTruncated": "The body is larger than the inspector keeps; this is the beginning.",
+  "inspectorNoHeaders": "This message carries no headers.",
+
+  "bodyImageLabel": "Image body",
+  "bodyImageMeta": "{type} · {width} × {height} px · {size}",
+  "@bodyImageMeta": {
+    "placeholders": {
+      "type": { "type": "String", "example": "image/png" },
+      "width": { "type": "int", "example": "800" },
+      "height": { "type": "int", "example": "600" },
+      "size": { "type": "String", "example": "12 KB" }
+    }
+  },
+  "bodyBinaryData": "Binary data",
+  "bodyBinaryTitle": "Binary body",
+  "bodyBinaryHint": "{type}, {size}. It is not text, so it is not shown; save it to open it with another app.",
+  "@bodyBinaryHint": {
+    "placeholders": {
+      "type": { "type": "String", "example": "application/pdf" },
+      "size": { "type": "String", "example": "12 KB" }
+    }
+  },
+  "bodySave": "Save Body…",
+  "bodySaveDialogTitle": "Save Body",
+  "bodySaveFailed": "The body could not be saved: {error}",
+  "@bodySaveFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "bodySaved": "Body saved to {dest}",
+  "@bodySaved": {
+    "placeholders": { "dest": { "type": "String", "example": "/Users/me/photo.png" } }
+  },
+
+  "kvSendRow": "Send this row",
+  "kvRemoveRow": "Remove row",
+  "kvAddRow": "Add row",
+  "timingConnect": "Connect",
+  "timingWaiting": "Waiting",
+  "timingDownload": "Download",
+  "timingTotal": "Total",
+  "timingReused": "reused",
+  "timingNote": "Each phase starts where the one before it ended. A connection that is reused skips DNS, connect and TLS.",
+  "timingReusedNote": "This request reused an open connection, so it spent no time on DNS, connect or TLS.",
+
   "settingsLanguage": "Language",
   "@settingsLanguage": {
     "description": "The label of the language row in Settings."

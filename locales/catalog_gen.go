@@ -1519,6 +1519,774 @@ func (msgs Messages) ComposerSendAgain() string {
 	return Catalog.Format(msgs.locale, "composerSendAgain", nil)
 }
 
+// CommonCopy says "Copy"
+// in the language the app shows.
+func CommonCopy() string { return In(i18n.Locale()).CommonCopy() }
+
+// CommonCopy says "Copy"
+// in the language of msgs.
+func (msgs Messages) CommonCopy() string {
+	return Catalog.Format(msgs.locale, "commonCopy", nil)
+}
+
+// CommonClearFilter says "Clear Filter"
+// in the language the app shows.
+func CommonClearFilter() string { return In(i18n.Locale()).CommonClearFilter() }
+
+// CommonClearFilter says "Clear Filter"
+// in the language of msgs.
+func (msgs Messages) CommonClearFilter() string {
+	return Catalog.Format(msgs.locale, "commonClearFilter", nil)
+}
+
+// CommonEmptyBody says "(empty body)"
+// in the language the app shows.
+func CommonEmptyBody() string { return In(i18n.Locale()).CommonEmptyBody() }
+
+// CommonEmptyBody says "(empty body)"
+// in the language of msgs.
+func (msgs Messages) CommonEmptyBody() string {
+	return Catalog.Format(msgs.locale, "commonEmptyBody", nil)
+}
+
+// CommonShowingFirst says "Showing the first {cut} of {total}; Copy takes all of it."
+// in the language the app shows.
+func CommonShowingFirst(cut string, total string) string {
+	return In(i18n.Locale()).CommonShowingFirst(cut, total)
+}
+
+// CommonShowingFirst says "Showing the first {cut} of {total}; Copy takes all of it."
+// in the language of msgs.
+func (msgs Messages) CommonShowingFirst(cut string, total string) string {
+	return Catalog.Format(msgs.locale, "commonShowingFirst", map[string]any{"cut": cut, "total": total})
+}
+
+// InspectorToggleCapture says "Start or stop capture"
+// in the language the app shows.
+func InspectorToggleCapture() string { return In(i18n.Locale()).InspectorToggleCapture() }
+
+// InspectorToggleCapture says "Start or stop capture"
+// in the language of msgs.
+func (msgs Messages) InspectorToggleCapture() string {
+	return Catalog.Format(msgs.locale, "inspectorToggleCapture", nil)
+}
+
+// InspectorToggleCaptureHint says "Start or stop the capture proxy"
+// in the language the app shows.
+func InspectorToggleCaptureHint() string { return In(i18n.Locale()).InspectorToggleCaptureHint() }
+
+// InspectorToggleCaptureHint says "Start or stop the capture proxy"
+// in the language of msgs.
+func (msgs Messages) InspectorToggleCaptureHint() string {
+	return Catalog.Format(msgs.locale, "inspectorToggleCaptureHint", nil)
+}
+
+// InspectorStartCapture says "Start Capture"
+// in the language the app shows.
+func InspectorStartCapture() string { return In(i18n.Locale()).InspectorStartCapture() }
+
+// InspectorStartCapture says "Start Capture"
+// in the language of msgs.
+func (msgs Messages) InspectorStartCapture() string {
+	return Catalog.Format(msgs.locale, "inspectorStartCapture", nil)
+}
+
+// InspectorCopyAddr says "Copy proxy address"
+// in the language the app shows.
+func InspectorCopyAddr() string { return In(i18n.Locale()).InspectorCopyAddr() }
+
+// InspectorCopyAddr says "Copy proxy address"
+// in the language of msgs.
+func (msgs Messages) InspectorCopyAddr() string {
+	return Catalog.Format(msgs.locale, "inspectorCopyAddr", nil)
+}
+
+// InspectorCopyAddrHint says "Copy {addr}"
+// in the language the app shows.
+func InspectorCopyAddrHint(addr string) string { return In(i18n.Locale()).InspectorCopyAddrHint(addr) }
+
+// InspectorCopyAddrHint says "Copy {addr}"
+// in the language of msgs.
+func (msgs Messages) InspectorCopyAddrHint(addr string) string {
+	return Catalog.Format(msgs.locale, "inspectorCopyAddrHint", map[string]any{"addr": addr})
+}
+
+// InspectorAddrCopied says "Proxy address copied: {addr}"
+// in the language the app shows.
+func InspectorAddrCopied(addr string) string { return In(i18n.Locale()).InspectorAddrCopied(addr) }
+
+// InspectorAddrCopied says "Proxy address copied: {addr}"
+// in the language of msgs.
+func (msgs Messages) InspectorAddrCopied(addr string) string {
+	return Catalog.Format(msgs.locale, "inspectorAddrCopied", map[string]any{"addr": addr})
+}
+
+// InspectorFilterCount says "{shown} of {total}"
+// in the language the app shows.
+func InspectorFilterCount(shown int, total int) string {
+	return In(i18n.Locale()).InspectorFilterCount(shown, total)
+}
+
+// InspectorFilterCount says "{shown} of {total}"
+// in the language of msgs.
+func (msgs Messages) InspectorFilterCount(shown int, total int) string {
+	return Catalog.Format(msgs.locale, "inspectorFilterCount", map[string]any{"shown": shown, "total": total})
+}
+
+// InspectorFilterTraffic says "Filter traffic"
+// in the language the app shows.
+func InspectorFilterTraffic() string { return In(i18n.Locale()).InspectorFilterTraffic() }
+
+// InspectorFilterTraffic says "Filter traffic"
+// in the language of msgs.
+func (msgs Messages) InspectorFilterTraffic() string {
+	return Catalog.Format(msgs.locale, "inspectorFilterTraffic", nil)
+}
+
+// InspectorFilterHint says "Filter by method, host, path or type (⌘F)"
+// in the language the app shows.
+func InspectorFilterHint() string { return In(i18n.Locale()).InspectorFilterHint() }
+
+// InspectorFilterHint says "Filter by method, host, path or type (⌘F)"
+// in the language of msgs.
+func (msgs Messages) InspectorFilterHint() string {
+	return Catalog.Format(msgs.locale, "inspectorFilterHint", nil)
+}
+
+// InspectorFollow says "Follow new flows"
+// in the language the app shows.
+func InspectorFollow() string { return In(i18n.Locale()).InspectorFollow() }
+
+// InspectorFollow says "Follow new flows"
+// in the language of msgs.
+func (msgs Messages) InspectorFollow() string {
+	return Catalog.Format(msgs.locale, "inspectorFollow", nil)
+}
+
+// InspectorFollowHint says "Follow new flows: choose each one as it arrives"
+// in the language the app shows.
+func InspectorFollowHint() string { return In(i18n.Locale()).InspectorFollowHint() }
+
+// InspectorFollowHint says "Follow new flows: choose each one as it arrives"
+// in the language of msgs.
+func (msgs Messages) InspectorFollowHint() string {
+	return Catalog.Format(msgs.locale, "inspectorFollowHint", nil)
+}
+
+// InspectorExportHAR says "Export HAR"
+// in the language the app shows.
+func InspectorExportHAR() string { return In(i18n.Locale()).InspectorExportHAR() }
+
+// InspectorExportHAR says "Export HAR"
+// in the language of msgs.
+func (msgs Messages) InspectorExportHAR() string {
+	return Catalog.Format(msgs.locale, "inspectorExportHAR", nil)
+}
+
+// InspectorClearSession says "Clear Session"
+// in the language the app shows.
+func InspectorClearSession() string { return In(i18n.Locale()).InspectorClearSession() }
+
+// InspectorClearSession says "Clear Session"
+// in the language of msgs.
+func (msgs Messages) InspectorClearSession() string {
+	return Catalog.Format(msgs.locale, "inspectorClearSession", nil)
+}
+
+// InspectorNoMatch says "No flows match this filter"
+// in the language the app shows.
+func InspectorNoMatch() string { return In(i18n.Locale()).InspectorNoMatch() }
+
+// InspectorNoMatch says "No flows match this filter"
+// in the language of msgs.
+func (msgs Messages) InspectorNoMatch() string {
+	return Catalog.Format(msgs.locale, "inspectorNoMatch", nil)
+}
+
+// InspectorClearFilters says "Clear Filters"
+// in the language the app shows.
+func InspectorClearFilters() string { return In(i18n.Locale()).InspectorClearFilters() }
+
+// InspectorClearFilters says "Clear Filters"
+// in the language of msgs.
+func (msgs Messages) InspectorClearFilters() string {
+	return Catalog.Format(msgs.locale, "inspectorClearFilters", nil)
+}
+
+// InspectorColMethod says "Method"
+// in the language the app shows.
+func InspectorColMethod() string { return In(i18n.Locale()).InspectorColMethod() }
+
+// InspectorColMethod says "Method"
+// in the language of msgs.
+func (msgs Messages) InspectorColMethod() string {
+	return Catalog.Format(msgs.locale, "inspectorColMethod", nil)
+}
+
+// InspectorColStatus says "Status"
+// in the language the app shows.
+func InspectorColStatus() string { return In(i18n.Locale()).InspectorColStatus() }
+
+// InspectorColStatus says "Status"
+// in the language of msgs.
+func (msgs Messages) InspectorColStatus() string {
+	return Catalog.Format(msgs.locale, "inspectorColStatus", nil)
+}
+
+// InspectorFilterByStatus says "Filter by status"
+// in the language the app shows.
+func InspectorFilterByStatus() string { return In(i18n.Locale()).InspectorFilterByStatus() }
+
+// InspectorFilterByStatus says "Filter by status"
+// in the language of msgs.
+func (msgs Messages) InspectorFilterByStatus() string {
+	return Catalog.Format(msgs.locale, "inspectorFilterByStatus", nil)
+}
+
+// InspectorColHost says "Host"
+// in the language the app shows.
+func InspectorColHost() string { return In(i18n.Locale()).InspectorColHost() }
+
+// InspectorColHost says "Host"
+// in the language of msgs.
+func (msgs Messages) InspectorColHost() string {
+	return Catalog.Format(msgs.locale, "inspectorColHost", nil)
+}
+
+// InspectorColPath says "Path"
+// in the language the app shows.
+func InspectorColPath() string { return In(i18n.Locale()).InspectorColPath() }
+
+// InspectorColPath says "Path"
+// in the language of msgs.
+func (msgs Messages) InspectorColPath() string {
+	return Catalog.Format(msgs.locale, "inspectorColPath", nil)
+}
+
+// InspectorColSize says "Size"
+// in the language the app shows.
+func InspectorColSize() string { return In(i18n.Locale()).InspectorColSize() }
+
+// InspectorColSize says "Size"
+// in the language of msgs.
+func (msgs Messages) InspectorColSize() string {
+	return Catalog.Format(msgs.locale, "inspectorColSize", nil)
+}
+
+// InspectorColTime says "Time"
+// in the language the app shows.
+func InspectorColTime() string { return In(i18n.Locale()).InspectorColTime() }
+
+// InspectorColTime says "Time"
+// in the language of msgs.
+func (msgs Messages) InspectorColTime() string {
+	return Catalog.Format(msgs.locale, "inspectorColTime", nil)
+}
+
+// InspectorColAt says "At"
+// in the language the app shows.
+func InspectorColAt() string { return In(i18n.Locale()).InspectorColAt() }
+
+// InspectorColAt says "At"
+// in the language of msgs.
+func (msgs Messages) InspectorColAt() string {
+	return Catalog.Format(msgs.locale, "inspectorColAt", nil)
+}
+
+// InspectorStatusAll says "All Statuses"
+// in the language the app shows.
+func InspectorStatusAll() string { return In(i18n.Locale()).InspectorStatusAll() }
+
+// InspectorStatusAll says "All Statuses"
+// in the language of msgs.
+func (msgs Messages) InspectorStatusAll() string {
+	return Catalog.Format(msgs.locale, "inspectorStatusAll", nil)
+}
+
+// InspectorStatus2xx says "2xx · Success"
+// in the language the app shows.
+func InspectorStatus2xx() string { return In(i18n.Locale()).InspectorStatus2xx() }
+
+// InspectorStatus2xx says "2xx · Success"
+// in the language of msgs.
+func (msgs Messages) InspectorStatus2xx() string {
+	return Catalog.Format(msgs.locale, "inspectorStatus2xx", nil)
+}
+
+// InspectorStatus3xx says "3xx · Redirect"
+// in the language the app shows.
+func InspectorStatus3xx() string { return In(i18n.Locale()).InspectorStatus3xx() }
+
+// InspectorStatus3xx says "3xx · Redirect"
+// in the language of msgs.
+func (msgs Messages) InspectorStatus3xx() string {
+	return Catalog.Format(msgs.locale, "inspectorStatus3xx", nil)
+}
+
+// InspectorStatus4xx says "4xx · Client Error"
+// in the language the app shows.
+func InspectorStatus4xx() string { return In(i18n.Locale()).InspectorStatus4xx() }
+
+// InspectorStatus4xx says "4xx · Client Error"
+// in the language of msgs.
+func (msgs Messages) InspectorStatus4xx() string {
+	return Catalog.Format(msgs.locale, "inspectorStatus4xx", nil)
+}
+
+// InspectorStatus5xx says "5xx · Server Error"
+// in the language the app shows.
+func InspectorStatus5xx() string { return In(i18n.Locale()).InspectorStatus5xx() }
+
+// InspectorStatus5xx says "5xx · Server Error"
+// in the language of msgs.
+func (msgs Messages) InspectorStatus5xx() string {
+	return Catalog.Format(msgs.locale, "inspectorStatus5xx", nil)
+}
+
+// InspectorStatusErr says "Errors · no response"
+// in the language the app shows.
+func InspectorStatusErr() string { return In(i18n.Locale()).InspectorStatusErr() }
+
+// InspectorStatusErr says "Errors · no response"
+// in the language of msgs.
+func (msgs Messages) InspectorStatusErr() string {
+	return Catalog.Format(msgs.locale, "inspectorStatusErr", nil)
+}
+
+// InspectorSendToComposer says "Send to Composer"
+// in the language the app shows.
+func InspectorSendToComposer() string { return In(i18n.Locale()).InspectorSendToComposer() }
+
+// InspectorSendToComposer says "Send to Composer"
+// in the language of msgs.
+func (msgs Messages) InspectorSendToComposer() string {
+	return Catalog.Format(msgs.locale, "inspectorSendToComposer", nil)
+}
+
+// InspectorShowOnly says "Show Only {host}"
+// in the language the app shows.
+func InspectorShowOnly(host string) string { return In(i18n.Locale()).InspectorShowOnly(host) }
+
+// InspectorShowOnly says "Show Only {host}"
+// in the language of msgs.
+func (msgs Messages) InspectorShowOnly(host string) string {
+	return Catalog.Format(msgs.locale, "inspectorShowOnly", map[string]any{"host": host})
+}
+
+// InspectorWaiting says "Waiting for traffic"
+// in the language the app shows.
+func InspectorWaiting() string { return In(i18n.Locale()).InspectorWaiting() }
+
+// InspectorWaiting says "Waiting for traffic"
+// in the language of msgs.
+func (msgs Messages) InspectorWaiting() string {
+	return Catalog.Format(msgs.locale, "inspectorWaiting", nil)
+}
+
+// InspectorWaitingHint says "Point an app or device at {addr}, or press Start Capture. HTTPS needs the Root CA installed and trusted."
+// in the language the app shows.
+func InspectorWaitingHint(addr string) string { return In(i18n.Locale()).InspectorWaitingHint(addr) }
+
+// InspectorWaitingHint says "Point an app or device at {addr}, or press Start Capture. HTTPS needs the Root CA installed and trusted."
+// in the language of msgs.
+func (msgs Messages) InspectorWaitingHint(addr string) string {
+	return Catalog.Format(msgs.locale, "inspectorWaitingHint", map[string]any{"addr": addr})
+}
+
+// InspectorProxyPausedTitle says "The proxy is paused"
+// in the language the app shows.
+func InspectorProxyPausedTitle() string { return In(i18n.Locale()).InspectorProxyPausedTitle() }
+
+// InspectorProxyPausedTitle says "The proxy is paused"
+// in the language of msgs.
+func (msgs Messages) InspectorProxyPausedTitle() string {
+	return Catalog.Format(msgs.locale, "inspectorProxyPausedTitle", nil)
+}
+
+// InspectorPausedHint says "Start the capture, then set a client's HTTP proxy to {addr}. The flows appear here as they pass."
+// in the language the app shows.
+func InspectorPausedHint(addr string) string { return In(i18n.Locale()).InspectorPausedHint(addr) }
+
+// InspectorPausedHint says "Start the capture, then set a client's HTTP proxy to {addr}. The flows appear here as they pass."
+// in the language of msgs.
+func (msgs Messages) InspectorPausedHint(addr string) string {
+	return Catalog.Format(msgs.locale, "inspectorPausedHint", map[string]any{"addr": addr})
+}
+
+// InspectorRootCA says "Root CA…"
+// in the language the app shows.
+func InspectorRootCA() string { return In(i18n.Locale()).InspectorRootCA() }
+
+// InspectorRootCA says "Root CA…"
+// in the language of msgs.
+func (msgs Messages) InspectorRootCA() string {
+	return Catalog.Format(msgs.locale, "inspectorRootCA", nil)
+}
+
+// InspectorSelectFlow says "Select a flow"
+// in the language the app shows.
+func InspectorSelectFlow() string { return In(i18n.Locale()).InspectorSelectFlow() }
+
+// InspectorSelectFlow says "Select a flow"
+// in the language of msgs.
+func (msgs Messages) InspectorSelectFlow() string {
+	return Catalog.Format(msgs.locale, "inspectorSelectFlow", nil)
+}
+
+// InspectorSelectFlowHint says "Click a row above to read its request and response. Double-click sends it to the Composer."
+// in the language the app shows.
+func InspectorSelectFlowHint() string { return In(i18n.Locale()).InspectorSelectFlowHint() }
+
+// InspectorSelectFlowHint says "Click a row above to read its request and response. Double-click sends it to the Composer."
+// in the language of msgs.
+func (msgs Messages) InspectorSelectFlowHint() string {
+	return Catalog.Format(msgs.locale, "inspectorSelectFlowHint", nil)
+}
+
+// InspectorTabRequest says "Request"
+// in the language the app shows.
+func InspectorTabRequest() string { return In(i18n.Locale()).InspectorTabRequest() }
+
+// InspectorTabRequest says "Request"
+// in the language of msgs.
+func (msgs Messages) InspectorTabRequest() string {
+	return Catalog.Format(msgs.locale, "inspectorTabRequest", nil)
+}
+
+// InspectorTabResponse says "Response"
+// in the language the app shows.
+func InspectorTabResponse() string { return In(i18n.Locale()).InspectorTabResponse() }
+
+// InspectorTabResponse says "Response"
+// in the language of msgs.
+func (msgs Messages) InspectorTabResponse() string {
+	return Catalog.Format(msgs.locale, "inspectorTabResponse", nil)
+}
+
+// InspectorProxyError says "proxy error"
+// in the language the app shows.
+func InspectorProxyError() string { return In(i18n.Locale()).InspectorProxyError() }
+
+// InspectorProxyError says "proxy error"
+// in the language of msgs.
+func (msgs Messages) InspectorProxyError() string {
+	return Catalog.Format(msgs.locale, "inspectorProxyError", nil)
+}
+
+// InspectorResponseSize says "Response size"
+// in the language the app shows.
+func InspectorResponseSize() string { return In(i18n.Locale()).InspectorResponseSize() }
+
+// InspectorResponseSize says "Response size"
+// in the language of msgs.
+func (msgs Messages) InspectorResponseSize() string {
+	return Catalog.Format(msgs.locale, "inspectorResponseSize", nil)
+}
+
+// InspectorCopyReqHeaders says "Copy Request Headers"
+// in the language the app shows.
+func InspectorCopyReqHeaders() string { return In(i18n.Locale()).InspectorCopyReqHeaders() }
+
+// InspectorCopyReqHeaders says "Copy Request Headers"
+// in the language of msgs.
+func (msgs Messages) InspectorCopyReqHeaders() string {
+	return Catalog.Format(msgs.locale, "inspectorCopyReqHeaders", nil)
+}
+
+// InspectorReqHeadersCopied says "Request headers copied"
+// in the language the app shows.
+func InspectorReqHeadersCopied() string { return In(i18n.Locale()).InspectorReqHeadersCopied() }
+
+// InspectorReqHeadersCopied says "Request headers copied"
+// in the language of msgs.
+func (msgs Messages) InspectorReqHeadersCopied() string {
+	return Catalog.Format(msgs.locale, "inspectorReqHeadersCopied", nil)
+}
+
+// InspectorCopyRespHeaders says "Copy Response Headers"
+// in the language the app shows.
+func InspectorCopyRespHeaders() string { return In(i18n.Locale()).InspectorCopyRespHeaders() }
+
+// InspectorCopyRespHeaders says "Copy Response Headers"
+// in the language of msgs.
+func (msgs Messages) InspectorCopyRespHeaders() string {
+	return Catalog.Format(msgs.locale, "inspectorCopyRespHeaders", nil)
+}
+
+// InspectorRespHeadersCopied says "Response headers copied"
+// in the language the app shows.
+func InspectorRespHeadersCopied() string { return In(i18n.Locale()).InspectorRespHeadersCopied() }
+
+// InspectorRespHeadersCopied says "Response headers copied"
+// in the language of msgs.
+func (msgs Messages) InspectorRespHeadersCopied() string {
+	return Catalog.Format(msgs.locale, "inspectorRespHeadersCopied", nil)
+}
+
+// InspectorReplayHint says "Replay this request in the Composer"
+// in the language the app shows.
+func InspectorReplayHint() string { return In(i18n.Locale()).InspectorReplayHint() }
+
+// InspectorReplayHint says "Replay this request in the Composer"
+// in the language of msgs.
+func (msgs Messages) InspectorReplayHint() string {
+	return Catalog.Format(msgs.locale, "inspectorReplayHint", nil)
+}
+
+// InspectorCopyBody says "Copy Body"
+// in the language the app shows.
+func InspectorCopyBody() string { return In(i18n.Locale()).InspectorCopyBody() }
+
+// InspectorCopyBody says "Copy Body"
+// in the language of msgs.
+func (msgs Messages) InspectorCopyBody() string {
+	return Catalog.Format(msgs.locale, "inspectorCopyBody", nil)
+}
+
+// InspectorBodyCopied says "Body copied"
+// in the language the app shows.
+func InspectorBodyCopied() string { return In(i18n.Locale()).InspectorBodyCopied() }
+
+// InspectorBodyCopied says "Body copied"
+// in the language of msgs.
+func (msgs Messages) InspectorBodyCopied() string {
+	return Catalog.Format(msgs.locale, "inspectorBodyCopied", nil)
+}
+
+// InspectorCopyHeaders says "Copy Headers"
+// in the language the app shows.
+func InspectorCopyHeaders() string { return In(i18n.Locale()).InspectorCopyHeaders() }
+
+// InspectorCopyHeaders says "Copy Headers"
+// in the language of msgs.
+func (msgs Messages) InspectorCopyHeaders() string {
+	return Catalog.Format(msgs.locale, "inspectorCopyHeaders", nil)
+}
+
+// InspectorHeadersCopied says "Headers copied"
+// in the language the app shows.
+func InspectorHeadersCopied() string { return In(i18n.Locale()).InspectorHeadersCopied() }
+
+// InspectorHeadersCopied says "Headers copied"
+// in the language of msgs.
+func (msgs Messages) InspectorHeadersCopied() string {
+	return Catalog.Format(msgs.locale, "inspectorHeadersCopied", nil)
+}
+
+// InspectorTruncated says "The body is larger than the inspector keeps; this is the beginning."
+// in the language the app shows.
+func InspectorTruncated() string { return In(i18n.Locale()).InspectorTruncated() }
+
+// InspectorTruncated says "The body is larger than the inspector keeps; this is the beginning."
+// in the language of msgs.
+func (msgs Messages) InspectorTruncated() string {
+	return Catalog.Format(msgs.locale, "inspectorTruncated", nil)
+}
+
+// InspectorNoHeaders says "This message carries no headers."
+// in the language the app shows.
+func InspectorNoHeaders() string { return In(i18n.Locale()).InspectorNoHeaders() }
+
+// InspectorNoHeaders says "This message carries no headers."
+// in the language of msgs.
+func (msgs Messages) InspectorNoHeaders() string {
+	return Catalog.Format(msgs.locale, "inspectorNoHeaders", nil)
+}
+
+// BodyImageLabel says "Image body"
+// in the language the app shows.
+func BodyImageLabel() string { return In(i18n.Locale()).BodyImageLabel() }
+
+// BodyImageLabel says "Image body"
+// in the language of msgs.
+func (msgs Messages) BodyImageLabel() string {
+	return Catalog.Format(msgs.locale, "bodyImageLabel", nil)
+}
+
+// BodyImageMeta says "{type} · {width} × {height} px · {size}"
+// in the language the app shows.
+func BodyImageMeta(type_ string, width int, height int, size string) string {
+	return In(i18n.Locale()).BodyImageMeta(type_, width, height, size)
+}
+
+// BodyImageMeta says "{type} · {width} × {height} px · {size}"
+// in the language of msgs.
+func (msgs Messages) BodyImageMeta(type_ string, width int, height int, size string) string {
+	return Catalog.Format(msgs.locale, "bodyImageMeta", map[string]any{"type": type_, "width": width, "height": height, "size": size})
+}
+
+// BodyBinaryData says "Binary data"
+// in the language the app shows.
+func BodyBinaryData() string { return In(i18n.Locale()).BodyBinaryData() }
+
+// BodyBinaryData says "Binary data"
+// in the language of msgs.
+func (msgs Messages) BodyBinaryData() string {
+	return Catalog.Format(msgs.locale, "bodyBinaryData", nil)
+}
+
+// BodyBinaryTitle says "Binary body"
+// in the language the app shows.
+func BodyBinaryTitle() string { return In(i18n.Locale()).BodyBinaryTitle() }
+
+// BodyBinaryTitle says "Binary body"
+// in the language of msgs.
+func (msgs Messages) BodyBinaryTitle() string {
+	return Catalog.Format(msgs.locale, "bodyBinaryTitle", nil)
+}
+
+// BodyBinaryHint says "{type}, {size}. It is not text, so it is not shown; save it to open it with another app."
+// in the language the app shows.
+func BodyBinaryHint(type_ string, size string) string {
+	return In(i18n.Locale()).BodyBinaryHint(type_, size)
+}
+
+// BodyBinaryHint says "{type}, {size}. It is not text, so it is not shown; save it to open it with another app."
+// in the language of msgs.
+func (msgs Messages) BodyBinaryHint(type_ string, size string) string {
+	return Catalog.Format(msgs.locale, "bodyBinaryHint", map[string]any{"type": type_, "size": size})
+}
+
+// BodySave says "Save Body…"
+// in the language the app shows.
+func BodySave() string { return In(i18n.Locale()).BodySave() }
+
+// BodySave says "Save Body…"
+// in the language of msgs.
+func (msgs Messages) BodySave() string {
+	return Catalog.Format(msgs.locale, "bodySave", nil)
+}
+
+// BodySaveDialogTitle says "Save Body"
+// in the language the app shows.
+func BodySaveDialogTitle() string { return In(i18n.Locale()).BodySaveDialogTitle() }
+
+// BodySaveDialogTitle says "Save Body"
+// in the language of msgs.
+func (msgs Messages) BodySaveDialogTitle() string {
+	return Catalog.Format(msgs.locale, "bodySaveDialogTitle", nil)
+}
+
+// BodySaveFailed says "The body could not be saved: {error}"
+// in the language the app shows.
+func BodySaveFailed(error string) string { return In(i18n.Locale()).BodySaveFailed(error) }
+
+// BodySaveFailed says "The body could not be saved: {error}"
+// in the language of msgs.
+func (msgs Messages) BodySaveFailed(error string) string {
+	return Catalog.Format(msgs.locale, "bodySaveFailed", map[string]any{"error": error})
+}
+
+// BodySaved says "Body saved to {dest}"
+// in the language the app shows.
+func BodySaved(dest string) string { return In(i18n.Locale()).BodySaved(dest) }
+
+// BodySaved says "Body saved to {dest}"
+// in the language of msgs.
+func (msgs Messages) BodySaved(dest string) string {
+	return Catalog.Format(msgs.locale, "bodySaved", map[string]any{"dest": dest})
+}
+
+// KvSendRow says "Send this row"
+// in the language the app shows.
+func KvSendRow() string { return In(i18n.Locale()).KvSendRow() }
+
+// KvSendRow says "Send this row"
+// in the language of msgs.
+func (msgs Messages) KvSendRow() string {
+	return Catalog.Format(msgs.locale, "kvSendRow", nil)
+}
+
+// KvRemoveRow says "Remove row"
+// in the language the app shows.
+func KvRemoveRow() string { return In(i18n.Locale()).KvRemoveRow() }
+
+// KvRemoveRow says "Remove row"
+// in the language of msgs.
+func (msgs Messages) KvRemoveRow() string {
+	return Catalog.Format(msgs.locale, "kvRemoveRow", nil)
+}
+
+// KvAddRow says "Add row"
+// in the language the app shows.
+func KvAddRow() string { return In(i18n.Locale()).KvAddRow() }
+
+// KvAddRow says "Add row"
+// in the language of msgs.
+func (msgs Messages) KvAddRow() string {
+	return Catalog.Format(msgs.locale, "kvAddRow", nil)
+}
+
+// TimingConnect says "Connect"
+// in the language the app shows.
+func TimingConnect() string { return In(i18n.Locale()).TimingConnect() }
+
+// TimingConnect says "Connect"
+// in the language of msgs.
+func (msgs Messages) TimingConnect() string {
+	return Catalog.Format(msgs.locale, "timingConnect", nil)
+}
+
+// TimingWaiting says "Waiting"
+// in the language the app shows.
+func TimingWaiting() string { return In(i18n.Locale()).TimingWaiting() }
+
+// TimingWaiting says "Waiting"
+// in the language of msgs.
+func (msgs Messages) TimingWaiting() string {
+	return Catalog.Format(msgs.locale, "timingWaiting", nil)
+}
+
+// TimingDownload says "Download"
+// in the language the app shows.
+func TimingDownload() string { return In(i18n.Locale()).TimingDownload() }
+
+// TimingDownload says "Download"
+// in the language of msgs.
+func (msgs Messages) TimingDownload() string {
+	return Catalog.Format(msgs.locale, "timingDownload", nil)
+}
+
+// TimingTotal says "Total"
+// in the language the app shows.
+func TimingTotal() string { return In(i18n.Locale()).TimingTotal() }
+
+// TimingTotal says "Total"
+// in the language of msgs.
+func (msgs Messages) TimingTotal() string {
+	return Catalog.Format(msgs.locale, "timingTotal", nil)
+}
+
+// TimingReused says "reused"
+// in the language the app shows.
+func TimingReused() string { return In(i18n.Locale()).TimingReused() }
+
+// TimingReused says "reused"
+// in the language of msgs.
+func (msgs Messages) TimingReused() string {
+	return Catalog.Format(msgs.locale, "timingReused", nil)
+}
+
+// TimingNote says "Each phase starts where the one before it ended. A connection that is reused skips DNS, connect and TLS."
+// in the language the app shows.
+func TimingNote() string { return In(i18n.Locale()).TimingNote() }
+
+// TimingNote says "Each phase starts where the one before it ended. A connection that is reused skips DNS, connect and TLS."
+// in the language of msgs.
+func (msgs Messages) TimingNote() string {
+	return Catalog.Format(msgs.locale, "timingNote", nil)
+}
+
+// TimingReusedNote says "This request reused an open connection, so it spent no time on DNS, connect or TLS."
+// in the language the app shows.
+func TimingReusedNote() string { return In(i18n.Locale()).TimingReusedNote() }
+
+// TimingReusedNote says "This request reused an open connection, so it spent no time on DNS, connect or TLS."
+// in the language of msgs.
+func (msgs Messages) TimingReusedNote() string {
+	return Catalog.Format(msgs.locale, "timingReusedNote", nil)
+}
+
 // SettingsLanguage says "Language"
 // in the language the app shows.
 //
