@@ -140,6 +140,8 @@
   "composerTabParams": "Params",
   "composerTabHeaders": "Headers",
   "composerTabBody": "Body",
+  "composerTabRespBody": "Body",
+  "composerTabRespHeaders": "Headers",
   "composerTabAuth": "Auth",
   "composerTiming": "Timing",
   "composerTabCount": "{name} · {count}",

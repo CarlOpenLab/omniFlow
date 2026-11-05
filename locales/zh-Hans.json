@@ -96,6 +96,8 @@
   "composerTabParams": "参数",
   "composerTabHeaders": "请求头",
   "composerTabBody": "请求体",
+  "composerTabRespBody": "响应体",
+  "composerTabRespHeaders": "响应头",
   "composerTabAuth": "认证",
   "composerTiming": "耗时",
   "composerTabCount": "{name}（{count}）",

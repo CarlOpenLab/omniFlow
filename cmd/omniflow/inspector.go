@@ -436,11 +436,18 @@ func (a *app) flowDetailBody(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow
 		sub := ui.Row(c).Height(34).Shrink(0).Padding(0, 12).Gap(8).
 			BorderWidth(0, 0, 1, 0).BorderColor(pal.Divider.Alpha(0.7))
 		sub.Children(func() {
+			// The tabs name the side shown: the request's own words for
+			// one, the answer's for the other.
 			bodyLabel := locales.ComposerTabBody()
+			headersLabel := locales.ComposerTabHeaders()
+			if a.detailTab == 1 {
+				bodyLabel = locales.ComposerTabRespBody()
+				headersLabel = locales.ComposerTabRespHeaders()
+			}
 			if len(body) > 0 {
 				bodyLabel += " · " + httpx.FormatBytes(int64(len(body)))
 			}
-			segmented(c, pal, &a.detailSub, []string{bodyLabel, countLabel(locales.ComposerTabHeaders(), len(headers))})
+			segmented(c, pal, &a.detailSub, []string{bodyLabel, countLabel(headersLabel, len(headers))})
 			ui.Spacer(c)
 			if contentType != "" {
 				ui.Row(c).Center().Height(20).Padding(0, 7).Radius(5).Background(pal.Chip).

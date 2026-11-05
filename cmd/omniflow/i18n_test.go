@@ -12,6 +12,7 @@ import (
 
 	"github.com/egoist/mygo/i18n"
 
+	"github.com/CarlOpenLab/omniflow/internal/httpx"
 	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/locales"
 )
@@ -260,6 +261,51 @@ func TestChineseTabCount(t *testing.T) {
 	tt := newTester(t, a)
 	if !tt.HasText("请求头（2）") {
 		t.Errorf("the Chinese header count is missing: %q", tt.Texts())
+	}
+}
+
+// The tabs over an answer name the answer, not the request: Chinese has a
+// word for each side.
+func TestChineseResponseTabs(t *testing.T) {
+	i18n.SetLocaleFunc(func() string { return "zh-Hans" })
+	t.Cleanup(func() { i18n.SetLocaleFunc(func() string { return "en" }) })
+	a := newTestApp(t)
+	a.resp = &httpx.Result{
+		Status: 200, StatusText: "OK", Proto: "HTTP/1.1",
+		Headers: []httpx.Header{
+			{Key: "Content-Type", Value: "application/json"},
+			{Key: "Server", Value: "GitHub.com"},
+		},
+		Body: []byte(`{"a":1}`),
+	}
+	tt := newTester(t, a)
+	if !tt.HasText("响应体") {
+		t.Errorf("the composer's answer body tab is not 响应体: %q", tt.Texts())
+	}
+	if !tt.HasText("响应头（2）") {
+		t.Errorf("the composer's answer headers tab is not 响应头（2）: %q", tt.Texts())
+	}
+	if !tt.HasText("请求体") {
+		t.Error("the request body tab stopped saying 请求体")
+	}
+
+	a.mode = modeInspector
+	seedFlows(a)
+	a.follow = false
+	a.flowSelID = 4
+	a.detailTab = 1
+	tt.Frame()
+	bodyTab := "响应体 · " + httpx.FormatBytes(int64(len(a.flows[3].RespBody)))
+	if !tt.HasText(bodyTab) {
+		t.Errorf("the inspector's answer body tab is not %q: %q", bodyTab, tt.Texts())
+	}
+	if !tt.HasText("响应头（2）") {
+		t.Errorf("the inspector's answer headers tab is not 响应头（2）: %q", tt.Texts())
+	}
+	a.detailTab = 0
+	tt.Frame()
+	if !tt.HasText("请求头（2）") {
+		t.Errorf("the inspector's request headers tab is not 请求头（2）: %q", tt.Texts())
 	}
 }
 

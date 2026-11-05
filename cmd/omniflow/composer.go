@@ -479,7 +479,7 @@ func (a *app) responsePane(c *ui.Context, pal *uitokens.Palette) {
 				})
 		}
 		prettyText, isJSON := httpx.Pretty(resp.Body)
-		labels := []string{locales.ComposerTabBody(), countLabel(locales.ComposerTabHeaders(), len(resp.Headers)), locales.ComposerTiming()}
+		labels := []string{locales.ComposerTabRespBody(), countLabel(locales.ComposerTabRespHeaders(), len(resp.Headers)), locales.ComposerTiming()}
 		lineTabs(c, pal, &a.respTab, labels)
 		ui.Box(c).Grow(1).MinHeight(0).Children(func() {
 			switch a.respTab {

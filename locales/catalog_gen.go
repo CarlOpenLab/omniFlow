@@ -921,6 +921,26 @@ func (msgs Messages) ComposerTabBody() string {
 	return Catalog.Format(msgs.locale, "composerTabBody", nil)
 }
 
+// ComposerTabRespBody says "Body"
+// in the language the app shows.
+func ComposerTabRespBody() string { return In(i18n.Locale()).ComposerTabRespBody() }
+
+// ComposerTabRespBody says "Body"
+// in the language of msgs.
+func (msgs Messages) ComposerTabRespBody() string {
+	return Catalog.Format(msgs.locale, "composerTabRespBody", nil)
+}
+
+// ComposerTabRespHeaders says "Headers"
+// in the language the app shows.
+func ComposerTabRespHeaders() string { return In(i18n.Locale()).ComposerTabRespHeaders() }
+
+// ComposerTabRespHeaders says "Headers"
+// in the language of msgs.
+func (msgs Messages) ComposerTabRespHeaders() string {
+	return Catalog.Format(msgs.locale, "composerTabRespHeaders", nil)
+}
+
 // ComposerTabAuth says "Auth"
 // in the language the app shows.
 func ComposerTabAuth() string { return In(i18n.Locale()).ComposerTabAuth() }
