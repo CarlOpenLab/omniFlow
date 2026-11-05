@@ -39,7 +39,7 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 		labels := make([]string, len(themes))
 		current := 0
 		for i, t := range themes {
-			labels[i] = t.label
+			labels[i] = t.label()
 			if t.mode == mode {
 				current = i
 			}
@@ -48,7 +48,7 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 		themeRow := ui.Row(c).Height(30).Gap(10)
 		themeRow.Children(func() {
 			ui.Text(c, "Theme").FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
-			segmented(c, pal, &tidx, labels)
+			segmentedKey(c, pal, "theme:", &tidx, labels)
 		})
 		if tidx != current && tidx >= 0 && tidx < len(themes) {
 			a.setTheme(themes[tidx].mode)
@@ -72,7 +72,7 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 		langRow := ui.Row(c).Height(30).Gap(10)
 		langRow.Children(func() {
 			ui.Text(c, locales.SettingsLanguage()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
-			segmented(c, pal, &lidx, langLabels)
+			segmentedKey(c, pal, "lang:", &lidx, langLabels)
 		})
 		if lidx != langNow && lidx >= 0 && lidx < len(langTags) {
 			a.setLanguage(langTags[lidx])

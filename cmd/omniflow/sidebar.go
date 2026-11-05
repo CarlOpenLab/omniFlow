@@ -9,6 +9,7 @@ import (
 	"github.com/CarlOpenLab/omniflow/internal/httpx"
 	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 // sidebar is the column beside the card: the collection or the captured
@@ -42,8 +43,8 @@ func (a *app) composerSidebar(c *ui.Context, pal *uitokens.Palette) {
 	// Environment: it changes what every request sends, so it sits first.
 	envHead := ui.Row(c).Height(30).Padding(4, 0, 0, 0)
 	envHead.Children(func() {
-		sectionTitle(c, pal, "Environment", 0)
-		if b := iconButton(c, pal, iconLayers, "Manage Environments", 24); b.Clicked() {
+		sectionTitle(c, pal, locales.SidebarEnvironment(), 0)
+		if b := iconButton(c, pal, iconLayers, locales.SidebarManageEnvs(), 24); b.Clicked() {
 			a.openEnvs()
 		}
 	})
@@ -53,8 +54,8 @@ func (a *app) composerSidebar(c *ui.Context, pal *uitokens.Palette) {
 	// Collections
 	header := ui.Row(c).Height(30).Padding(4, 0, 0, 0)
 	header.Children(func() {
-		sectionTitle(c, pal, "Collections", len(a.requests))
-		if b := iconButton(c, pal, iconPlus, "New Request", 24); b.Clicked() {
+		sectionTitle(c, pal, locales.SidebarCollections(), len(a.requests))
+		if b := iconButton(c, pal, iconPlus, locales.ComposerNewRequest(), 24); b.Clicked() {
 			a.newRequest()
 		}
 	})
@@ -65,16 +66,16 @@ func (a *app) composerSidebar(c *ui.Context, pal *uitokens.Palette) {
 	}
 	if len(a.requests) == 0 {
 		ui.Row(c).Height(30).Padding(4, 10).Children(func() {
-			ui.Text(c, "No saved requests").FontSize(11.5).TextColor(pal.TextFaint)
+			ui.Text(c, locales.SidebarNoRequests()).FontSize(11.5).TextColor(pal.TextFaint)
 		})
 	}
 
 	ui.Box(c).Height(10)
 	hist := ui.Row(c).Height(30).Padding(4, 0, 0, 0)
 	hist.Children(func() {
-		sectionTitle(c, pal, "History", len(a.history))
+		sectionTitle(c, pal, locales.SidebarHistory(), len(a.history))
 		if len(a.history) > 0 {
-			if b := iconButton(c, pal, iconTrash, "Clear History", 24); b.Clicked() {
+			if b := iconButton(c, pal, iconTrash, locales.SidebarClearHistory(), 24); b.Clicked() {
 				a.clearHistory()
 			}
 		}
@@ -87,9 +88,9 @@ func (a *app) composerSidebar(c *ui.Context, pal *uitokens.Palette) {
 	}
 	if len(a.history) == 0 {
 		ui.Row(c).Height(30).Padding(4, 10).Children(func() {
-			text := "Requests you send appear here"
+			text := locales.SidebarHistoryEmpty()
 			if !a.prefs.KeepHistory {
-				text = "History is off in Settings"
+				text = locales.SidebarHistoryOff()
 			}
 			ui.Text(c, text).FontSize(11.5).TextColor(pal.TextFaint)
 		})
@@ -124,29 +125,29 @@ func (a *app) requestRow(c *ui.Context, pal *uitokens.Palette, r model.Request) 
 			SingleLine().Ellipsis("…").Grow(1).MinWidth(0)
 		switch {
 		case hovered:
-			del := iconButton(c, pal, iconTrash, "Delete "+r.DisplayName(), 20)
+			del := iconButton(c, pal, iconTrash, locales.SidebarDeleteRequest(r.DisplayName()), 20)
 			del.OnClick(func() { a.deleteRequest(r.ID) })
 		case a.hasDraft(r.ID):
 			ui.Box(c).Size(6, 6).Shrink(0).Radius(3).Background(pal.Warning).Margin(0, 7).
-				Label("Edited").Tooltip("Edited, not saved")
+				Label(locales.SidebarEdited()).Tooltip(locales.SidebarEditedHint())
 		}
 	})
 	row.ContextMenu(func(m *ui.Menu) {
-		if m.Item("Open").Disabled(selected).Chosen() {
+		if m.Item(locales.CommonOpen()).Disabled(selected).Chosen() {
 			act = func() { a.loadRequest(r) }
 		}
-		if m.Item("Duplicate").Chosen() {
+		if m.Item(locales.CommonDuplicate()).Chosen() {
 			act = func() { a.duplicateRequest(r.ID) }
 		}
 		m.Separator()
-		if m.Item("Copy URL").Disabled(r.URL == "").Chosen() {
-			act = func() { a.copyText(c, "URL copied", r.URL) }
+		if m.Item(locales.CommonCopyURL()).Disabled(r.URL == "").Chosen() {
+			act = func() { a.copyText(c, locales.CommonURLCopied(), r.URL) }
 		}
-		if m.Item("Copy as cURL").Chosen() {
+		if m.Item(locales.CommonCopyCurl()).Chosen() {
 			act = func() { a.copySpecCurl(c, specOf(r)) }
 		}
 		m.Separator()
-		if m.Item("Delete").Chosen() {
+		if m.Item(locales.CommonDelete()).Chosen() {
 			act = func() { a.deleteRequest(r.ID) }
 		}
 	})
@@ -163,7 +164,7 @@ func (a *app) copySpecCurl(c *ui.Context, spec httpx.Spec) {
 		a.setNotice(err.Error())
 		return
 	}
-	a.copyText(c, "cURL command copied", cmd)
+	a.copyText(c, locales.ComposerCurlCopied(), cmd)
 }
 
 // historyRow is a request sent before: its verb, URL and the status it
@@ -171,9 +172,9 @@ func (a *app) copySpecCurl(c *ui.Context, spec httpx.Spec) {
 func (a *app) historyRow(c *ui.Context, pal *uitokens.Palette, h model.HistoryEntry) (act func()) {
 	tip := h.Method + " " + h.URL
 	if !h.At.IsZero() {
-		tip += "\nSent " + h.At.Format("Jan 2, 15:04:05")
+		tip += "\n" + locales.HistorySent(h.At)
 		if h.Duration > 0 {
-			tip += fmt.Sprintf(" · %d ms", h.Duration)
+			tip += " · " + locales.HistoryDuration(int(h.Duration))
 		}
 	}
 	row := ui.ButtonBase(c.Key("hist:"+h.ID)).Height(27).Padding(0, 8).Radius(7).Gap(7).
@@ -190,22 +191,22 @@ func (a *app) historyRow(c *ui.Context, pal *uitokens.Palette, h model.HistoryEn
 			ui.Text(c, fmt.Sprint(h.Status)).FontSize(9.5).FontWeight(600).
 				TextColor(uitokens.StatusColor(pal, h.Status))
 		} else {
-			ui.Text(c, "ERR").FontSize(9.5).FontWeight(600).TextColor(pal.Danger)
+			ui.Text(c, locales.CommonErrorShort()).FontSize(9.5).FontWeight(600).TextColor(pal.Danger)
 		}
 	})
 	row.ContextMenu(func(m *ui.Menu) {
-		if m.Item("Open").Chosen() {
+		if m.Item(locales.CommonOpen()).Chosen() {
 			act = func() { a.loadHistory(h) }
 		}
 		m.Separator()
-		if m.Item("Copy URL").Chosen() {
-			act = func() { a.copyText(c, "URL copied", h.URL) }
+		if m.Item(locales.CommonCopyURL()).Chosen() {
+			act = func() { a.copyText(c, locales.CommonURLCopied(), h.URL) }
 		}
-		if m.Item("Copy as cURL").Disabled(h.Request == nil).Chosen() {
+		if m.Item(locales.CommonCopyCurl()).Disabled(h.Request == nil).Chosen() {
 			act = func() { a.copySpecCurl(c, specOf(*h.Request)) }
 		}
 		m.Separator()
-		if m.Item("Remove from History").Chosen() {
+		if m.Item(locales.CommonRemoveHistory()).Chosen() {
 			act = func() { a.removeHistory(h.ID) }
 		}
 	})
@@ -225,39 +226,39 @@ func prettyURL(raw string) string {
 		}
 	}
 	if s == "" {
-		return "(empty)"
+		return locales.SidebarEmptyURL()
 	}
 	return s
 }
 
 func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 	// Capture
-	sectionTitle(c, pal, "Capture", 0)
+	sectionTitle(c, pal, locales.SidebarCapture(), 0)
 	panel := ui.Column(c).FillWidth().Radius(10).Background(pal.Chip).
 		Padding(10, 10, 8, 10).Gap(8)
 	panel.Children(func() {
 		row := ui.Row(c).Height(26).Gap(8)
 		row.Children(func() {
 			col := pal.TextFaint
-			label := "Paused"
+			label := locales.InspectorPaused()
 			if a.proxyRunning() {
 				col = pal.Success
-				label = "Recording"
+				label = locales.InspectorRecordingStatus()
 			}
 			statusDot(c, col, 8)
 			ui.Text(c, label).FontSize(12).FontWeight(650).TextColor(pal.Text).Grow(1)
 			toggle := ui.ButtonBase(c.Key("capture-toggle")).Height(24).Padding(0, 8).Radius(6).Gap(5).
-				Label("Start or stop the proxy").Tooltip("Start or stop the proxy (⇧⌘P)")
+				Label(locales.SidebarProxyToggle()).Tooltip(locales.SidebarProxyToggleHint())
 			if toggle.Hovered() {
 				toggle.Background(pal.RowHover)
 			}
 			toggle.Children(func() {
 				if a.proxyRunning() {
 					ui.Icon(c, iconStop).Size(11, 11).TextColor(pal.Danger)
-					ui.Text(c, "Stop").FontSize(11).FontWeight(600).TextColor(pal.Danger)
+					ui.Text(c, locales.SidebarStop()).FontSize(11).FontWeight(600).TextColor(pal.Danger)
 				} else {
 					ui.Icon(c, iconPlay).Size(11, 11).TextColor(pal.Success)
-					ui.Text(c, "Start").FontSize(11).FontWeight(600).TextColor(pal.Success)
+					ui.Text(c, locales.SidebarStart()).FontSize(11).FontWeight(600).TextColor(pal.Success)
 				}
 			})
 			if toggle.Clicked() {
@@ -266,10 +267,10 @@ func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 		})
 		port := ui.Row(c).Height(26).Gap(8)
 		port.Children(func() {
-			ui.Text(c, "Port").FontSize(11.5).TextColor(pal.TextMuted).Width(34)
+			ui.Text(c, locales.CommonPort()).FontSize(11.5).TextColor(pal.TextMuted).Width(34)
 			in := ui.TextInput(c.Key("proxy-port"), &a.proxyPort).Height(24).Width(68).
 				FontSize(11.5).Font("monospace").Padding(2, 6).Radius(6).
-				Background(pal.Chip).Border(1, pal.Edge).Tooltip("Enter to apply")
+				Background(pal.Chip).Border(1, pal.Edge).Tooltip(locales.CommonEnterToApply())
 			if !validPort(a.proxyPort) {
 				in.Border(1, pal.Danger)
 			}
@@ -284,8 +285,8 @@ func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 		}
 		decrypt := ui.Row(c).Height(24).Gap(8)
 		decrypt.Children(func() {
-			ui.Text(c, "Decrypt HTTPS").FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
-			ui.Switch(c.Key("mitm"), &a.mitm).Label("Decrypt HTTPS")
+			ui.Text(c, locales.SidebarDecryptHTTPS()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
+			ui.Switch(c.Key("mitm"), &a.mitm).Label(locales.SidebarDecryptHTTPS())
 		})
 		if a.mitm != a.prefs.DecryptHTTPS {
 			a.prefs.DecryptHTTPS = a.mitm
@@ -295,13 +296,13 @@ func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 			}
 		}
 		caRow := ui.Row(c).Height(24).Gap(6).Padding(0, 4).Margin(0, -4).Radius(6).
-			Cursor(ui.CursorPointer).Label("Root CA Certificate")
+			Cursor(ui.CursorPointer).Label(locales.CaTitle())
 		if caRow.Hovered() {
 			caRow.Background(pal.RowHover)
 		}
 		caRow.Children(func() {
 			ui.Icon(c, iconShield).Size(12, 12).TextColor(pal.TextMuted)
-			ui.Text(c, "Root CA Certificate").FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
+			ui.Text(c, locales.CaTitle()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
 			ui.Icon(c, iconRight).Size(11, 11).TextColor(pal.TextFaint)
 		})
 		if caRow.Clicked() {
@@ -314,15 +315,15 @@ func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 	domains := a.domains()
 	header := ui.Row(c).Height(30).Padding(4, 0, 0, 0)
 	header.Children(func() {
-		sectionTitle(c, pal, "Domains", len(domains))
+		sectionTitle(c, pal, locales.SidebarDomains(), len(domains))
 		if a.domainFilter != "" {
-			if b := iconButton(c, pal, iconX, "Show All Domains", 24); b.Clicked() {
+			if b := iconButton(c, pal, iconX, locales.SidebarShowAllDomains(), 24); b.Clicked() {
 				a.domainFilter = ""
 			}
 		}
 	})
 	allRow := ui.ButtonBase(c.Key("domain:all")).Height(28).Padding(0, 8).Radius(7).Gap(7).
-		Label("All traffic")
+		Label(locales.SidebarAllTraffic())
 	if a.domainFilter == "" {
 		allRow.Background(pal.AccentSoft)
 	} else if allRow.Hovered() {
@@ -330,7 +331,7 @@ func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 	}
 	allRow.Children(func() {
 		ui.Icon(c, iconGlobe).Size(12, 12).TextColor(pal.TextMuted)
-		ui.Text(c, "All traffic").FontSize(11.5).FontWeight(550).TextColor(pal.Text).Grow(1)
+		ui.Text(c, locales.SidebarAllTraffic()).FontSize(11.5).FontWeight(550).TextColor(pal.Text).Grow(1)
 		ui.Text(c, fmt.Sprint(len(a.flows))).FontSize(10).TextColor(pal.TextFaint)
 	})
 	if allRow.Clicked() {
@@ -366,7 +367,7 @@ func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 	}
 	if len(domains) == 0 {
 		ui.Row(c).Height(30).Padding(4, 10).Children(func() {
-			ui.Text(c, "No hosts captured yet").FontSize(11.5).TextColor(pal.TextFaint)
+			ui.Text(c, locales.SidebarNoHosts()).FontSize(11.5).TextColor(pal.TextFaint)
 		})
 	}
 
@@ -374,18 +375,21 @@ func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 	note := ui.Column(c).FillWidth().Radius(9).Background(pal.Chip).
 		Padding(9, 10).Gap(3)
 	note.Children(func() {
-		ui.Text(c, "Point a device at this proxy").FontSize(10.5).FontWeight(650).
+		ui.Text(c, locales.SidebarPointDevice()).FontSize(10.5).FontWeight(650).
 			TextColor(pal.Text)
-		ui.Text(c, "HTTP proxy 127.0.0.1:"+a.proxyPort+". For HTTPS, install the Root CA and trust it.").
+		ui.Text(c, locales.SidebarProxyHint("127.0.0.1:"+a.proxyPort)).
 			FontSize(10).TextColor(pal.TextMuted).LineHeight(1.4)
 	})
 }
 
 // themes are the appearances a person can choose, as prefs store them.
-var themes = []struct{ mode, label string }{
-	{"system", "System"},
-	{"light", "Light"},
-	{"dark", "Dark"},
+var themes = []struct {
+	mode  string
+	label func() string
+}{
+	{"system", locales.ThemeSystem},
+	{"light", locales.ThemeLight},
+	{"dark", locales.ThemeDark},
 }
 
 // themeMode is the stored appearance, with the first run's empty one read as
@@ -403,13 +407,13 @@ func (a *app) sidebarFooter(c *ui.Context, pal *uitokens.Palette) {
 	row := ui.Row(c).Height(uitokens.FootH).Shrink(0).Padding(0, 10).Gap(4)
 	row.Children(func() {
 		settings := ui.ButtonBase(c.Key("settings")).Height(26).Padding(0, 8).Radius(7).Gap(6).
-			Label("Settings").Tooltip("Settings ⌘,")
+			Label(locales.CommonSettings()).Tooltip(locales.CommonSettingsTooltip())
 		if settings.Hovered() {
 			settings.Background(pal.RowHover)
 		}
 		settings.Children(func() {
 			ui.Icon(c, iconGear).Size(13, 13).TextColor(pal.TextMuted)
-			ui.Text(c, "Settings").FontSize(11.5).FontWeight(550).TextColor(pal.TextMuted)
+			ui.Text(c, locales.CommonSettings()).FontSize(11.5).FontWeight(550).TextColor(pal.TextMuted)
 		})
 		if settings.Clicked() {
 			a.settingsOpen = true
@@ -423,15 +427,15 @@ func (a *app) sidebarFooter(c *ui.Context, pal *uitokens.Palette) {
 // trip to Settings.
 func (a *app) appearanceMenu(c *ui.Context, pal *uitokens.Palette) {
 	mode := themeMode(a.prefs.Theme)
-	icon, label := iconMonitor, "System"
+	icon, label := iconMonitor, locales.ThemeSystem()
 	switch mode {
 	case "light":
-		icon, label = iconSun, "Light"
+		icon, label = iconSun, locales.ThemeLight()
 	case "dark":
-		icon, label = iconMoon, "Dark"
+		icon, label = iconMoon, locales.ThemeDark()
 	}
 	chip := ui.ButtonBase(c.Key("appearance")).Height(24).Padding(0, 8).Radius(6).Gap(5).
-		Label("Appearance").Tooltip("Appearance: " + label)
+		Label(locales.CommonAppearance()).Tooltip(locales.CommonAppearanceTooltip(label))
 	if chip.Hovered() {
 		chip.Background(pal.RowHover)
 	}
@@ -442,12 +446,12 @@ func (a *app) appearanceMenu(c *ui.Context, pal *uitokens.Palette) {
 	})
 	chip.Menu(func(m *ui.Menu) {
 		for _, t := range themes {
-			if m.Item(t.label).Checked(mode == t.mode).Chosen() {
+			if m.Item(t.label()).Checked(mode == t.mode).Chosen() {
 				a.setTheme(t.mode)
 			}
 		}
 		m.Separator()
-		if m.Item("Settings…").Shortcut(ui.Cmd, ui.KeyComma).Chosen() {
+		if m.Item(locales.CommonSettingsMenu()).Shortcut(ui.Cmd, ui.KeyComma).Chosen() {
 			a.settingsOpen = true
 		}
 	})

@@ -20,6 +20,7 @@ import (
 	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/internal/proxy"
 	"github.com/CarlOpenLab/omniflow/internal/store"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 type viewMode int
@@ -1009,7 +1010,7 @@ func (a *app) exportHAR() {
 			a.update(func() { a.setNotice("The capture could not be exported: " + err.Error()) })
 			return
 		}
-		a.update(func() { a.setNotice("Exported " + plural(n, "flow") + " to " + dest) })
+		a.update(func() { a.setNotice(locales.NoticeExported(n, dest)) })
 	}()
 }
 

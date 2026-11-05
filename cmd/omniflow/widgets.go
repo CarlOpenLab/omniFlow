@@ -192,12 +192,18 @@ func lineTabs(c *ui.Context, pal *uitokens.Palette, sel *int, labels []string) u
 // segmented is the small choice control used inside a panel: a trough with
 // one lifted segment, as the prototype's mode switch.
 func segmented(c *ui.Context, pal *uitokens.Palette, sel *int, labels []string) ui.Element {
+	return segmentedKey(c, pal, "seg:", sel, labels)
+}
+
+// segmentedKey is segmented with its widgets keyed under prefix, so two
+// rows with the same label in one language do not share a key.
+func segmentedKey(c *ui.Context, pal *uitokens.Palette, prefix string, sel *int, labels []string) ui.Element {
 	track := ui.Row(c).Shrink(0).Padding(2).Radius(8).Gap(1).Background(pal.Chip)
 	track.Children(func() {
 		for i := range labels {
 			idx := i
 			selected := i == *sel
-			b := ui.ButtonBase(c.Key("seg:"+labels[i])).Height(24).Padding(0, 10).
+			b := ui.ButtonBase(c.Key(prefix+labels[i])).Height(24).Padding(0, 10).
 				Radius(6).Center().Label(labels[i]).Background(ui.Transparent)
 			col := pal.TextMuted
 			if selected {

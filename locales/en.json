@@ -1,5 +1,235 @@
 {
   "@@locale": "en",
+
+  "commonSave": "Save",
+  "commonCancel": "Cancel",
+  "commonUndo": "Undo",
+  "commonUndoTooltip": "Put it back",
+  "commonOpen": "Open",
+  "commonDuplicate": "Duplicate",
+  "commonDelete": "Delete",
+  "commonCopyURL": "Copy URL",
+  "commonURLCopied": "URL copied",
+  "commonCopyCurl": "Copy as cURL",
+  "commonRemoveHistory": "Remove from History",
+  "commonMore": "More",
+  "commonSettings": "Settings",
+  "commonSettingsTooltip": "Settings ⌘,",
+  "commonSettingsMenu": "Settings…",
+  "commonAppearance": "Appearance",
+  "commonAppearanceTooltip": "Appearance: {name}",
+  "@commonAppearanceTooltip": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "commonErrorShort": "ERR",
+  "commonPort": "Port",
+  "commonEnterToApply": "Enter to apply",
+  "commonValuePlaceholder": "value",
+  "commonHeaderPlaceholder": "header",
+  "commonFieldPlaceholder": "field",
+  "caTitle": "Root CA Certificate",
+
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+
+  "composerMode": "Composer",
+  "inspectorMode": "Inspector",
+  "inspectorTitle": "Proxy Inspector",
+
+  "composerNewRequest": "New Request",
+  "composerRequestName": "Request name",
+  "composerRenameHint": "Double-click to rename",
+  "composerNotSaved": "· Not saved",
+  "composerEdited": "· Edited",
+  "composerSaved": "· Saved",
+  "composerNoURL": "no URL yet",
+  "composerCurlCopied": "cURL command copied",
+  "composerURLCopied": "URL copied",
+
+  "inspectorRecording": "Recording on {addr} · {count, plural, one {# flow} other {# flows}}",
+  "@inspectorRecording": {
+    "description": "The inspector's title line while the proxy records.",
+    "placeholders": {
+      "addr": { "type": "String", "example": "127.0.0.1:9090" },
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+  "inspectorStopped": "Stopped · {error}",
+  "@inspectorStopped": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "inspectorPausedCount": "Paused · {count, plural, one {# captured flow} other {# captured flows}}",
+  "@inspectorPausedCount": {
+    "placeholders": { "count": { "type": "int", "example": "3" } }
+  },
+  "inspectorPausedEmpty": "Paused · no traffic captured",
+
+  "saveTooltipNew": "Save to the collection (⌘S)",
+  "saveTooltipChanges": "Save changes (⌘S)",
+
+  "footerProxyPaused": "Proxy paused",
+  "footerProxyRunning": "Proxy {port} · {count} captured",
+  "@footerProxyRunning": {
+    "placeholders": {
+      "port": { "type": "String", "example": "9090" },
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+  "noticeExported": "Exported {count, plural, one {# flow} other {# flows}} to {dest}",
+  "@noticeExported": {
+    "placeholders": {
+      "count": { "type": "int", "example": "3" },
+      "dest": { "type": "String", "example": "/Users/me/capture.har" }
+    }
+  },
+  "footerMove": "Move",
+  "footerFilter": "Filter",
+
+  "sidebarEnvironment": "Environment",
+  "sidebarManageEnvs": "Manage Environments",
+  "sidebarCollections": "Collections",
+  "sidebarNoRequests": "No saved requests",
+  "sidebarHistory": "History",
+  "sidebarClearHistory": "Clear History",
+  "sidebarHistoryEmpty": "Requests you send appear here",
+  "sidebarHistoryOff": "History is off in Settings",
+  "sidebarDeleteRequest": "Delete {name}",
+  "@sidebarDeleteRequest": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "sidebarEdited": "Edited",
+  "sidebarEditedHint": "Edited, not saved",
+  "sidebarEmptyURL": "(empty)",
+  "sidebarCapture": "Capture",
+  "inspectorPaused": "Paused",
+  "inspectorRecordingStatus": "Recording",
+  "sidebarProxyToggle": "Start or stop the proxy",
+  "sidebarProxyToggleHint": "Start or stop the proxy (⇧⌘P)",
+  "sidebarStop": "Stop",
+  "sidebarStart": "Start",
+  "sidebarDecryptHTTPS": "Decrypt HTTPS",
+  "sidebarDomains": "Domains",
+  "sidebarShowAllDomains": "Show All Domains",
+  "sidebarAllTraffic": "All traffic",
+  "sidebarNoHosts": "No hosts captured yet",
+  "sidebarPointDevice": "Point a device at this proxy",
+  "sidebarProxyHint": "HTTP proxy {addr}. For HTTPS, install the Root CA and trust it.",
+  "@sidebarProxyHint": {
+    "placeholders": { "addr": { "type": "String", "example": "127.0.0.1:9090" } }
+  },
+  "historySent": "Sent {at, date, ::MMMd} {at, time, ::Hms}",
+  "@historySent": {
+    "description": "A history row's tooltip, under the request line.",
+    "placeholders": { "at": { "type": "DateTime" } }
+  },
+  "historyDuration": "{ms} ms",
+  "@historyDuration": {
+    "placeholders": { "ms": { "type": "int", "example": "284" } }
+  },
+
+  "composerMethodLabel": "Method {method}",
+  "@composerMethodLabel": {
+    "placeholders": { "method": { "type": "String", "example": "GET" } }
+  },
+  "composerMethodTooltip": "Choose the HTTP method",
+  "composerRequestURL": "Request URL",
+  "composerSend": "Send",
+  "composerSendTooltip": "Send this request (⌘↩)",
+  "composerSending": "Sending",
+  "composerTabParams": "Params",
+  "composerTabHeaders": "Headers",
+  "composerTabBody": "Body",
+  "composerTabAuth": "Auth",
+  "composerTiming": "Timing",
+  "composerTabCount": "{name} · {count}",
+  "@composerTabCount": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+  "composerBodyKind": "{body} · {kind}",
+  "@composerBodyKind": {
+    "placeholders": {
+      "body": { "type": "String" },
+      "kind": { "type": "String" }
+    }
+  },
+  "composerAuthKind": "{auth} · {kind}",
+  "@composerAuthKind": {
+    "placeholders": {
+      "auth": { "type": "String" },
+      "kind": { "type": "String" }
+    }
+  },
+  "composerKindJSON": "JSON",
+  "composerKindForm": "Form",
+  "composerKindText": "Text",
+  "composerFormat": "Format",
+  "composerQueryParams": "Query Parameters",
+  "composerQueryParamsHint": "appended to the URL when sent",
+  "composerParamPlaceholder": "parameter",
+  "composerNoParams": "No query parameters yet.",
+  "composerRequestHeaders": "Request Headers",
+  "composerHeadersHint": "sent as written",
+  "composerAuthAddedByTab": "Authorization is added by the Auth tab",
+  "composerNoHeaders": "No headers yet.",
+  "composerNoFormFields": "No form fields yet.",
+  "composerBodyNone": "None",
+  "composerBodyJSON": "JSON",
+  "composerBodyText": "Text",
+  "composerBodyForm": "Form",
+  "composerFieldCount": "{count, plural, one {# field} other {# fields}}",
+  "@composerFieldCount": {
+    "placeholders": { "count": { "type": "int", "example": "3" } }
+  },
+  "composerCharCount": "{count, plural, one {# character} other {# characters}}",
+  "@composerCharCount": {
+    "placeholders": { "count": { "type": "int", "example": "120" } }
+  },
+  "composerNoBody": "No body",
+  "composerNoBodyHint": "Choose JSON, Text or Form above. A GET request sends no body even when one is written.",
+  "composerJSONHint": "application/json is added when no Content-Type header says otherwise.",
+  "composerFormHint": "Sent URL-encoded as application/x-www-form-urlencoded, unless a Content-Type header says otherwise.",
+  "composerTextHint": "text/plain; charset=utf-8 is added when no Content-Type header says otherwise.",
+  "composerNoBodyMethodHint": "This method sends no body. Switch to POST, PUT or PATCH to send it.",
+  "composerJSONValid": "Valid JSON",
+  "composerJSONInvalid": "Invalid JSON",
+  "composerJSONInvalidAt": "Invalid JSON at {line}:{column}",
+  "@composerJSONInvalidAt": {
+    "placeholders": {
+      "line": { "type": "int", "example": "3" },
+      "column": { "type": "int", "example": "14" }
+    }
+  },
+  "composerBearerHint": "The token is sent as Authorization: Bearer <token>.",
+  "composerToken": "Token",
+  "composerBasicHint": "The username and password are sent as HTTP Basic authentication.",
+  "composerUsername": "Username",
+  "composerPassword": "Password",
+  "composerAuthNone": "None",
+  "composerNoAuth": "No Authorization header is added.",
+  "composerWaiting": "Waiting for the server",
+  "composerCancelTooltip": "Cancel this request (⌘.)",
+  "composerNothingSent": "Nothing sent yet",
+  "composerNothingSentHint": "Write a request above and press ⌘↩. The response lands here with its headers, body and timing.",
+  "composerTruncated": "The body is larger than 8 MB; this is the first 8 MB.",
+  "composerNoResponseHeaders": "The response carries no headers.",
+  "composerResponse": "Response",
+  "composerTotalTime": "Total time",
+  "composerBodySize": "Body size",
+  "composerPrettyJSON": "Pretty JSON",
+  "composerPrettyJSONHint": "Indent the JSON",
+  "composerPretty": "Pretty",
+  "composerCopyResponse": "Copy Response",
+  "composerResponseCopied": "Response copied",
+  "composerRequestFailed": "The request did not complete",
+  "composerTryAgain": "Try Again",
+  "composerRequestCanceled": "Request canceled",
+  "composerCanceledHint": "Nothing more will be read from it. Send it again when you are ready.",
+  "composerSendAgain": "Send Again",
+
   "settingsLanguage": "Language",
   "@settingsLanguage": {
     "description": "The label of the language row in Settings."

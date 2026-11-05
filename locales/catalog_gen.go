@@ -4,6 +4,7 @@ package locales
 
 import (
 	"embed"
+	"time"
 
 	"github.com/egoist/mygo/i18n"
 
@@ -33,6 +34,1490 @@ type Messages struct{ locale string }
 // "zh-Hant", or of the catalog's language that suits it best, "" for the
 // source language.
 func In(locale string) Messages { return Messages{locale} }
+
+// CommonSave says "Save"
+// in the language the app shows.
+func CommonSave() string { return In(i18n.Locale()).CommonSave() }
+
+// CommonSave says "Save"
+// in the language of msgs.
+func (msgs Messages) CommonSave() string {
+	return Catalog.Format(msgs.locale, "commonSave", nil)
+}
+
+// CommonCancel says "Cancel"
+// in the language the app shows.
+func CommonCancel() string { return In(i18n.Locale()).CommonCancel() }
+
+// CommonCancel says "Cancel"
+// in the language of msgs.
+func (msgs Messages) CommonCancel() string {
+	return Catalog.Format(msgs.locale, "commonCancel", nil)
+}
+
+// CommonUndo says "Undo"
+// in the language the app shows.
+func CommonUndo() string { return In(i18n.Locale()).CommonUndo() }
+
+// CommonUndo says "Undo"
+// in the language of msgs.
+func (msgs Messages) CommonUndo() string {
+	return Catalog.Format(msgs.locale, "commonUndo", nil)
+}
+
+// CommonUndoTooltip says "Put it back"
+// in the language the app shows.
+func CommonUndoTooltip() string { return In(i18n.Locale()).CommonUndoTooltip() }
+
+// CommonUndoTooltip says "Put it back"
+// in the language of msgs.
+func (msgs Messages) CommonUndoTooltip() string {
+	return Catalog.Format(msgs.locale, "commonUndoTooltip", nil)
+}
+
+// CommonOpen says "Open"
+// in the language the app shows.
+func CommonOpen() string { return In(i18n.Locale()).CommonOpen() }
+
+// CommonOpen says "Open"
+// in the language of msgs.
+func (msgs Messages) CommonOpen() string {
+	return Catalog.Format(msgs.locale, "commonOpen", nil)
+}
+
+// CommonDuplicate says "Duplicate"
+// in the language the app shows.
+func CommonDuplicate() string { return In(i18n.Locale()).CommonDuplicate() }
+
+// CommonDuplicate says "Duplicate"
+// in the language of msgs.
+func (msgs Messages) CommonDuplicate() string {
+	return Catalog.Format(msgs.locale, "commonDuplicate", nil)
+}
+
+// CommonDelete says "Delete"
+// in the language the app shows.
+func CommonDelete() string { return In(i18n.Locale()).CommonDelete() }
+
+// CommonDelete says "Delete"
+// in the language of msgs.
+func (msgs Messages) CommonDelete() string {
+	return Catalog.Format(msgs.locale, "commonDelete", nil)
+}
+
+// CommonCopyURL says "Copy URL"
+// in the language the app shows.
+func CommonCopyURL() string { return In(i18n.Locale()).CommonCopyURL() }
+
+// CommonCopyURL says "Copy URL"
+// in the language of msgs.
+func (msgs Messages) CommonCopyURL() string {
+	return Catalog.Format(msgs.locale, "commonCopyURL", nil)
+}
+
+// CommonURLCopied says "URL copied"
+// in the language the app shows.
+func CommonURLCopied() string { return In(i18n.Locale()).CommonURLCopied() }
+
+// CommonURLCopied says "URL copied"
+// in the language of msgs.
+func (msgs Messages) CommonURLCopied() string {
+	return Catalog.Format(msgs.locale, "commonURLCopied", nil)
+}
+
+// CommonCopyCurl says "Copy as cURL"
+// in the language the app shows.
+func CommonCopyCurl() string { return In(i18n.Locale()).CommonCopyCurl() }
+
+// CommonCopyCurl says "Copy as cURL"
+// in the language of msgs.
+func (msgs Messages) CommonCopyCurl() string {
+	return Catalog.Format(msgs.locale, "commonCopyCurl", nil)
+}
+
+// CommonRemoveHistory says "Remove from History"
+// in the language the app shows.
+func CommonRemoveHistory() string { return In(i18n.Locale()).CommonRemoveHistory() }
+
+// CommonRemoveHistory says "Remove from History"
+// in the language of msgs.
+func (msgs Messages) CommonRemoveHistory() string {
+	return Catalog.Format(msgs.locale, "commonRemoveHistory", nil)
+}
+
+// CommonMore says "More"
+// in the language the app shows.
+func CommonMore() string { return In(i18n.Locale()).CommonMore() }
+
+// CommonMore says "More"
+// in the language of msgs.
+func (msgs Messages) CommonMore() string {
+	return Catalog.Format(msgs.locale, "commonMore", nil)
+}
+
+// CommonSettings says "Settings"
+// in the language the app shows.
+func CommonSettings() string { return In(i18n.Locale()).CommonSettings() }
+
+// CommonSettings says "Settings"
+// in the language of msgs.
+func (msgs Messages) CommonSettings() string {
+	return Catalog.Format(msgs.locale, "commonSettings", nil)
+}
+
+// CommonSettingsTooltip says "Settings ⌘,"
+// in the language the app shows.
+func CommonSettingsTooltip() string { return In(i18n.Locale()).CommonSettingsTooltip() }
+
+// CommonSettingsTooltip says "Settings ⌘,"
+// in the language of msgs.
+func (msgs Messages) CommonSettingsTooltip() string {
+	return Catalog.Format(msgs.locale, "commonSettingsTooltip", nil)
+}
+
+// CommonSettingsMenu says "Settings…"
+// in the language the app shows.
+func CommonSettingsMenu() string { return In(i18n.Locale()).CommonSettingsMenu() }
+
+// CommonSettingsMenu says "Settings…"
+// in the language of msgs.
+func (msgs Messages) CommonSettingsMenu() string {
+	return Catalog.Format(msgs.locale, "commonSettingsMenu", nil)
+}
+
+// CommonAppearance says "Appearance"
+// in the language the app shows.
+func CommonAppearance() string { return In(i18n.Locale()).CommonAppearance() }
+
+// CommonAppearance says "Appearance"
+// in the language of msgs.
+func (msgs Messages) CommonAppearance() string {
+	return Catalog.Format(msgs.locale, "commonAppearance", nil)
+}
+
+// CommonAppearanceTooltip says "Appearance: {name}"
+// in the language the app shows.
+func CommonAppearanceTooltip(name string) string {
+	return In(i18n.Locale()).CommonAppearanceTooltip(name)
+}
+
+// CommonAppearanceTooltip says "Appearance: {name}"
+// in the language of msgs.
+func (msgs Messages) CommonAppearanceTooltip(name string) string {
+	return Catalog.Format(msgs.locale, "commonAppearanceTooltip", map[string]any{"name": name})
+}
+
+// CommonErrorShort says "ERR"
+// in the language the app shows.
+func CommonErrorShort() string { return In(i18n.Locale()).CommonErrorShort() }
+
+// CommonErrorShort says "ERR"
+// in the language of msgs.
+func (msgs Messages) CommonErrorShort() string {
+	return Catalog.Format(msgs.locale, "commonErrorShort", nil)
+}
+
+// CommonPort says "Port"
+// in the language the app shows.
+func CommonPort() string { return In(i18n.Locale()).CommonPort() }
+
+// CommonPort says "Port"
+// in the language of msgs.
+func (msgs Messages) CommonPort() string {
+	return Catalog.Format(msgs.locale, "commonPort", nil)
+}
+
+// CommonEnterToApply says "Enter to apply"
+// in the language the app shows.
+func CommonEnterToApply() string { return In(i18n.Locale()).CommonEnterToApply() }
+
+// CommonEnterToApply says "Enter to apply"
+// in the language of msgs.
+func (msgs Messages) CommonEnterToApply() string {
+	return Catalog.Format(msgs.locale, "commonEnterToApply", nil)
+}
+
+// CommonValuePlaceholder says "value"
+// in the language the app shows.
+func CommonValuePlaceholder() string { return In(i18n.Locale()).CommonValuePlaceholder() }
+
+// CommonValuePlaceholder says "value"
+// in the language of msgs.
+func (msgs Messages) CommonValuePlaceholder() string {
+	return Catalog.Format(msgs.locale, "commonValuePlaceholder", nil)
+}
+
+// CommonHeaderPlaceholder says "header"
+// in the language the app shows.
+func CommonHeaderPlaceholder() string { return In(i18n.Locale()).CommonHeaderPlaceholder() }
+
+// CommonHeaderPlaceholder says "header"
+// in the language of msgs.
+func (msgs Messages) CommonHeaderPlaceholder() string {
+	return Catalog.Format(msgs.locale, "commonHeaderPlaceholder", nil)
+}
+
+// CommonFieldPlaceholder says "field"
+// in the language the app shows.
+func CommonFieldPlaceholder() string { return In(i18n.Locale()).CommonFieldPlaceholder() }
+
+// CommonFieldPlaceholder says "field"
+// in the language of msgs.
+func (msgs Messages) CommonFieldPlaceholder() string {
+	return Catalog.Format(msgs.locale, "commonFieldPlaceholder", nil)
+}
+
+// CaTitle says "Root CA Certificate"
+// in the language the app shows.
+func CaTitle() string { return In(i18n.Locale()).CaTitle() }
+
+// CaTitle says "Root CA Certificate"
+// in the language of msgs.
+func (msgs Messages) CaTitle() string {
+	return Catalog.Format(msgs.locale, "caTitle", nil)
+}
+
+// ThemeSystem says "System"
+// in the language the app shows.
+func ThemeSystem() string { return In(i18n.Locale()).ThemeSystem() }
+
+// ThemeSystem says "System"
+// in the language of msgs.
+func (msgs Messages) ThemeSystem() string {
+	return Catalog.Format(msgs.locale, "themeSystem", nil)
+}
+
+// ThemeLight says "Light"
+// in the language the app shows.
+func ThemeLight() string { return In(i18n.Locale()).ThemeLight() }
+
+// ThemeLight says "Light"
+// in the language of msgs.
+func (msgs Messages) ThemeLight() string {
+	return Catalog.Format(msgs.locale, "themeLight", nil)
+}
+
+// ThemeDark says "Dark"
+// in the language the app shows.
+func ThemeDark() string { return In(i18n.Locale()).ThemeDark() }
+
+// ThemeDark says "Dark"
+// in the language of msgs.
+func (msgs Messages) ThemeDark() string {
+	return Catalog.Format(msgs.locale, "themeDark", nil)
+}
+
+// ComposerMode says "Composer"
+// in the language the app shows.
+func ComposerMode() string { return In(i18n.Locale()).ComposerMode() }
+
+// ComposerMode says "Composer"
+// in the language of msgs.
+func (msgs Messages) ComposerMode() string {
+	return Catalog.Format(msgs.locale, "composerMode", nil)
+}
+
+// InspectorMode says "Inspector"
+// in the language the app shows.
+func InspectorMode() string { return In(i18n.Locale()).InspectorMode() }
+
+// InspectorMode says "Inspector"
+// in the language of msgs.
+func (msgs Messages) InspectorMode() string {
+	return Catalog.Format(msgs.locale, "inspectorMode", nil)
+}
+
+// InspectorTitle says "Proxy Inspector"
+// in the language the app shows.
+func InspectorTitle() string { return In(i18n.Locale()).InspectorTitle() }
+
+// InspectorTitle says "Proxy Inspector"
+// in the language of msgs.
+func (msgs Messages) InspectorTitle() string {
+	return Catalog.Format(msgs.locale, "inspectorTitle", nil)
+}
+
+// ComposerNewRequest says "New Request"
+// in the language the app shows.
+func ComposerNewRequest() string { return In(i18n.Locale()).ComposerNewRequest() }
+
+// ComposerNewRequest says "New Request"
+// in the language of msgs.
+func (msgs Messages) ComposerNewRequest() string {
+	return Catalog.Format(msgs.locale, "composerNewRequest", nil)
+}
+
+// ComposerRequestName says "Request name"
+// in the language the app shows.
+func ComposerRequestName() string { return In(i18n.Locale()).ComposerRequestName() }
+
+// ComposerRequestName says "Request name"
+// in the language of msgs.
+func (msgs Messages) ComposerRequestName() string {
+	return Catalog.Format(msgs.locale, "composerRequestName", nil)
+}
+
+// ComposerRenameHint says "Double-click to rename"
+// in the language the app shows.
+func ComposerRenameHint() string { return In(i18n.Locale()).ComposerRenameHint() }
+
+// ComposerRenameHint says "Double-click to rename"
+// in the language of msgs.
+func (msgs Messages) ComposerRenameHint() string {
+	return Catalog.Format(msgs.locale, "composerRenameHint", nil)
+}
+
+// ComposerNotSaved says "· Not saved"
+// in the language the app shows.
+func ComposerNotSaved() string { return In(i18n.Locale()).ComposerNotSaved() }
+
+// ComposerNotSaved says "· Not saved"
+// in the language of msgs.
+func (msgs Messages) ComposerNotSaved() string {
+	return Catalog.Format(msgs.locale, "composerNotSaved", nil)
+}
+
+// ComposerEdited says "· Edited"
+// in the language the app shows.
+func ComposerEdited() string { return In(i18n.Locale()).ComposerEdited() }
+
+// ComposerEdited says "· Edited"
+// in the language of msgs.
+func (msgs Messages) ComposerEdited() string {
+	return Catalog.Format(msgs.locale, "composerEdited", nil)
+}
+
+// ComposerSaved says "· Saved"
+// in the language the app shows.
+func ComposerSaved() string { return In(i18n.Locale()).ComposerSaved() }
+
+// ComposerSaved says "· Saved"
+// in the language of msgs.
+func (msgs Messages) ComposerSaved() string {
+	return Catalog.Format(msgs.locale, "composerSaved", nil)
+}
+
+// ComposerNoURL says "no URL yet"
+// in the language the app shows.
+func ComposerNoURL() string { return In(i18n.Locale()).ComposerNoURL() }
+
+// ComposerNoURL says "no URL yet"
+// in the language of msgs.
+func (msgs Messages) ComposerNoURL() string {
+	return Catalog.Format(msgs.locale, "composerNoURL", nil)
+}
+
+// ComposerCurlCopied says "cURL command copied"
+// in the language the app shows.
+func ComposerCurlCopied() string { return In(i18n.Locale()).ComposerCurlCopied() }
+
+// ComposerCurlCopied says "cURL command copied"
+// in the language of msgs.
+func (msgs Messages) ComposerCurlCopied() string {
+	return Catalog.Format(msgs.locale, "composerCurlCopied", nil)
+}
+
+// ComposerURLCopied says "URL copied"
+// in the language the app shows.
+func ComposerURLCopied() string { return In(i18n.Locale()).ComposerURLCopied() }
+
+// ComposerURLCopied says "URL copied"
+// in the language of msgs.
+func (msgs Messages) ComposerURLCopied() string {
+	return Catalog.Format(msgs.locale, "composerURLCopied", nil)
+}
+
+// InspectorRecording says "Recording on {addr} · {count, plural, one {# flow} other {# flows}}"
+// in the language the app shows.
+//
+// The inspector's title line while the proxy records.
+func InspectorRecording(addr string, count int) string {
+	return In(i18n.Locale()).InspectorRecording(addr, count)
+}
+
+// InspectorRecording says "Recording on {addr} · {count, plural, one {# flow} other {# flows}}"
+// in the language of msgs.
+//
+// The inspector's title line while the proxy records.
+func (msgs Messages) InspectorRecording(addr string, count int) string {
+	return Catalog.Format(msgs.locale, "inspectorRecording", map[string]any{"addr": addr, "count": count})
+}
+
+// InspectorStopped says "Stopped · {error}"
+// in the language the app shows.
+func InspectorStopped(error string) string { return In(i18n.Locale()).InspectorStopped(error) }
+
+// InspectorStopped says "Stopped · {error}"
+// in the language of msgs.
+func (msgs Messages) InspectorStopped(error string) string {
+	return Catalog.Format(msgs.locale, "inspectorStopped", map[string]any{"error": error})
+}
+
+// InspectorPausedCount says "Paused · {count, plural, one {# captured flow} other {# captured flows}}"
+// in the language the app shows.
+func InspectorPausedCount(count int) string { return In(i18n.Locale()).InspectorPausedCount(count) }
+
+// InspectorPausedCount says "Paused · {count, plural, one {# captured flow} other {# captured flows}}"
+// in the language of msgs.
+func (msgs Messages) InspectorPausedCount(count int) string {
+	return Catalog.Format(msgs.locale, "inspectorPausedCount", map[string]any{"count": count})
+}
+
+// InspectorPausedEmpty says "Paused · no traffic captured"
+// in the language the app shows.
+func InspectorPausedEmpty() string { return In(i18n.Locale()).InspectorPausedEmpty() }
+
+// InspectorPausedEmpty says "Paused · no traffic captured"
+// in the language of msgs.
+func (msgs Messages) InspectorPausedEmpty() string {
+	return Catalog.Format(msgs.locale, "inspectorPausedEmpty", nil)
+}
+
+// SaveTooltipNew says "Save to the collection (⌘S)"
+// in the language the app shows.
+func SaveTooltipNew() string { return In(i18n.Locale()).SaveTooltipNew() }
+
+// SaveTooltipNew says "Save to the collection (⌘S)"
+// in the language of msgs.
+func (msgs Messages) SaveTooltipNew() string {
+	return Catalog.Format(msgs.locale, "saveTooltipNew", nil)
+}
+
+// SaveTooltipChanges says "Save changes (⌘S)"
+// in the language the app shows.
+func SaveTooltipChanges() string { return In(i18n.Locale()).SaveTooltipChanges() }
+
+// SaveTooltipChanges says "Save changes (⌘S)"
+// in the language of msgs.
+func (msgs Messages) SaveTooltipChanges() string {
+	return Catalog.Format(msgs.locale, "saveTooltipChanges", nil)
+}
+
+// FooterProxyPaused says "Proxy paused"
+// in the language the app shows.
+func FooterProxyPaused() string { return In(i18n.Locale()).FooterProxyPaused() }
+
+// FooterProxyPaused says "Proxy paused"
+// in the language of msgs.
+func (msgs Messages) FooterProxyPaused() string {
+	return Catalog.Format(msgs.locale, "footerProxyPaused", nil)
+}
+
+// FooterProxyRunning says "Proxy {port} · {count} captured"
+// in the language the app shows.
+func FooterProxyRunning(port string, count int) string {
+	return In(i18n.Locale()).FooterProxyRunning(port, count)
+}
+
+// FooterProxyRunning says "Proxy {port} · {count} captured"
+// in the language of msgs.
+func (msgs Messages) FooterProxyRunning(port string, count int) string {
+	return Catalog.Format(msgs.locale, "footerProxyRunning", map[string]any{"port": port, "count": count})
+}
+
+// NoticeExported says "Exported {count, plural, one {# flow} other {# flows}} to {dest}"
+// in the language the app shows.
+func NoticeExported(count int, dest string) string {
+	return In(i18n.Locale()).NoticeExported(count, dest)
+}
+
+// NoticeExported says "Exported {count, plural, one {# flow} other {# flows}} to {dest}"
+// in the language of msgs.
+func (msgs Messages) NoticeExported(count int, dest string) string {
+	return Catalog.Format(msgs.locale, "noticeExported", map[string]any{"count": count, "dest": dest})
+}
+
+// FooterMove says "Move"
+// in the language the app shows.
+func FooterMove() string { return In(i18n.Locale()).FooterMove() }
+
+// FooterMove says "Move"
+// in the language of msgs.
+func (msgs Messages) FooterMove() string {
+	return Catalog.Format(msgs.locale, "footerMove", nil)
+}
+
+// FooterFilter says "Filter"
+// in the language the app shows.
+func FooterFilter() string { return In(i18n.Locale()).FooterFilter() }
+
+// FooterFilter says "Filter"
+// in the language of msgs.
+func (msgs Messages) FooterFilter() string {
+	return Catalog.Format(msgs.locale, "footerFilter", nil)
+}
+
+// SidebarEnvironment says "Environment"
+// in the language the app shows.
+func SidebarEnvironment() string { return In(i18n.Locale()).SidebarEnvironment() }
+
+// SidebarEnvironment says "Environment"
+// in the language of msgs.
+func (msgs Messages) SidebarEnvironment() string {
+	return Catalog.Format(msgs.locale, "sidebarEnvironment", nil)
+}
+
+// SidebarManageEnvs says "Manage Environments"
+// in the language the app shows.
+func SidebarManageEnvs() string { return In(i18n.Locale()).SidebarManageEnvs() }
+
+// SidebarManageEnvs says "Manage Environments"
+// in the language of msgs.
+func (msgs Messages) SidebarManageEnvs() string {
+	return Catalog.Format(msgs.locale, "sidebarManageEnvs", nil)
+}
+
+// SidebarCollections says "Collections"
+// in the language the app shows.
+func SidebarCollections() string { return In(i18n.Locale()).SidebarCollections() }
+
+// SidebarCollections says "Collections"
+// in the language of msgs.
+func (msgs Messages) SidebarCollections() string {
+	return Catalog.Format(msgs.locale, "sidebarCollections", nil)
+}
+
+// SidebarNoRequests says "No saved requests"
+// in the language the app shows.
+func SidebarNoRequests() string { return In(i18n.Locale()).SidebarNoRequests() }
+
+// SidebarNoRequests says "No saved requests"
+// in the language of msgs.
+func (msgs Messages) SidebarNoRequests() string {
+	return Catalog.Format(msgs.locale, "sidebarNoRequests", nil)
+}
+
+// SidebarHistory says "History"
+// in the language the app shows.
+func SidebarHistory() string { return In(i18n.Locale()).SidebarHistory() }
+
+// SidebarHistory says "History"
+// in the language of msgs.
+func (msgs Messages) SidebarHistory() string {
+	return Catalog.Format(msgs.locale, "sidebarHistory", nil)
+}
+
+// SidebarClearHistory says "Clear History"
+// in the language the app shows.
+func SidebarClearHistory() string { return In(i18n.Locale()).SidebarClearHistory() }
+
+// SidebarClearHistory says "Clear History"
+// in the language of msgs.
+func (msgs Messages) SidebarClearHistory() string {
+	return Catalog.Format(msgs.locale, "sidebarClearHistory", nil)
+}
+
+// SidebarHistoryEmpty says "Requests you send appear here"
+// in the language the app shows.
+func SidebarHistoryEmpty() string { return In(i18n.Locale()).SidebarHistoryEmpty() }
+
+// SidebarHistoryEmpty says "Requests you send appear here"
+// in the language of msgs.
+func (msgs Messages) SidebarHistoryEmpty() string {
+	return Catalog.Format(msgs.locale, "sidebarHistoryEmpty", nil)
+}
+
+// SidebarHistoryOff says "History is off in Settings"
+// in the language the app shows.
+func SidebarHistoryOff() string { return In(i18n.Locale()).SidebarHistoryOff() }
+
+// SidebarHistoryOff says "History is off in Settings"
+// in the language of msgs.
+func (msgs Messages) SidebarHistoryOff() string {
+	return Catalog.Format(msgs.locale, "sidebarHistoryOff", nil)
+}
+
+// SidebarDeleteRequest says "Delete {name}"
+// in the language the app shows.
+func SidebarDeleteRequest(name string) string { return In(i18n.Locale()).SidebarDeleteRequest(name) }
+
+// SidebarDeleteRequest says "Delete {name}"
+// in the language of msgs.
+func (msgs Messages) SidebarDeleteRequest(name string) string {
+	return Catalog.Format(msgs.locale, "sidebarDeleteRequest", map[string]any{"name": name})
+}
+
+// SidebarEdited says "Edited"
+// in the language the app shows.
+func SidebarEdited() string { return In(i18n.Locale()).SidebarEdited() }
+
+// SidebarEdited says "Edited"
+// in the language of msgs.
+func (msgs Messages) SidebarEdited() string {
+	return Catalog.Format(msgs.locale, "sidebarEdited", nil)
+}
+
+// SidebarEditedHint says "Edited, not saved"
+// in the language the app shows.
+func SidebarEditedHint() string { return In(i18n.Locale()).SidebarEditedHint() }
+
+// SidebarEditedHint says "Edited, not saved"
+// in the language of msgs.
+func (msgs Messages) SidebarEditedHint() string {
+	return Catalog.Format(msgs.locale, "sidebarEditedHint", nil)
+}
+
+// SidebarEmptyURL says "(empty)"
+// in the language the app shows.
+func SidebarEmptyURL() string { return In(i18n.Locale()).SidebarEmptyURL() }
+
+// SidebarEmptyURL says "(empty)"
+// in the language of msgs.
+func (msgs Messages) SidebarEmptyURL() string {
+	return Catalog.Format(msgs.locale, "sidebarEmptyURL", nil)
+}
+
+// SidebarCapture says "Capture"
+// in the language the app shows.
+func SidebarCapture() string { return In(i18n.Locale()).SidebarCapture() }
+
+// SidebarCapture says "Capture"
+// in the language of msgs.
+func (msgs Messages) SidebarCapture() string {
+	return Catalog.Format(msgs.locale, "sidebarCapture", nil)
+}
+
+// InspectorPaused says "Paused"
+// in the language the app shows.
+func InspectorPaused() string { return In(i18n.Locale()).InspectorPaused() }
+
+// InspectorPaused says "Paused"
+// in the language of msgs.
+func (msgs Messages) InspectorPaused() string {
+	return Catalog.Format(msgs.locale, "inspectorPaused", nil)
+}
+
+// InspectorRecordingStatus says "Recording"
+// in the language the app shows.
+func InspectorRecordingStatus() string { return In(i18n.Locale()).InspectorRecordingStatus() }
+
+// InspectorRecordingStatus says "Recording"
+// in the language of msgs.
+func (msgs Messages) InspectorRecordingStatus() string {
+	return Catalog.Format(msgs.locale, "inspectorRecordingStatus", nil)
+}
+
+// SidebarProxyToggle says "Start or stop the proxy"
+// in the language the app shows.
+func SidebarProxyToggle() string { return In(i18n.Locale()).SidebarProxyToggle() }
+
+// SidebarProxyToggle says "Start or stop the proxy"
+// in the language of msgs.
+func (msgs Messages) SidebarProxyToggle() string {
+	return Catalog.Format(msgs.locale, "sidebarProxyToggle", nil)
+}
+
+// SidebarProxyToggleHint says "Start or stop the proxy (⇧⌘P)"
+// in the language the app shows.
+func SidebarProxyToggleHint() string { return In(i18n.Locale()).SidebarProxyToggleHint() }
+
+// SidebarProxyToggleHint says "Start or stop the proxy (⇧⌘P)"
+// in the language of msgs.
+func (msgs Messages) SidebarProxyToggleHint() string {
+	return Catalog.Format(msgs.locale, "sidebarProxyToggleHint", nil)
+}
+
+// SidebarStop says "Stop"
+// in the language the app shows.
+func SidebarStop() string { return In(i18n.Locale()).SidebarStop() }
+
+// SidebarStop says "Stop"
+// in the language of msgs.
+func (msgs Messages) SidebarStop() string {
+	return Catalog.Format(msgs.locale, "sidebarStop", nil)
+}
+
+// SidebarStart says "Start"
+// in the language the app shows.
+func SidebarStart() string { return In(i18n.Locale()).SidebarStart() }
+
+// SidebarStart says "Start"
+// in the language of msgs.
+func (msgs Messages) SidebarStart() string {
+	return Catalog.Format(msgs.locale, "sidebarStart", nil)
+}
+
+// SidebarDecryptHTTPS says "Decrypt HTTPS"
+// in the language the app shows.
+func SidebarDecryptHTTPS() string { return In(i18n.Locale()).SidebarDecryptHTTPS() }
+
+// SidebarDecryptHTTPS says "Decrypt HTTPS"
+// in the language of msgs.
+func (msgs Messages) SidebarDecryptHTTPS() string {
+	return Catalog.Format(msgs.locale, "sidebarDecryptHTTPS", nil)
+}
+
+// SidebarDomains says "Domains"
+// in the language the app shows.
+func SidebarDomains() string { return In(i18n.Locale()).SidebarDomains() }
+
+// SidebarDomains says "Domains"
+// in the language of msgs.
+func (msgs Messages) SidebarDomains() string {
+	return Catalog.Format(msgs.locale, "sidebarDomains", nil)
+}
+
+// SidebarShowAllDomains says "Show All Domains"
+// in the language the app shows.
+func SidebarShowAllDomains() string { return In(i18n.Locale()).SidebarShowAllDomains() }
+
+// SidebarShowAllDomains says "Show All Domains"
+// in the language of msgs.
+func (msgs Messages) SidebarShowAllDomains() string {
+	return Catalog.Format(msgs.locale, "sidebarShowAllDomains", nil)
+}
+
+// SidebarAllTraffic says "All traffic"
+// in the language the app shows.
+func SidebarAllTraffic() string { return In(i18n.Locale()).SidebarAllTraffic() }
+
+// SidebarAllTraffic says "All traffic"
+// in the language of msgs.
+func (msgs Messages) SidebarAllTraffic() string {
+	return Catalog.Format(msgs.locale, "sidebarAllTraffic", nil)
+}
+
+// SidebarNoHosts says "No hosts captured yet"
+// in the language the app shows.
+func SidebarNoHosts() string { return In(i18n.Locale()).SidebarNoHosts() }
+
+// SidebarNoHosts says "No hosts captured yet"
+// in the language of msgs.
+func (msgs Messages) SidebarNoHosts() string {
+	return Catalog.Format(msgs.locale, "sidebarNoHosts", nil)
+}
+
+// SidebarPointDevice says "Point a device at this proxy"
+// in the language the app shows.
+func SidebarPointDevice() string { return In(i18n.Locale()).SidebarPointDevice() }
+
+// SidebarPointDevice says "Point a device at this proxy"
+// in the language of msgs.
+func (msgs Messages) SidebarPointDevice() string {
+	return Catalog.Format(msgs.locale, "sidebarPointDevice", nil)
+}
+
+// SidebarProxyHint says "HTTP proxy {addr}. For HTTPS, install the Root CA and trust it."
+// in the language the app shows.
+func SidebarProxyHint(addr string) string { return In(i18n.Locale()).SidebarProxyHint(addr) }
+
+// SidebarProxyHint says "HTTP proxy {addr}. For HTTPS, install the Root CA and trust it."
+// in the language of msgs.
+func (msgs Messages) SidebarProxyHint(addr string) string {
+	return Catalog.Format(msgs.locale, "sidebarProxyHint", map[string]any{"addr": addr})
+}
+
+// HistorySent says "Sent {at, date, ::MMMd} {at, time, ::Hms}"
+// in the language the app shows.
+//
+// A history row's tooltip, under the request line.
+func HistorySent(at time.Time) string { return In(i18n.Locale()).HistorySent(at) }
+
+// HistorySent says "Sent {at, date, ::MMMd} {at, time, ::Hms}"
+// in the language of msgs.
+//
+// A history row's tooltip, under the request line.
+func (msgs Messages) HistorySent(at time.Time) string {
+	return Catalog.Format(msgs.locale, "historySent", map[string]any{"at": at})
+}
+
+// HistoryDuration says "{ms} ms"
+// in the language the app shows.
+func HistoryDuration(ms int) string { return In(i18n.Locale()).HistoryDuration(ms) }
+
+// HistoryDuration says "{ms} ms"
+// in the language of msgs.
+func (msgs Messages) HistoryDuration(ms int) string {
+	return Catalog.Format(msgs.locale, "historyDuration", map[string]any{"ms": ms})
+}
+
+// ComposerMethodLabel says "Method {method}"
+// in the language the app shows.
+func ComposerMethodLabel(method string) string { return In(i18n.Locale()).ComposerMethodLabel(method) }
+
+// ComposerMethodLabel says "Method {method}"
+// in the language of msgs.
+func (msgs Messages) ComposerMethodLabel(method string) string {
+	return Catalog.Format(msgs.locale, "composerMethodLabel", map[string]any{"method": method})
+}
+
+// ComposerMethodTooltip says "Choose the HTTP method"
+// in the language the app shows.
+func ComposerMethodTooltip() string { return In(i18n.Locale()).ComposerMethodTooltip() }
+
+// ComposerMethodTooltip says "Choose the HTTP method"
+// in the language of msgs.
+func (msgs Messages) ComposerMethodTooltip() string {
+	return Catalog.Format(msgs.locale, "composerMethodTooltip", nil)
+}
+
+// ComposerRequestURL says "Request URL"
+// in the language the app shows.
+func ComposerRequestURL() string { return In(i18n.Locale()).ComposerRequestURL() }
+
+// ComposerRequestURL says "Request URL"
+// in the language of msgs.
+func (msgs Messages) ComposerRequestURL() string {
+	return Catalog.Format(msgs.locale, "composerRequestURL", nil)
+}
+
+// ComposerSend says "Send"
+// in the language the app shows.
+func ComposerSend() string { return In(i18n.Locale()).ComposerSend() }
+
+// ComposerSend says "Send"
+// in the language of msgs.
+func (msgs Messages) ComposerSend() string {
+	return Catalog.Format(msgs.locale, "composerSend", nil)
+}
+
+// ComposerSendTooltip says "Send this request (⌘↩)"
+// in the language the app shows.
+func ComposerSendTooltip() string { return In(i18n.Locale()).ComposerSendTooltip() }
+
+// ComposerSendTooltip says "Send this request (⌘↩)"
+// in the language of msgs.
+func (msgs Messages) ComposerSendTooltip() string {
+	return Catalog.Format(msgs.locale, "composerSendTooltip", nil)
+}
+
+// ComposerSending says "Sending"
+// in the language the app shows.
+func ComposerSending() string { return In(i18n.Locale()).ComposerSending() }
+
+// ComposerSending says "Sending"
+// in the language of msgs.
+func (msgs Messages) ComposerSending() string {
+	return Catalog.Format(msgs.locale, "composerSending", nil)
+}
+
+// ComposerTabParams says "Params"
+// in the language the app shows.
+func ComposerTabParams() string { return In(i18n.Locale()).ComposerTabParams() }
+
+// ComposerTabParams says "Params"
+// in the language of msgs.
+func (msgs Messages) ComposerTabParams() string {
+	return Catalog.Format(msgs.locale, "composerTabParams", nil)
+}
+
+// ComposerTabHeaders says "Headers"
+// in the language the app shows.
+func ComposerTabHeaders() string { return In(i18n.Locale()).ComposerTabHeaders() }
+
+// ComposerTabHeaders says "Headers"
+// in the language of msgs.
+func (msgs Messages) ComposerTabHeaders() string {
+	return Catalog.Format(msgs.locale, "composerTabHeaders", nil)
+}
+
+// ComposerTabBody says "Body"
+// in the language the app shows.
+func ComposerTabBody() string { return In(i18n.Locale()).ComposerTabBody() }
+
+// ComposerTabBody says "Body"
+// in the language of msgs.
+func (msgs Messages) ComposerTabBody() string {
+	return Catalog.Format(msgs.locale, "composerTabBody", nil)
+}
+
+// ComposerTabAuth says "Auth"
+// in the language the app shows.
+func ComposerTabAuth() string { return In(i18n.Locale()).ComposerTabAuth() }
+
+// ComposerTabAuth says "Auth"
+// in the language of msgs.
+func (msgs Messages) ComposerTabAuth() string {
+	return Catalog.Format(msgs.locale, "composerTabAuth", nil)
+}
+
+// ComposerTiming says "Timing"
+// in the language the app shows.
+func ComposerTiming() string { return In(i18n.Locale()).ComposerTiming() }
+
+// ComposerTiming says "Timing"
+// in the language of msgs.
+func (msgs Messages) ComposerTiming() string {
+	return Catalog.Format(msgs.locale, "composerTiming", nil)
+}
+
+// ComposerTabCount says "{name} · {count}"
+// in the language the app shows.
+func ComposerTabCount(name string, count int) string {
+	return In(i18n.Locale()).ComposerTabCount(name, count)
+}
+
+// ComposerTabCount says "{name} · {count}"
+// in the language of msgs.
+func (msgs Messages) ComposerTabCount(name string, count int) string {
+	return Catalog.Format(msgs.locale, "composerTabCount", map[string]any{"name": name, "count": count})
+}
+
+// ComposerBodyKind says "{body} · {kind}"
+// in the language the app shows.
+func ComposerBodyKind(body string, kind string) string {
+	return In(i18n.Locale()).ComposerBodyKind(body, kind)
+}
+
+// ComposerBodyKind says "{body} · {kind}"
+// in the language of msgs.
+func (msgs Messages) ComposerBodyKind(body string, kind string) string {
+	return Catalog.Format(msgs.locale, "composerBodyKind", map[string]any{"body": body, "kind": kind})
+}
+
+// ComposerAuthKind says "{auth} · {kind}"
+// in the language the app shows.
+func ComposerAuthKind(auth string, kind string) string {
+	return In(i18n.Locale()).ComposerAuthKind(auth, kind)
+}
+
+// ComposerAuthKind says "{auth} · {kind}"
+// in the language of msgs.
+func (msgs Messages) ComposerAuthKind(auth string, kind string) string {
+	return Catalog.Format(msgs.locale, "composerAuthKind", map[string]any{"auth": auth, "kind": kind})
+}
+
+// ComposerKindJSON says "JSON"
+// in the language the app shows.
+func ComposerKindJSON() string { return In(i18n.Locale()).ComposerKindJSON() }
+
+// ComposerKindJSON says "JSON"
+// in the language of msgs.
+func (msgs Messages) ComposerKindJSON() string {
+	return Catalog.Format(msgs.locale, "composerKindJSON", nil)
+}
+
+// ComposerKindForm says "Form"
+// in the language the app shows.
+func ComposerKindForm() string { return In(i18n.Locale()).ComposerKindForm() }
+
+// ComposerKindForm says "Form"
+// in the language of msgs.
+func (msgs Messages) ComposerKindForm() string {
+	return Catalog.Format(msgs.locale, "composerKindForm", nil)
+}
+
+// ComposerKindText says "Text"
+// in the language the app shows.
+func ComposerKindText() string { return In(i18n.Locale()).ComposerKindText() }
+
+// ComposerKindText says "Text"
+// in the language of msgs.
+func (msgs Messages) ComposerKindText() string {
+	return Catalog.Format(msgs.locale, "composerKindText", nil)
+}
+
+// ComposerFormat says "Format"
+// in the language the app shows.
+func ComposerFormat() string { return In(i18n.Locale()).ComposerFormat() }
+
+// ComposerFormat says "Format"
+// in the language of msgs.
+func (msgs Messages) ComposerFormat() string {
+	return Catalog.Format(msgs.locale, "composerFormat", nil)
+}
+
+// ComposerQueryParams says "Query Parameters"
+// in the language the app shows.
+func ComposerQueryParams() string { return In(i18n.Locale()).ComposerQueryParams() }
+
+// ComposerQueryParams says "Query Parameters"
+// in the language of msgs.
+func (msgs Messages) ComposerQueryParams() string {
+	return Catalog.Format(msgs.locale, "composerQueryParams", nil)
+}
+
+// ComposerQueryParamsHint says "appended to the URL when sent"
+// in the language the app shows.
+func ComposerQueryParamsHint() string { return In(i18n.Locale()).ComposerQueryParamsHint() }
+
+// ComposerQueryParamsHint says "appended to the URL when sent"
+// in the language of msgs.
+func (msgs Messages) ComposerQueryParamsHint() string {
+	return Catalog.Format(msgs.locale, "composerQueryParamsHint", nil)
+}
+
+// ComposerParamPlaceholder says "parameter"
+// in the language the app shows.
+func ComposerParamPlaceholder() string { return In(i18n.Locale()).ComposerParamPlaceholder() }
+
+// ComposerParamPlaceholder says "parameter"
+// in the language of msgs.
+func (msgs Messages) ComposerParamPlaceholder() string {
+	return Catalog.Format(msgs.locale, "composerParamPlaceholder", nil)
+}
+
+// ComposerNoParams says "No query parameters yet."
+// in the language the app shows.
+func ComposerNoParams() string { return In(i18n.Locale()).ComposerNoParams() }
+
+// ComposerNoParams says "No query parameters yet."
+// in the language of msgs.
+func (msgs Messages) ComposerNoParams() string {
+	return Catalog.Format(msgs.locale, "composerNoParams", nil)
+}
+
+// ComposerRequestHeaders says "Request Headers"
+// in the language the app shows.
+func ComposerRequestHeaders() string { return In(i18n.Locale()).ComposerRequestHeaders() }
+
+// ComposerRequestHeaders says "Request Headers"
+// in the language of msgs.
+func (msgs Messages) ComposerRequestHeaders() string {
+	return Catalog.Format(msgs.locale, "composerRequestHeaders", nil)
+}
+
+// ComposerHeadersHint says "sent as written"
+// in the language the app shows.
+func ComposerHeadersHint() string { return In(i18n.Locale()).ComposerHeadersHint() }
+
+// ComposerHeadersHint says "sent as written"
+// in the language of msgs.
+func (msgs Messages) ComposerHeadersHint() string {
+	return Catalog.Format(msgs.locale, "composerHeadersHint", nil)
+}
+
+// ComposerAuthAddedByTab says "Authorization is added by the Auth tab"
+// in the language the app shows.
+func ComposerAuthAddedByTab() string { return In(i18n.Locale()).ComposerAuthAddedByTab() }
+
+// ComposerAuthAddedByTab says "Authorization is added by the Auth tab"
+// in the language of msgs.
+func (msgs Messages) ComposerAuthAddedByTab() string {
+	return Catalog.Format(msgs.locale, "composerAuthAddedByTab", nil)
+}
+
+// ComposerNoHeaders says "No headers yet."
+// in the language the app shows.
+func ComposerNoHeaders() string { return In(i18n.Locale()).ComposerNoHeaders() }
+
+// ComposerNoHeaders says "No headers yet."
+// in the language of msgs.
+func (msgs Messages) ComposerNoHeaders() string {
+	return Catalog.Format(msgs.locale, "composerNoHeaders", nil)
+}
+
+// ComposerNoFormFields says "No form fields yet."
+// in the language the app shows.
+func ComposerNoFormFields() string { return In(i18n.Locale()).ComposerNoFormFields() }
+
+// ComposerNoFormFields says "No form fields yet."
+// in the language of msgs.
+func (msgs Messages) ComposerNoFormFields() string {
+	return Catalog.Format(msgs.locale, "composerNoFormFields", nil)
+}
+
+// ComposerBodyNone says "None"
+// in the language the app shows.
+func ComposerBodyNone() string { return In(i18n.Locale()).ComposerBodyNone() }
+
+// ComposerBodyNone says "None"
+// in the language of msgs.
+func (msgs Messages) ComposerBodyNone() string {
+	return Catalog.Format(msgs.locale, "composerBodyNone", nil)
+}
+
+// ComposerBodyJSON says "JSON"
+// in the language the app shows.
+func ComposerBodyJSON() string { return In(i18n.Locale()).ComposerBodyJSON() }
+
+// ComposerBodyJSON says "JSON"
+// in the language of msgs.
+func (msgs Messages) ComposerBodyJSON() string {
+	return Catalog.Format(msgs.locale, "composerBodyJSON", nil)
+}
+
+// ComposerBodyText says "Text"
+// in the language the app shows.
+func ComposerBodyText() string { return In(i18n.Locale()).ComposerBodyText() }
+
+// ComposerBodyText says "Text"
+// in the language of msgs.
+func (msgs Messages) ComposerBodyText() string {
+	return Catalog.Format(msgs.locale, "composerBodyText", nil)
+}
+
+// ComposerBodyForm says "Form"
+// in the language the app shows.
+func ComposerBodyForm() string { return In(i18n.Locale()).ComposerBodyForm() }
+
+// ComposerBodyForm says "Form"
+// in the language of msgs.
+func (msgs Messages) ComposerBodyForm() string {
+	return Catalog.Format(msgs.locale, "composerBodyForm", nil)
+}
+
+// ComposerFieldCount says "{count, plural, one {# field} other {# fields}}"
+// in the language the app shows.
+func ComposerFieldCount(count int) string { return In(i18n.Locale()).ComposerFieldCount(count) }
+
+// ComposerFieldCount says "{count, plural, one {# field} other {# fields}}"
+// in the language of msgs.
+func (msgs Messages) ComposerFieldCount(count int) string {
+	return Catalog.Format(msgs.locale, "composerFieldCount", map[string]any{"count": count})
+}
+
+// ComposerCharCount says "{count, plural, one {# character} other {# characters}}"
+// in the language the app shows.
+func ComposerCharCount(count int) string { return In(i18n.Locale()).ComposerCharCount(count) }
+
+// ComposerCharCount says "{count, plural, one {# character} other {# characters}}"
+// in the language of msgs.
+func (msgs Messages) ComposerCharCount(count int) string {
+	return Catalog.Format(msgs.locale, "composerCharCount", map[string]any{"count": count})
+}
+
+// ComposerNoBody says "No body"
+// in the language the app shows.
+func ComposerNoBody() string { return In(i18n.Locale()).ComposerNoBody() }
+
+// ComposerNoBody says "No body"
+// in the language of msgs.
+func (msgs Messages) ComposerNoBody() string {
+	return Catalog.Format(msgs.locale, "composerNoBody", nil)
+}
+
+// ComposerNoBodyHint says "Choose JSON, Text or Form above. A GET request sends no body even when one is written."
+// in the language the app shows.
+func ComposerNoBodyHint() string { return In(i18n.Locale()).ComposerNoBodyHint() }
+
+// ComposerNoBodyHint says "Choose JSON, Text or Form above. A GET request sends no body even when one is written."
+// in the language of msgs.
+func (msgs Messages) ComposerNoBodyHint() string {
+	return Catalog.Format(msgs.locale, "composerNoBodyHint", nil)
+}
+
+// ComposerJSONHint says "application/json is added when no Content-Type header says otherwise."
+// in the language the app shows.
+func ComposerJSONHint() string { return In(i18n.Locale()).ComposerJSONHint() }
+
+// ComposerJSONHint says "application/json is added when no Content-Type header says otherwise."
+// in the language of msgs.
+func (msgs Messages) ComposerJSONHint() string {
+	return Catalog.Format(msgs.locale, "composerJSONHint", nil)
+}
+
+// ComposerFormHint says "Sent URL-encoded as application/x-www-form-urlencoded, unless a Content-Type header says otherwise."
+// in the language the app shows.
+func ComposerFormHint() string { return In(i18n.Locale()).ComposerFormHint() }
+
+// ComposerFormHint says "Sent URL-encoded as application/x-www-form-urlencoded, unless a Content-Type header says otherwise."
+// in the language of msgs.
+func (msgs Messages) ComposerFormHint() string {
+	return Catalog.Format(msgs.locale, "composerFormHint", nil)
+}
+
+// ComposerTextHint says "text/plain; charset=utf-8 is added when no Content-Type header says otherwise."
+// in the language the app shows.
+func ComposerTextHint() string { return In(i18n.Locale()).ComposerTextHint() }
+
+// ComposerTextHint says "text/plain; charset=utf-8 is added when no Content-Type header says otherwise."
+// in the language of msgs.
+func (msgs Messages) ComposerTextHint() string {
+	return Catalog.Format(msgs.locale, "composerTextHint", nil)
+}
+
+// ComposerNoBodyMethodHint says "This method sends no body. Switch to POST, PUT or PATCH to send it."
+// in the language the app shows.
+func ComposerNoBodyMethodHint() string { return In(i18n.Locale()).ComposerNoBodyMethodHint() }
+
+// ComposerNoBodyMethodHint says "This method sends no body. Switch to POST, PUT or PATCH to send it."
+// in the language of msgs.
+func (msgs Messages) ComposerNoBodyMethodHint() string {
+	return Catalog.Format(msgs.locale, "composerNoBodyMethodHint", nil)
+}
+
+// ComposerJSONValid says "Valid JSON"
+// in the language the app shows.
+func ComposerJSONValid() string { return In(i18n.Locale()).ComposerJSONValid() }
+
+// ComposerJSONValid says "Valid JSON"
+// in the language of msgs.
+func (msgs Messages) ComposerJSONValid() string {
+	return Catalog.Format(msgs.locale, "composerJSONValid", nil)
+}
+
+// ComposerJSONInvalid says "Invalid JSON"
+// in the language the app shows.
+func ComposerJSONInvalid() string { return In(i18n.Locale()).ComposerJSONInvalid() }
+
+// ComposerJSONInvalid says "Invalid JSON"
+// in the language of msgs.
+func (msgs Messages) ComposerJSONInvalid() string {
+	return Catalog.Format(msgs.locale, "composerJSONInvalid", nil)
+}
+
+// ComposerJSONInvalidAt says "Invalid JSON at {line}:{column}"
+// in the language the app shows.
+func ComposerJSONInvalidAt(line int, column int) string {
+	return In(i18n.Locale()).ComposerJSONInvalidAt(line, column)
+}
+
+// ComposerJSONInvalidAt says "Invalid JSON at {line}:{column}"
+// in the language of msgs.
+func (msgs Messages) ComposerJSONInvalidAt(line int, column int) string {
+	return Catalog.Format(msgs.locale, "composerJSONInvalidAt", map[string]any{"line": line, "column": column})
+}
+
+// ComposerBearerHint says "The token is sent as Authorization: Bearer <token>."
+// in the language the app shows.
+func ComposerBearerHint() string { return In(i18n.Locale()).ComposerBearerHint() }
+
+// ComposerBearerHint says "The token is sent as Authorization: Bearer <token>."
+// in the language of msgs.
+func (msgs Messages) ComposerBearerHint() string {
+	return Catalog.Format(msgs.locale, "composerBearerHint", nil)
+}
+
+// ComposerToken says "Token"
+// in the language the app shows.
+func ComposerToken() string { return In(i18n.Locale()).ComposerToken() }
+
+// ComposerToken says "Token"
+// in the language of msgs.
+func (msgs Messages) ComposerToken() string {
+	return Catalog.Format(msgs.locale, "composerToken", nil)
+}
+
+// ComposerBasicHint says "The username and password are sent as HTTP Basic authentication."
+// in the language the app shows.
+func ComposerBasicHint() string { return In(i18n.Locale()).ComposerBasicHint() }
+
+// ComposerBasicHint says "The username and password are sent as HTTP Basic authentication."
+// in the language of msgs.
+func (msgs Messages) ComposerBasicHint() string {
+	return Catalog.Format(msgs.locale, "composerBasicHint", nil)
+}
+
+// ComposerUsername says "Username"
+// in the language the app shows.
+func ComposerUsername() string { return In(i18n.Locale()).ComposerUsername() }
+
+// ComposerUsername says "Username"
+// in the language of msgs.
+func (msgs Messages) ComposerUsername() string {
+	return Catalog.Format(msgs.locale, "composerUsername", nil)
+}
+
+// ComposerPassword says "Password"
+// in the language the app shows.
+func ComposerPassword() string { return In(i18n.Locale()).ComposerPassword() }
+
+// ComposerPassword says "Password"
+// in the language of msgs.
+func (msgs Messages) ComposerPassword() string {
+	return Catalog.Format(msgs.locale, "composerPassword", nil)
+}
+
+// ComposerAuthNone says "None"
+// in the language the app shows.
+func ComposerAuthNone() string { return In(i18n.Locale()).ComposerAuthNone() }
+
+// ComposerAuthNone says "None"
+// in the language of msgs.
+func (msgs Messages) ComposerAuthNone() string {
+	return Catalog.Format(msgs.locale, "composerAuthNone", nil)
+}
+
+// ComposerNoAuth says "No Authorization header is added."
+// in the language the app shows.
+func ComposerNoAuth() string { return In(i18n.Locale()).ComposerNoAuth() }
+
+// ComposerNoAuth says "No Authorization header is added."
+// in the language of msgs.
+func (msgs Messages) ComposerNoAuth() string {
+	return Catalog.Format(msgs.locale, "composerNoAuth", nil)
+}
+
+// ComposerWaiting says "Waiting for the server"
+// in the language the app shows.
+func ComposerWaiting() string { return In(i18n.Locale()).ComposerWaiting() }
+
+// ComposerWaiting says "Waiting for the server"
+// in the language of msgs.
+func (msgs Messages) ComposerWaiting() string {
+	return Catalog.Format(msgs.locale, "composerWaiting", nil)
+}
+
+// ComposerCancelTooltip says "Cancel this request (⌘.)"
+// in the language the app shows.
+func ComposerCancelTooltip() string { return In(i18n.Locale()).ComposerCancelTooltip() }
+
+// ComposerCancelTooltip says "Cancel this request (⌘.)"
+// in the language of msgs.
+func (msgs Messages) ComposerCancelTooltip() string {
+	return Catalog.Format(msgs.locale, "composerCancelTooltip", nil)
+}
+
+// ComposerNothingSent says "Nothing sent yet"
+// in the language the app shows.
+func ComposerNothingSent() string { return In(i18n.Locale()).ComposerNothingSent() }
+
+// ComposerNothingSent says "Nothing sent yet"
+// in the language of msgs.
+func (msgs Messages) ComposerNothingSent() string {
+	return Catalog.Format(msgs.locale, "composerNothingSent", nil)
+}
+
+// ComposerNothingSentHint says "Write a request above and press ⌘↩. The response lands here with its headers, body and timing."
+// in the language the app shows.
+func ComposerNothingSentHint() string { return In(i18n.Locale()).ComposerNothingSentHint() }
+
+// ComposerNothingSentHint says "Write a request above and press ⌘↩. The response lands here with its headers, body and timing."
+// in the language of msgs.
+func (msgs Messages) ComposerNothingSentHint() string {
+	return Catalog.Format(msgs.locale, "composerNothingSentHint", nil)
+}
+
+// ComposerTruncated says "The body is larger than 8 MB; this is the first 8 MB."
+// in the language the app shows.
+func ComposerTruncated() string { return In(i18n.Locale()).ComposerTruncated() }
+
+// ComposerTruncated says "The body is larger than 8 MB; this is the first 8 MB."
+// in the language of msgs.
+func (msgs Messages) ComposerTruncated() string {
+	return Catalog.Format(msgs.locale, "composerTruncated", nil)
+}
+
+// ComposerNoResponseHeaders says "The response carries no headers."
+// in the language the app shows.
+func ComposerNoResponseHeaders() string { return In(i18n.Locale()).ComposerNoResponseHeaders() }
+
+// ComposerNoResponseHeaders says "The response carries no headers."
+// in the language of msgs.
+func (msgs Messages) ComposerNoResponseHeaders() string {
+	return Catalog.Format(msgs.locale, "composerNoResponseHeaders", nil)
+}
+
+// ComposerResponse says "Response"
+// in the language the app shows.
+func ComposerResponse() string { return In(i18n.Locale()).ComposerResponse() }
+
+// ComposerResponse says "Response"
+// in the language of msgs.
+func (msgs Messages) ComposerResponse() string {
+	return Catalog.Format(msgs.locale, "composerResponse", nil)
+}
+
+// ComposerTotalTime says "Total time"
+// in the language the app shows.
+func ComposerTotalTime() string { return In(i18n.Locale()).ComposerTotalTime() }
+
+// ComposerTotalTime says "Total time"
+// in the language of msgs.
+func (msgs Messages) ComposerTotalTime() string {
+	return Catalog.Format(msgs.locale, "composerTotalTime", nil)
+}
+
+// ComposerBodySize says "Body size"
+// in the language the app shows.
+func ComposerBodySize() string { return In(i18n.Locale()).ComposerBodySize() }
+
+// ComposerBodySize says "Body size"
+// in the language of msgs.
+func (msgs Messages) ComposerBodySize() string {
+	return Catalog.Format(msgs.locale, "composerBodySize", nil)
+}
+
+// ComposerPrettyJSON says "Pretty JSON"
+// in the language the app shows.
+func ComposerPrettyJSON() string { return In(i18n.Locale()).ComposerPrettyJSON() }
+
+// ComposerPrettyJSON says "Pretty JSON"
+// in the language of msgs.
+func (msgs Messages) ComposerPrettyJSON() string {
+	return Catalog.Format(msgs.locale, "composerPrettyJSON", nil)
+}
+
+// ComposerPrettyJSONHint says "Indent the JSON"
+// in the language the app shows.
+func ComposerPrettyJSONHint() string { return In(i18n.Locale()).ComposerPrettyJSONHint() }
+
+// ComposerPrettyJSONHint says "Indent the JSON"
+// in the language of msgs.
+func (msgs Messages) ComposerPrettyJSONHint() string {
+	return Catalog.Format(msgs.locale, "composerPrettyJSONHint", nil)
+}
+
+// ComposerPretty says "Pretty"
+// in the language the app shows.
+func ComposerPretty() string { return In(i18n.Locale()).ComposerPretty() }
+
+// ComposerPretty says "Pretty"
+// in the language of msgs.
+func (msgs Messages) ComposerPretty() string {
+	return Catalog.Format(msgs.locale, "composerPretty", nil)
+}
+
+// ComposerCopyResponse says "Copy Response"
+// in the language the app shows.
+func ComposerCopyResponse() string { return In(i18n.Locale()).ComposerCopyResponse() }
+
+// ComposerCopyResponse says "Copy Response"
+// in the language of msgs.
+func (msgs Messages) ComposerCopyResponse() string {
+	return Catalog.Format(msgs.locale, "composerCopyResponse", nil)
+}
+
+// ComposerResponseCopied says "Response copied"
+// in the language the app shows.
+func ComposerResponseCopied() string { return In(i18n.Locale()).ComposerResponseCopied() }
+
+// ComposerResponseCopied says "Response copied"
+// in the language of msgs.
+func (msgs Messages) ComposerResponseCopied() string {
+	return Catalog.Format(msgs.locale, "composerResponseCopied", nil)
+}
+
+// ComposerRequestFailed says "The request did not complete"
+// in the language the app shows.
+func ComposerRequestFailed() string { return In(i18n.Locale()).ComposerRequestFailed() }
+
+// ComposerRequestFailed says "The request did not complete"
+// in the language of msgs.
+func (msgs Messages) ComposerRequestFailed() string {
+	return Catalog.Format(msgs.locale, "composerRequestFailed", nil)
+}
+
+// ComposerTryAgain says "Try Again"
+// in the language the app shows.
+func ComposerTryAgain() string { return In(i18n.Locale()).ComposerTryAgain() }
+
+// ComposerTryAgain says "Try Again"
+// in the language of msgs.
+func (msgs Messages) ComposerTryAgain() string {
+	return Catalog.Format(msgs.locale, "composerTryAgain", nil)
+}
+
+// ComposerRequestCanceled says "Request canceled"
+// in the language the app shows.
+func ComposerRequestCanceled() string { return In(i18n.Locale()).ComposerRequestCanceled() }
+
+// ComposerRequestCanceled says "Request canceled"
+// in the language of msgs.
+func (msgs Messages) ComposerRequestCanceled() string {
+	return Catalog.Format(msgs.locale, "composerRequestCanceled", nil)
+}
+
+// ComposerCanceledHint says "Nothing more will be read from it. Send it again when you are ready."
+// in the language the app shows.
+func ComposerCanceledHint() string { return In(i18n.Locale()).ComposerCanceledHint() }
+
+// ComposerCanceledHint says "Nothing more will be read from it. Send it again when you are ready."
+// in the language of msgs.
+func (msgs Messages) ComposerCanceledHint() string {
+	return Catalog.Format(msgs.locale, "composerCanceledHint", nil)
+}
+
+// ComposerSendAgain says "Send Again"
+// in the language the app shows.
+func ComposerSendAgain() string { return In(i18n.Locale()).ComposerSendAgain() }
+
+// ComposerSendAgain says "Send Again"
+// in the language of msgs.
+func (msgs Messages) ComposerSendAgain() string {
+	return Catalog.Format(msgs.locale, "composerSendAgain", nil)
+}
 
 // SettingsLanguage says "Language"
 // in the language the app shows.
