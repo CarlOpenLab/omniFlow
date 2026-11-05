@@ -100,6 +100,11 @@ func (a *app) previewImage(key string, body []byte) (*ui.Bitmap, error) {
 // with its size, or a note that it is bytes, with a way to save them. key
 // names the body for the picture's cache; name is the file it saves as.
 func (a *app) bodyView(c *ui.Context, pal *uitokens.Palette, key, name string, body []byte, contentType, text, note string) {
+	// The two panes keep their own place in a body.
+	scroll := &a.flowScroll
+	if a.mode == modeComposer {
+		scroll = &a.respScroll
+	}
 	switch shapeOf(body, contentType) {
 	case shapeImage:
 		if bmp, err := a.previewImage(key, body); err == nil {
@@ -110,7 +115,7 @@ func (a *app) bodyView(c *ui.Context, pal *uitokens.Palette, key, name string, b
 	case shapeBinary:
 		a.binaryView(c, pal, body, contentType, name, note)
 	default:
-		codeView(c, pal, text, note)
+		a.codeView(c, pal, text, note, scroll)
 	}
 }
 

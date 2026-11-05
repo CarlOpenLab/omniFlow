@@ -466,32 +466,59 @@ func clipText(text, note string) (string, string) {
 	return text[:cut], more
 }
 
-// codeView is a selectable monospaced document on the inspector's paper.
-func codeView(c *ui.Context, pal *uitokens.Palette, text string, note string) ui.Element {
+// codeView is a selectable monospaced document on the inspector's paper,
+// with its find bar over it while one is open. scroll is where the body is
+// scrolled, kept per pane.
+func (a *app) codeView(c *ui.Context, pal *uitokens.Palette, text string, note string, scroll *ui.ScrollState) ui.Element {
 	text, note = clipText(text, note)
-	scroll := ui.ScrollBoth(c).Grow(1).Background(pal.CodeBg)
-	scroll.Children(func() {
-		ui.Column(c).Padding(10, 14, 12, 14).Gap(0).Children(func() {
-			if note != "" {
-				ui.Row(c).Height(24).Padding(0, 0, 2, 0).Children(func() {
-					ui.Text(c, note).FontSize(10.5).FontWeight(600).TextColor(pal.Warning)
-				})
+	col := ui.Column(c).Grow(1).MinHeight(0)
+	col.Children(func() {
+		f := &a.find
+		if f.open {
+			f.sync(text)
+			bar := ui.FindBar(c, &f.open, &f.query, len(f.matches), &f.current)
+			if bar.Changed() {
+				f.moved = true
 			}
-			if strings.TrimSpace(text) == "" {
-				ui.Text(c, locales.CommonEmptyBody()).Font("monospace").FontSize(11.5).
-					TextColor(pal.TextFaint).Padding(2, 0)
-				return
+			// The field may have taken a keystroke while the bar was built.
+			f.sync(text)
+			if f.moved {
+				a.scrollToFind(c, text, scroll)
+				f.moved = false
 			}
-			if spans, ok := jsonSpans(text, pal); ok {
-				ui.RichText(c, spans...).Font("monospace").FontSize(11.5).
-					FixedLineHeight(18).Selectable().NoWrap()
-				return
-			}
-			ui.Text(c, text).Font("monospace").FontSize(11.5).FixedLineHeight(18).
-				TextColor(pal.CodeText).Selectable().NoWrap()
+		}
+		body := ui.ScrollBoth(c).Grow(1).Background(pal.CodeBg)
+		body.TrackScroll(scroll)
+		body.Children(func() {
+			ui.Column(c).Padding(codePadTop, codePadLeft, 12, codePadLeft).Gap(0).Children(func() {
+				if note != "" {
+					ui.Row(c).Height(24).Padding(0, 0, 2, 0).Children(func() {
+						ui.Text(c, note).FontSize(10.5).FontWeight(600).TextColor(pal.Warning)
+					})
+				}
+				if strings.TrimSpace(text) == "" {
+					ui.Text(c, locales.CommonEmptyBody()).Font("monospace").FontSize(11.5).
+						TextColor(pal.TextFaint).Padding(2, 0)
+					return
+				}
+				if f.open {
+					ui.RichText(c, findSpans(text, f.matches, f.current, pal)...).
+						Font("monospace").FontSize(11.5).
+						FixedLineHeight(codeLineHeight).Selectable().NoWrap()
+					return
+				}
+				if spans, ok := jsonSpans(text, pal); ok {
+					ui.RichText(c, spans...).Font("monospace").FontSize(11.5).
+						FixedLineHeight(codeLineHeight).Selectable().NoWrap()
+					return
+				}
+				ui.Text(c, text).Font("monospace").FontSize(11.5).
+					FixedLineHeight(codeLineHeight).TextColor(pal.CodeText).
+					Selectable().NoWrap()
+			})
 		})
 	})
-	return scroll
+	return col
 }
 
 // highlightLimit keeps the span list small enough to lay out smoothly; a

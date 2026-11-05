@@ -57,6 +57,7 @@
   "noticeExported": "已导出 {count, plural, other {# 条流量}}到 {dest}",
   "footerMove": "移动",
   "footerFilter": "筛选",
+  "footerFind": "查找",
 
   "sidebarEnvironment": "环境",
   "sidebarManageEnvs": "管理环境",
@@ -171,7 +172,7 @@
   "inspectorAddrCopied": "已复制代理地址：{addr}",
   "inspectorFilterCount": "{shown} / {total}",
   "inspectorFilterTraffic": "筛选流量",
-  "inspectorFilterHint": "按方法、主机、路径或类型筛选（⌘F）",
+  "inspectorFilterHint": "按方法、主机、路径或类型筛选（⇧⌘F）",
   "inspectorFollow": "跟随新流量",
   "inspectorFollowHint": "跟随新流量：每条到达时自动选中",
   "inspectorExportHAR": "导出 HAR",

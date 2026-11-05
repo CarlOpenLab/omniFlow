@@ -275,10 +275,14 @@ func (a *app) footer(c *ui.Context, pal *uitokens.Palette) {
 				shortcutHint(c, pal, "⌘↩", locales.ComposerSend())
 			}
 			shortcutHint(c, pal, "⌘S", locales.CommonSave())
+			if a.canFind() {
+				shortcutHint(c, pal, "⌘F", locales.FooterFind())
+			}
 			shortcutHint(c, pal, "⌘2", locales.InspectorMode())
 		} else {
 			shortcutHint(c, pal, "↑↓", locales.FooterMove())
-			shortcutHint(c, pal, "⌘F", locales.FooterFilter())
+			shortcutHint(c, pal, "⌘F", locales.FooterFind())
+			shortcutHint(c, pal, "⇧⌘F", locales.FooterFilter())
 			shortcutHint(c, pal, "⌘1", locales.ComposerMode())
 		}
 	})

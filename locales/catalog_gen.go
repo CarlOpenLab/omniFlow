@@ -547,6 +547,16 @@ func (msgs Messages) FooterFilter() string {
 	return Catalog.Format(msgs.locale, "footerFilter", nil)
 }
 
+// FooterFind says "Find"
+// in the language the app shows.
+func FooterFind() string { return In(i18n.Locale()).FooterFind() }
+
+// FooterFind says "Find"
+// in the language of msgs.
+func (msgs Messages) FooterFind() string {
+	return Catalog.Format(msgs.locale, "footerFind", nil)
+}
+
 // SidebarEnvironment says "Environment"
 // in the language the app shows.
 func SidebarEnvironment() string { return In(i18n.Locale()).SidebarEnvironment() }
@@ -1663,11 +1673,11 @@ func (msgs Messages) InspectorFilterTraffic() string {
 	return Catalog.Format(msgs.locale, "inspectorFilterTraffic", nil)
 }
 
-// InspectorFilterHint says "Filter by method, host, path or type (⌘F)"
+// InspectorFilterHint says "Filter by method, host, path or type (⇧⌘F)"
 // in the language the app shows.
 func InspectorFilterHint() string { return In(i18n.Locale()).InspectorFilterHint() }
 
-// InspectorFilterHint says "Filter by method, host, path or type (⌘F)"
+// InspectorFilterHint says "Filter by method, host, path or type (⇧⌘F)"
 // in the language of msgs.
 func (msgs Messages) InspectorFilterHint() string {
 	return Catalog.Format(msgs.locale, "inspectorFilterHint", nil)

@@ -91,6 +91,11 @@ type app struct {
 	jsonChecked   jsonCheck
 	// preview is the last body drawn as an image, decoded once.
 	preview bodyPreview
+	// find is the body's find bar; respScroll and flowScroll keep where
+	// the composer's response and the inspector's detail are scrolled.
+	find       findState
+	respScroll ui.ScrollState
+	flowScroll ui.ScrollState
 	// pendingCurl is a curl command pasted into the URL field, opened as a
 	// request in the next frame rather than in the middle of the paste.
 	pendingCurl string
@@ -318,6 +323,11 @@ func (a *app) shortcuts(c *ui.Context) {
 	if a.settingsOpen || a.caOpen || a.envOpen || a.methodOpen {
 		return
 	}
+	// A find bar belongs to the body it was opened over; leaving that body
+	// closes it, so ⌘F opens anew on the next one.
+	if a.find.open && !a.canFind() {
+		a.find.open = false
+	}
 	if c.Shortcut(ui.Cmd, ui.Key1) {
 		a.mode = modeComposer
 	}
@@ -336,11 +346,17 @@ func (a *app) shortcuts(c *ui.Context) {
 	if c.Shortcut(ui.Cmd, ui.KeyE) {
 		a.openEnvs()
 	}
+	// ⌘F finds in the body on show, as Safari does; the traffic filter is
+	// under ⇧⌘F so the two do not take the same chord.
 	if c.Shortcut(ui.Cmd, ui.KeyF) {
+		if !a.find.open && a.canFind() {
+			a.find.open = true
+			a.find.moved = true
+		}
+	}
+	if c.Shortcut(ui.Cmd|ui.Shift, ui.KeyF) {
 		if a.mode == modeInspector {
 			a.searchFocus.Focus()
-		} else {
-			a.urlFocus.Focus()
 		}
 	}
 	if c.Shortcut(ui.Cmd|ui.Shift, ui.KeyC) {

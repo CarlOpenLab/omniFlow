@@ -85,6 +85,7 @@
   },
   "footerMove": "Move",
   "footerFilter": "Filter",
+  "footerFind": "Find",
 
   "sidebarEnvironment": "Environment",
   "sidebarManageEnvs": "Manage Environments",
@@ -263,7 +264,7 @@
     }
   },
   "inspectorFilterTraffic": "Filter traffic",
-  "inspectorFilterHint": "Filter by method, host, path or type (⌘F)",
+  "inspectorFilterHint": "Filter by method, host, path or type (⇧⌘F)",
   "inspectorFollow": "Follow new flows",
   "inspectorFollowHint": "Follow new flows: choose each one as it arrives",
   "inspectorExportHAR": "Export HAR",
