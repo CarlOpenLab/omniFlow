@@ -1,0 +1,11 @@
+{
+  "@@locale": "en",
+  "settingsLanguage": "Language",
+  "@settingsLanguage": {
+    "description": "The label of the language row in Settings."
+  },
+  "languageSystem": "Follow System",
+  "@languageSystem": {
+    "description": "The Language row's option that follows the system's preferred languages."
+  }
+}

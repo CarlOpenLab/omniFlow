@@ -5,9 +5,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/egoist/mygo/i18n"
 	"github.com/egoist/mygo/ui"
 
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 // settingsDialog is the one place appearance and capture are configured.
@@ -50,6 +52,30 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 		})
 		if tidx != current && tidx >= 0 && tidx < len(themes) {
 			a.setTheme(themes[tidx].mode)
+		}
+
+		// Language: the system's, or one of the languages the app is
+		// written in, each named in itself.
+		langTags := []string{"", "en", "zh-Hans"}
+		langLabels := []string{
+			locales.LanguageSystem(),
+			i18n.Autonym("en"),
+			i18n.Autonym("zh-Hans"),
+		}
+		langNow := 0
+		for i, tag := range langTags {
+			if tag == normalizeLanguage(a.prefs.Language) {
+				langNow = i
+			}
+		}
+		lidx := langNow
+		langRow := ui.Row(c).Height(30).Gap(10)
+		langRow.Children(func() {
+			ui.Text(c, locales.SettingsLanguage()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
+			segmented(c, pal, &lidx, langLabels)
+		})
+		if lidx != langNow && lidx >= 0 && lidx < len(langTags) {
+			a.setLanguage(langTags[lidx])
 		}
 		ui.Box(c).Height(4)
 

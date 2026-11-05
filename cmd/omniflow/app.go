@@ -166,7 +166,39 @@ func newApp() *app {
 	return a
 }
 
+// setAppLocale is mygo.App.SetLocale, named so tests can watch the language
+// without a running app.
+var setAppLocale = mygo.App.SetLocale
+
+// normalizeLanguage reads a stored language the app does not ship as "":
+// follow the system, as a value a person did not choose.
+func normalizeLanguage(tag string) string {
+	switch tag {
+	case "en", "zh-Hans":
+		return tag
+	}
+	return ""
+}
+
+// applyLanguage makes the app show the stored language, or the system's
+// when it stores none.
+func (a *app) applyLanguage() {
+	setAppLocale(normalizeLanguage(a.prefs.Language))
+}
+
+// setLanguage stores and shows a language at once: "" follows the system.
+func (a *app) setLanguage(tag string) {
+	tag = normalizeLanguage(tag)
+	if a.prefs.Language == tag {
+		return
+	}
+	a.prefs.Language = tag
+	a.savePrefs()
+	setAppLocale(tag)
+}
+
 func (a *app) applyPreferences() {
+	a.applyLanguage()
 	applyAppearance(a.prefs.Theme)
 }
 
