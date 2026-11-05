@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/egoist/mygo/i18n"
 	"github.com/egoist/mygo/ui"
 
 	"github.com/CarlOpenLab/omniflow/internal/httpx"
@@ -253,6 +254,39 @@ func TestSnapshots(t *testing.T) {
 	a.mode = modeComposer
 	tester.Frame()
 	saveSnapshot(t, tester, out+"/omniflow-composer-min.png")
+
+	// The same surfaces in the app's other language, to review the copy in
+	// the places it has to fit.
+	i18n.SetLocaleFunc(func() string { return "zh-Hans" })
+	defer i18n.SetLocaleFunc(func() string { return "en" })
+	tester.SetSize(1280, 820)
+	a.settingsOpen, a.caOpen, a.envOpen = false, false, false
+	tester.Frame()
+	saveSnapshot(t, tester, out+"/omniflow-composer-zh.png")
+
+	a.mode = modeInspector
+	tester.Frame()
+	saveSnapshot(t, tester, out+"/omniflow-inspector-zh.png")
+
+	a.settingsOpen = true
+	tester.Frame()
+	saveSnapshot(t, tester, out+"/omniflow-settings-zh.png")
+	a.settingsOpen = false
+
+	a.caOpen = true
+	tester.Frame()
+	saveSnapshot(t, tester, out+"/omniflow-ca-zh.png")
+	a.caOpen = false
+
+	a.mode = modeComposer
+	a.envs = []model.Environment{{
+		ID: "env1", Name: "预发布",
+		Vars: []model.KV{{ID: "e1", Enabled: true, Key: "host", Value: "staging.example.com"}},
+	}}
+	a.envEdit, a.envOpen = "env1", true
+	tester.Frame()
+	saveSnapshot(t, tester, out+"/omniflow-environments-zh.png")
+	a.envOpen = false
 }
 
 // TestStressLayers renders the window over a magenta ground with the card at

@@ -524,7 +524,7 @@ func (a *app) responseHeader(c *ui.Context, pal *uitokens.Palette) {
 			_, isJSON := httpx.Pretty(resp.Body)
 			if isJSON {
 				pretty := ui.ButtonBase(c.Key("pretty")).Height(24).Padding(0, 8).Radius(6).Gap(4).
-					Label("Pretty JSON").Tooltip("Indent the JSON")
+					Label(locales.ComposerPrettyJSON()).Tooltip(locales.ComposerPrettyJSONHint())
 				if a.pretty {
 					pretty.Background(pal.AccentSoft)
 				} else if pretty.Hovered() {
@@ -578,7 +578,7 @@ func (a *app) canceledState(c *ui.Context, pal *uitokens.Palette) {
 			ui.Icon(c, iconCancel).Size(22, 22).TextColor(pal.TextMuted)
 		})
 		ui.Text(c, locales.ComposerRequestCanceled()).FontSize(13.5).FontWeight(650).TextColor(pal.Text)
-		ui.Text(c, "Nothing more will be read from it. Send it again when you are ready.").
+		ui.Text(c, locales.ComposerCanceledHint()).
 			FontSize(11.5).TextColor(pal.TextMuted).TextAlign(ui.Center).MaxWidth(440).LineHeight(1.4)
 		if quietButton(c, pal, "send-again", locales.ComposerSendAgain()).Clicked() {
 			a.send()
