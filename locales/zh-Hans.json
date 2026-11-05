@@ -98,7 +98,7 @@
   "composerTabBody": "请求体",
   "composerTabAuth": "认证",
   "composerTiming": "耗时",
-  "composerTabCount": "{name} · {count}",
+  "composerTabCount": "{name}（{count}）",
   "composerBodyKind": "{body} · {kind}",
   "composerAuthKind": "{auth} · {kind}",
   "composerKindJSON": "JSON",

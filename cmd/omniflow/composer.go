@@ -168,7 +168,7 @@ func countLabel(name string, n int) string {
 	if n == 0 {
 		return name
 	}
-	return fmt.Sprintf("%s · %d", name, n)
+	return locales.ComposerTabCount(name, n)
 }
 
 func bodyKindLabel(kind string) string {
@@ -303,11 +303,13 @@ func (a *app) bodyTab(c *ui.Context, pal *uitokens.Palette) {
 }
 
 // jsonCheck is the last JSON body checked, so the check runs as the body
-// changes rather than in every frame.
+// changes rather than in every frame. Where the parser stopped is kept as
+// numbers, so the message can be written in the language on screen now.
 type jsonCheck struct {
-	body string
-	ok   bool
-	msg  string
+	body   string
+	ok     bool
+	line   int
+	column int
 }
 
 // jsonState says whether the JSON body parses, and where it stops if not.
@@ -316,33 +318,41 @@ func (a *app) jsonState(c *ui.Context, pal *uitokens.Palette) {
 		return
 	}
 	if a.jsonChecked.body != a.req.Body {
-		ok, msg := checkJSON(a.req.Body)
-		a.jsonChecked = jsonCheck{body: a.req.Body, ok: ok, msg: msg}
+		check := checkJSON(a.req.Body)
+		check.body = a.req.Body
+		a.jsonChecked = check
 	}
 	col, icon := pal.Success, iconValid
 	if !a.jsonChecked.ok {
 		col, icon = pal.Danger, iconWarning
 	}
+	msg := locales.ComposerJSONValid()
+	if !a.jsonChecked.ok {
+		msg = locales.ComposerJSONInvalid()
+		if a.jsonChecked.line > 0 {
+			msg = locales.ComposerJSONInvalidAt(a.jsonChecked.line, a.jsonChecked.column)
+		}
+	}
 	ui.Row(c).Gap(5).Shrink(0).Children(func() {
 		ui.Icon(c, icon).Size(12, 12).TextColor(col)
-		ui.Text(c, a.jsonChecked.msg).FontSize(10.5).FontWeight(600).TextColor(col)
+		ui.Text(c, msg).FontSize(10.5).FontWeight(600).TextColor(col)
 	})
 }
 
 // checkJSON reports whether s is one JSON document, and if not, where the
 // parser gave up, as a line and column a person can find.
-func checkJSON(s string) (bool, string) {
+func checkJSON(s string) jsonCheck {
 	if json.Valid([]byte(s)) {
-		return true, locales.ComposerJSONValid()
+		return jsonCheck{ok: true}
 	}
 	var v any
 	err := json.Unmarshal([]byte(s), &v)
 	var syntax *json.SyntaxError
 	if errors.As(err, &syntax) {
 		line, col := lineCol(s, int(syntax.Offset))
-		return false, locales.ComposerJSONInvalidAt(line, col)
+		return jsonCheck{line: line, column: col}
 	}
-	return false, locales.ComposerJSONInvalid()
+	return jsonCheck{}
 }
 
 // lineCol turns a byte offset into a 1-based line and column of runes.
@@ -442,13 +452,14 @@ func (a *app) responsePane(c *ui.Context, pal *uitokens.Palette) {
 		}
 		if a.resp == nil {
 			ui.Box(c).Grow(1).MinHeight(0).Children(func() {
-				switch a.respErr {
-				case "":
+				msg := a.respProblemText()
+				switch {
+				case msg == "":
 					emptyState(c, pal, iconSend, locales.ComposerNothingSent(), locales.ComposerNothingSentHint())
-				case locales.ErrRequestCanceled():
+				case a.respProblem == respCanceled:
 					a.canceledState(c, pal)
 				default:
-					a.errorState(c, pal, a.respErr)
+					a.errorState(c, pal, msg)
 				}
 			})
 			return

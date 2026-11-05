@@ -167,8 +167,8 @@ func (a *app) inspectorTitle(c *ui.Context, pal *uitokens.Palette) {
 	switch {
 	case a.proxyRunning():
 		subtitle = locales.InspectorRecording("127.0.0.1:"+a.proxyPort, len(a.flows))
-	case a.proxyErr != "":
-		subtitle = locales.InspectorStopped(a.proxyErr)
+	case a.proxyProblemText() != "":
+		subtitle = locales.InspectorStopped(a.proxyProblemText())
 	case len(a.flows) > 0:
 		subtitle = locales.InspectorPausedCount(len(a.flows))
 	default:

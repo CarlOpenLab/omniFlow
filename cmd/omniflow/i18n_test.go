@@ -8,10 +8,12 @@ import (
 	"sort"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/egoist/mygo/i18n"
 
 	"github.com/CarlOpenLab/omniflow/internal/model"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 // TestMain pins the language the app shows, so the English assertions in
@@ -157,6 +159,114 @@ func TestChineseSettingsAndDialogs(t *testing.T) {
 	tt.Frame()
 	if !tt.HasText("根证书") {
 		t.Error("the Chinese certificate dialog is missing 根证书")
+	}
+}
+
+func TestChineseStatusFilterMenu(t *testing.T) {
+	i18n.SetLocaleFunc(func() string { return "zh-Hans" })
+	t.Cleanup(func() { i18n.SetLocaleFunc(func() string { return "en" }) })
+	a := newTestApp(t)
+	seedFlows(a)
+	a.mode = modeInspector
+	tt := newTester(t, a)
+	if err := tt.Click("状态"); err != nil {
+		t.Fatalf("click the status head: %v", err)
+	}
+	labels := tt.Menu()
+	for _, want := range []string{
+		"全部状态", "2xx · 成功", "3xx · 重定向", "4xx · 客户端错误", "5xx · 服务器错误", "错误 · 无响应",
+	} {
+		if !slices.Contains(labels, want) {
+			t.Errorf("the Chinese status menu is missing %q: %q", want, labels)
+		}
+	}
+}
+
+// The app's own messages are written when a problem happens but read in
+// whatever language is on screen now.
+func TestCanceledStateFollowsLanguage(t *testing.T) {
+	a := newTestApp(t)
+	a.sending = true
+	a.cancelSend() // under English, as the test app starts
+	i18n.SetLocaleFunc(func() string { return "zh-Hans" })
+	t.Cleanup(func() { i18n.SetLocaleFunc(func() string { return "en" }) })
+	tt := newTester(t, a)
+	if !tt.HasText("请求已取消") {
+		t.Errorf("the canceled request is not in Chinese: %q", tt.Texts())
+	}
+	if tt.HasText("请求未完成") {
+		t.Error("a canceled request is shown as an error")
+	}
+}
+
+func TestMissingVariableMessageFollowsLanguage(t *testing.T) {
+	a := newTestApp(t)
+	a.req.URL = "https://{{host}}/things"
+	a.send() // under English, as the test app starts
+	i18n.SetLocaleFunc(func() string { return "zh-Hans" })
+	t.Cleanup(func() { i18n.SetLocaleFunc(func() string { return "en" }) })
+	tt := newTester(t, a)
+	if !tt.HasText("未设置") {
+		t.Errorf("the missing-variable message is not in Chinese: %q", tt.Texts())
+	}
+}
+
+func TestProxyProblemFollowsLanguage(t *testing.T) {
+	a := newTestApp(t)
+	a.proxyPort = "0"
+	a.startProxy() // under English, as the test app starts
+	// The sidebar's inline check would print the message in the current
+	// language anyway; make the port valid again so only the stored problem
+	// is left on screen. The notice may keep its old language by design.
+	a.proxyPort = "9090"
+	a.notice = ""
+	i18n.SetLocaleFunc(func() string { return "zh-Hans" })
+	t.Cleanup(func() { i18n.SetLocaleFunc(func() string { return "en" }) })
+	a.mode = modeInspector
+	tt := newTester(t, a)
+	if !tt.HasText("请使用 1 到 65535 之间的端口。") {
+		t.Errorf("the port problem is not in Chinese: %q", tt.Texts())
+	}
+	if tt.HasText("Use a port from 1 to 65535.") {
+		t.Error("the port problem kept the language it was written in")
+	}
+}
+
+func TestJSONValidationFollowsLanguage(t *testing.T) {
+	a := newTestApp(t)
+	a.reqTab = 2
+	a.req.BodyKind = model.BodyJSON
+	a.req.Body = `{"a": }`
+	tt := newTester(t, a) // checked and written under English
+	i18n.SetLocaleFunc(func() string { return "zh-Hans" })
+	t.Cleanup(func() { i18n.SetLocaleFunc(func() string { return "en" }) })
+	tt.Frame()
+	if !tt.HasText("JSON 无效") {
+		t.Errorf("the JSON check is not in Chinese: %q", tt.Texts())
+	}
+	if tt.HasText("Invalid JSON") {
+		t.Error("the JSON check kept the language it was written in")
+	}
+}
+
+func TestChineseTabCount(t *testing.T) {
+	i18n.SetLocaleFunc(func() string { return "zh-Hans" })
+	t.Cleanup(func() { i18n.SetLocaleFunc(func() string { return "en" }) })
+	a := newTestApp(t)
+	a.req.Headers = []model.KV{
+		{ID: "h1", Enabled: true, Key: "Accept", Value: "application/json"},
+		{ID: "h2", Enabled: true, Key: "User-Agent", Value: "OmniFlow/0.1"},
+	}
+	tt := newTester(t, a)
+	if !tt.HasText("请求头（2）") {
+		t.Errorf("the Chinese header count is missing: %q", tt.Texts())
+	}
+}
+
+func TestHistorySentEnglishKeepsComma(t *testing.T) {
+	at := time.Date(2026, 1, 2, 15, 4, 5, 0, time.Local)
+	if got := locales.HistorySent(at); !strings.Contains(got, "Jan 2, 15:04:05") {
+		t.Errorf("the English history tooltip is %q, want the date and time with the comma it had", got)
 	}
 }
 

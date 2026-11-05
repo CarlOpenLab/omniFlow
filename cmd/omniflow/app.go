@@ -30,6 +30,28 @@ const (
 	modeInspector
 )
 
+// respProblem is a message the app itself puts in the response pane when a
+// request cannot go. The problem is kept by name, not by the sentence it was
+// written as, so the pane can say it in the language on screen now.
+type respProblem int
+
+const (
+	respOK respProblem = iota
+	respCanceled
+	respEnterURL
+	respMissingVars
+)
+
+// proxyProblem is the same idea for the inspector's own reason the proxy is
+// not listening.
+type proxyProblem int
+
+const (
+	proxyOK proxyProblem = iota
+	proxyCAUnavailable
+	proxyBadPort
+)
+
 // app is the window's state. It lives on the UI thread; the proxy publishes
 // to it through Window.Update, as everything off the main thread must.
 type app struct {
@@ -60,6 +82,8 @@ type app struct {
 	sendCancel    context.CancelFunc
 	resp          *httpx.Result
 	respErr       string
+	respProblem   respProblem
+	respMissing   []string
 	pretty        bool
 	composerSplit float32
 	urlFocus      ui.Handle
@@ -94,6 +118,7 @@ type app struct {
 	searchFocus   ui.Handle
 	proxyPort     string
 	proxyErr      string
+	proxyProblem  proxyProblem
 	mitm          bool
 	lastFlowAt    time.Time
 
@@ -227,6 +252,32 @@ func (a *app) setUndo(text string, undo func()) {
 	a.undo = undo
 }
 
+// respProblemText is the response pane's message about the request itself,
+// in the language on screen now; a result's own error stays as written.
+func (a *app) respProblemText() string {
+	switch a.respProblem {
+	case respCanceled:
+		return locales.ErrRequestCanceled()
+	case respEnterURL:
+		return locales.ErrEnterURL()
+	case respMissingVars:
+		return a.missingMessage(a.respMissing)
+	}
+	return a.respErr
+}
+
+// proxyProblemText is the inspector's own reason the proxy is not listening,
+// in the language on screen now; the proxy's error stays as written.
+func (a *app) proxyProblemText() string {
+	switch a.proxyProblem {
+	case proxyCAUnavailable:
+		return locales.NoticeProxyCAUnavailable()
+	case proxyBadPort:
+		return locales.ErrPort()
+	}
+	return a.proxyErr
+}
+
 // runUndo puts back what the notice offered to.
 func (a *app) runUndo() {
 	if u := a.undo; u != nil {
@@ -344,7 +395,7 @@ func (a *app) open(r model.Request, savedID string) {
 	a.reqTab = 0
 	a.respTab = 0
 	a.resp = nil
-	a.respErr = ""
+	a.respErr, a.respProblem, a.respMissing = "", respOK, nil
 	a.methodOpen = false
 }
 
@@ -622,21 +673,24 @@ func (a *app) send() {
 	// A request that cannot go replaces the last answer with why, which an
 	// answer left on screen would hide.
 	if strings.TrimSpace(a.req.URL) == "" {
-		a.resp, a.respErr = nil, locales.ErrEnterURL()
-		a.setNotice(locales.ErrEnterURL())
+		a.resp, a.respErr = nil, ""
+		a.respProblem, a.respMissing = respEnterURL, nil
+		a.setNotice(a.respProblemText())
 		return
 	}
 	resolved, missing := a.resolve(a.req)
 	// A URL with a hole in it cannot be sent; a header or a body can, as
 	// it may mean its braces, and the pane warns of it below the URL.
 	if urlMissing := missingIn(resolved.URL, missing); len(urlMissing) > 0 {
-		a.resp, a.respErr = nil, a.missingMessage(urlMissing)
-		a.setNotice(a.respErr)
+		a.resp, a.respErr = nil, ""
+		a.respProblem, a.respMissing = respMissingVars, urlMissing
+		a.setNotice(a.respProblemText())
 		return
 	}
 	u, err := httpx.BuildURL(resolved.URL, resolved.Params)
 	if err != nil {
 		a.resp, a.respErr = nil, err.Error()
+		a.respProblem, a.respMissing = respOK, nil
 		a.setNotice(err.Error())
 		return
 	}
@@ -648,6 +702,7 @@ func (a *app) send() {
 	a.sending, a.sendCancel = true, cancel
 	a.resp = nil
 	a.respErr = ""
+	a.respProblem, a.respMissing = respOK, nil
 	a.pretty = true
 	a.respTab = 0
 
@@ -676,6 +731,7 @@ func (a *app) finishSend(seq uint64, sent model.Request, sentURL string, res htt
 	a.sending, a.sendCancel = false, nil
 	a.resp = &res
 	a.respErr = res.Err
+	a.respProblem, a.respMissing = respOK, nil
 	a.addHistory(sent, sentURL, res)
 	if res.Err != "" {
 		a.setNotice(locales.NoticeRequestFailed(sentURL))
@@ -694,7 +750,8 @@ func (a *app) cancelSend() {
 	a.sendSeq++
 	a.sending, a.sendCancel = false, nil
 	a.resp = nil
-	a.respErr = locales.ErrRequestCanceled()
+	a.respErr = ""
+	a.respProblem, a.respMissing = respCanceled, nil
 }
 
 func specOf(r model.Request) httpx.Spec {
@@ -836,23 +893,27 @@ func flowCurl(f proxy.Flow) string {
 
 func (a *app) startProxy() {
 	if a.prx == nil {
-		a.proxyErr = locales.NoticeProxyCAUnavailable()
-		a.setNotice(a.proxyErr)
+		a.proxyErr = ""
+		a.proxyProblem = proxyCAUnavailable
+		a.setNotice(a.proxyProblemText())
 		return
 	}
 	if !validPort(a.proxyPort) {
-		a.proxyErr = locales.ErrPort()
-		a.setNotice(a.proxyErr)
+		a.proxyErr = ""
+		a.proxyProblem = proxyBadPort
+		a.setNotice(a.proxyProblemText())
 		return
 	}
 	a.prx.SetMITM(a.mitm)
 	addr, err := a.prx.Start(strings.TrimSpace(a.proxyPort))
 	if err != nil {
 		a.proxyErr = err.Error()
+		a.proxyProblem = proxyOK
 		a.setNotice(err.Error())
 		return
 	}
 	a.proxyErr = ""
+	a.proxyProblem = proxyOK
 	if _, port, err := splitHostPort(addr); err == nil {
 		a.proxyPort = port
 	}

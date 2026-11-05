@@ -807,13 +807,13 @@ func (msgs Messages) SidebarProxyHint(addr string) string {
 	return Catalog.Format(msgs.locale, "sidebarProxyHint", map[string]any{"addr": addr})
 }
 
-// HistorySent says "Sent {at, date, ::MMMd} {at, time, ::Hms}"
+// HistorySent says "Sent {at, date, ::MMMd}, {at, time, ::Hms}"
 // in the language the app shows.
 //
 // A history row's tooltip, under the request line.
 func HistorySent(at time.Time) string { return In(i18n.Locale()).HistorySent(at) }
 
-// HistorySent says "Sent {at, date, ::MMMd} {at, time, ::Hms}"
+// HistorySent says "Sent {at, date, ::MMMd}, {at, time, ::Hms}"
 // in the language of msgs.
 //
 // A history row's tooltip, under the request line.

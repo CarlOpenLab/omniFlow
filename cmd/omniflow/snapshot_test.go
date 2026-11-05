@@ -16,7 +16,6 @@ import (
 	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/internal/proxy"
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
-	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 func newTestApp(t *testing.T) *app {
@@ -173,12 +172,14 @@ func TestSnapshots(t *testing.T) {
 
 	a.resp = nil
 	a.respErr = "dial tcp: lookup api.void.example: no such host"
+	a.respProblem = respOK
 	tester.Frame()
 	saveSnapshot(t, tester, out+"/omniflow-composer-error.png")
-	a.respErr = locales.ErrRequestCanceled()
+	a.respErr = ""
+	a.respProblem = respCanceled
 	tester.Frame()
 	saveSnapshot(t, tester, out+"/omniflow-composer-canceled.png")
-	a.respErr = ""
+	a.respProblem = respOK
 
 	// A form body, written as a table.
 	a.req = a.requests[1].Clone()

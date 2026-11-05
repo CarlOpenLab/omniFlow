@@ -425,8 +425,8 @@ func TestPortIsCheckedBeforeTheProxyStarts(t *testing.T) {
 		t.Error("the sidebar does not flag the port")
 	}
 	a.startProxy()
-	if a.proxyRunning() || a.proxyErr != locales.ErrPort() {
-		t.Errorf("the proxy started on %s, or said %q", a.proxyPort, a.proxyErr)
+	if a.proxyRunning() || a.proxyProblemText() != locales.ErrPort() {
+		t.Errorf("the proxy started on %s, or said %q", a.proxyPort, a.proxyProblemText())
 	}
 }
 

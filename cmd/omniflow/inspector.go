@@ -70,11 +70,11 @@ func (a *app) captureToolbar(c *ui.Context, pal *uitokens.Palette) {
 		if addrChip.Clicked() {
 			a.copyText(c, locales.InspectorAddrCopied(addr), addr)
 		}
-		if a.proxyErr != "" {
+		if text := a.proxyProblemText(); text != "" {
 			ui.Row(c).Height(28).Padding(0, 8).Radius(7).Background(pal.Danger.Alpha(0.1)).
 				Children(func() {
 					ui.Icon(c, iconWarning).Size(11, 11).TextColor(pal.Danger)
-					ui.Text(c, a.proxyErr).FontSize(10.5).TextColor(pal.Danger).SingleLine().
+					ui.Text(c, text).FontSize(10.5).TextColor(pal.Danger).SingleLine().
 						Ellipsis("…").MaxWidth(280)
 				})
 		}
@@ -198,16 +198,19 @@ func (a *app) statusHead(c *ui.Context, pal *uitokens.Palette) {
 		ui.Icon(c, iconChevron).Size(8, 8).TextColor(col)
 	})
 	b.Menu(func(m *ui.Menu) {
-		groups := []struct{ value, label string }{
-			{"", "All Statuses"},
-			{"2xx", "2xx · Success"},
-			{"3xx", "3xx · Redirect"},
-			{"4xx", "4xx · Client Error"},
-			{"5xx", "5xx · Server Error"},
-			{"err", "Errors · no response"},
+		groups := []struct {
+			value string
+			label func() string
+		}{
+			{"", locales.InspectorStatusAll},
+			{"2xx", locales.InspectorStatus2xx},
+			{"3xx", locales.InspectorStatus3xx},
+			{"4xx", locales.InspectorStatus4xx},
+			{"5xx", locales.InspectorStatus5xx},
+			{"err", locales.InspectorStatusErr},
 		}
 		for _, g := range groups {
-			if m.Item(g.label).Checked(a.statusFilter == g.value).Chosen() {
+			if m.Item(g.label()).Checked(a.statusFilter == g.value).Chosen() {
 				a.statusFilter = g.value
 			}
 		}
