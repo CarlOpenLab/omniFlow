@@ -10,6 +10,8 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/i18n"
+
+	"github.com/CarlOpenLab/omniflow/internal/model"
 )
 
 // TestMain pins the language the app shows, so the English assertions in
@@ -87,6 +89,74 @@ func TestLanguageRow(t *testing.T) {
 	}
 	if len(*got) == 0 || (*got)[len(*got)-1] != "zh-Hans" {
 		t.Errorf("the locale setter got %q, want a final zh-Hans", *got)
+	}
+}
+
+func TestChineseComposer(t *testing.T) {
+	i18n.SetLocaleFunc(func() string { return "zh-Hans" })
+	t.Cleanup(func() { i18n.SetLocaleFunc(func() string { return "en" }) })
+	a := newTestApp(t)
+	tt := newTester(t, a)
+	for _, want := range []string{
+		"发送", "集合", "历史", "参数", "请求头", "请求体", "认证", "响应", "尚未发送",
+	} {
+		if !tt.HasText(want) {
+			t.Errorf("the Chinese composer is missing %q", want)
+		}
+	}
+}
+
+func TestChineseInspector(t *testing.T) {
+	i18n.SetLocaleFunc(func() string { return "zh-Hans" })
+	t.Cleanup(func() { i18n.SetLocaleFunc(func() string { return "en" }) })
+	a := newTestApp(t)
+	seedFlows(a)
+	a.mode = modeInspector
+	a.follow = false
+	a.flowSelID = 0
+	tt := newTester(t, a)
+	for _, want := range []string{
+		"抓包", "开始抓包", "方法", "状态", "主机", "路径", "大小", "耗时",
+		"全部流量", "选择一条流量",
+	} {
+		if !tt.HasText(want) {
+			t.Errorf("the Chinese inspector is missing %q", want)
+		}
+	}
+}
+
+func TestChineseSettingsAndDialogs(t *testing.T) {
+	i18n.SetLocaleFunc(func() string { return "zh-Hans" })
+	t.Cleanup(func() { i18n.SetLocaleFunc(func() string { return "en" }) })
+	a := newTestApp(t)
+	a.settingsOpen = true
+	tt := newTester(t, a)
+	for _, want := range []string{
+		"设置", "外观", "语言", "主题", "代理端口", "数据", "关于",
+	} {
+		if !tt.HasText(want) {
+			t.Errorf("the Chinese settings are missing %q", want)
+		}
+	}
+
+	a.settingsOpen = false
+	a.envs = []model.Environment{{
+		ID: "env1", Name: "Staging",
+		Vars: []model.KV{{ID: "e1", Enabled: true, Key: "host", Value: "staging.example.com"}},
+	}}
+	a.envEdit, a.envOpen = "env1", true
+	tt.Frame()
+	for _, want := range []string{"环境", "添加行"} {
+		if !tt.HasText(want) {
+			t.Errorf("the Chinese environment manager is missing %q", want)
+		}
+	}
+
+	a.envOpen = false
+	a.caOpen = true
+	tt.Frame()
+	if !tt.HasText("根证书") {
+		t.Error("the Chinese certificate dialog is missing 根证书")
 	}
 }
 

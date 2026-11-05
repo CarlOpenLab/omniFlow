@@ -140,7 +140,7 @@ func (a *app) cardHeader(c *ui.Context, pal *uitokens.Palette) {
 // click, and says whether the collection has it as it is.
 func (a *app) composerTitle(c *ui.Context, pal *uitokens.Palette) {
 	ui.Column(c).Gap(1).Justify(ui.Center).MinWidth(0).Shrink(1).Children(func() {
-		name := a.req.DisplayName()
+		name := displayRequestName(a.req)
 		title := ui.EditableText(c.Key("request-name"), &name).FontSize(13.5).FontWeight(700).
 			TextColor(pal.Text).MaxWidth(420).Label(locales.ComposerRequestName()).
 			Tooltip(locales.ComposerRenameHint())

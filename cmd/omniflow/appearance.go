@@ -4,6 +4,7 @@ import (
 	"github.com/egoist/mygo"
 
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 // blur is the strength of the window's material, as prefs store it.
@@ -19,12 +20,12 @@ const (
 // blurs are the settings' segments, in order.
 var blurs = []struct {
 	id    blur
-	label string
+	label func() string
 }{
-	{blurNone, "None"},
-	{blurSubtle, "Subtle"},
-	{blurMedium, "Medium"},
-	{blurDeep, "Deep"},
+	{blurNone, locales.BlurNone},
+	{blurSubtle, locales.BlurSubtle},
+	{blurMedium, locales.BlurMedium},
+	{blurDeep, locales.BlurDeep},
 }
 
 // normalizeBlur reads a strength it does not know, from an older file or

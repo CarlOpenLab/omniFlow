@@ -124,7 +124,7 @@ func newApp() *app {
 	}
 	st, err := store.Open(filepath.Join(dir, "omniflow.json"))
 	if err != nil {
-		a.setNotice("Settings could not be read: " + err.Error())
+		a.setNotice(locales.NoticeSettingsReadFailed(err.Error()))
 		st, _ = store.Open(filepath.Join(os.TempDir(), "omniflow.json"))
 	}
 	a.store = st
@@ -153,7 +153,7 @@ func newApp() *app {
 
 	ca, err := proxy.LoadOrCreateCA(dir)
 	if err != nil {
-		a.setNotice("The capture certificate could not be created: " + err.Error())
+		a.setNotice(locales.NoticeCACreateFailed(err.Error()))
 	} else {
 		a.ca = ca
 		a.prx = proxy.New(ca)
@@ -409,7 +409,7 @@ func (a *app) renameRequest(name string) {
 			a.requests[i].Name = name
 			a.requests[i].UpdatedAt = time.Now()
 			a.persistRequests()
-			a.setNotice("Renamed to “" + name + "”")
+			a.setNotice(locales.NoticeRenamed(name))
 			return
 		}
 	}
@@ -423,12 +423,12 @@ func (a *app) duplicateRequest(id string) {
 		}
 		cp := r.Clone()
 		cp.ID = model.NewID("req")
-		cp.Name = r.DisplayName() + " Copy"
+		cp.Name = locales.ComposerCopyName(displayRequestName(r))
 		cp.Saved, cp.UpdatedAt = true, time.Now()
 		a.requests = limitRequests(slices.Insert(a.requests, i+1, cp))
 		a.persistRequests()
 		a.loadRequest(cp)
-		a.setNotice("Duplicated as “" + cp.Name + "”")
+		a.setNotice(locales.NoticeDuplicated(cp.Name))
 		return
 	}
 }
@@ -441,7 +441,7 @@ func (a *app) persistRequests() {
 
 func (a *app) saveRequest() {
 	if strings.TrimSpace(a.req.URL) == "" {
-		a.setNotice("A request needs a URL before it can be saved")
+		a.setNotice(locales.NoticeNeedsURL())
 		return
 	}
 	now := time.Now()
@@ -475,7 +475,7 @@ func (a *app) saveRequest() {
 	a.requests = limitRequests(a.requests)
 	delete(a.drafts, a.savedSel)
 	a.persistRequests()
-	a.setNotice("Saved “" + name + "” to the collection")
+	a.setNotice(locales.NoticeSaved(name))
 }
 
 func limitRequests(in []model.Request) []model.Request {
@@ -507,7 +507,7 @@ func (a *app) deleteRequest(id string) {
 		a.newRequest()
 	}
 	a.persistRequests()
-	a.setUndo("Deleted “"+removed.DisplayName()+"”", func() {
+	a.setUndo(locales.NoticeDeletedRequest(displayRequestName(removed)), func() {
 		a.requests = slices.Insert(a.requests, min(idx, len(a.requests)), removed)
 		if hadDraft {
 			if a.drafts == nil {
@@ -519,7 +519,7 @@ func (a *app) deleteRequest(id string) {
 		if wasOpen {
 			a.loadRequest(removed)
 		}
-		a.setNotice("Restored “" + removed.DisplayName() + "”")
+		a.setNotice(locales.NoticeRestored(displayRequestName(removed)))
 	})
 }
 
@@ -536,7 +536,7 @@ func (a *app) loadHistory(h model.HistoryEntry) {
 	}
 	a.open(r, "")
 	if h.BodyDropped {
-		a.setNotice("The body was too large to keep in history; the rest is restored")
+		a.setNotice(locales.NoticeBodyTooLarge())
 	}
 }
 
@@ -548,7 +548,7 @@ func (a *app) removeHistory(id string) {
 	removed := a.history[idx]
 	a.history = slices.Delete(a.history, idx, idx+1)
 	a.persistHistory()
-	a.setUndo("Removed from history", func() {
+	a.setUndo(locales.NoticeRemovedHistory(), func() {
 		a.history = slices.Insert(a.history, min(idx, len(a.history)), removed)
 		a.persistHistory()
 	})
@@ -608,7 +608,7 @@ func (a *app) clearHistory() {
 	cleared := a.history
 	a.history = []model.HistoryEntry{}
 	a.persistHistory()
-	a.setUndo("History cleared", func() {
+	a.setUndo(locales.NoticeHistoryCleared(), func() {
 		// Anything sent since stays on top.
 		a.history = append(a.history, cleared...)
 		a.persistHistory()
@@ -622,8 +622,8 @@ func (a *app) send() {
 	// A request that cannot go replaces the last answer with why, which an
 	// answer left on screen would hide.
 	if strings.TrimSpace(a.req.URL) == "" {
-		a.resp, a.respErr = nil, "Enter a URL to send."
-		a.setNotice("Enter a URL to send")
+		a.resp, a.respErr = nil, locales.ErrEnterURL()
+		a.setNotice(locales.ErrEnterURL())
 		return
 	}
 	resolved, missing := a.resolve(a.req)
@@ -662,7 +662,7 @@ func (a *app) send() {
 		a.win.Update(func() { a.finishSend(seq, sent, sentURL, res) })
 	}()
 	if len(missing) > 0 {
-		a.setNotice("Sent with " + braces(missing) + " left as written")
+		a.setNotice(locales.NoticeSentMissing(braces(missing)))
 	}
 }
 
@@ -678,7 +678,7 @@ func (a *app) finishSend(seq uint64, sent model.Request, sentURL string, res htt
 	a.respErr = res.Err
 	a.addHistory(sent, sentURL, res)
 	if res.Err != "" {
-		a.setNotice("Request to " + sentURL + " failed")
+		a.setNotice(locales.NoticeRequestFailed(sentURL))
 	}
 }
 
@@ -694,11 +694,8 @@ func (a *app) cancelSend() {
 	a.sendSeq++
 	a.sending, a.sendCancel = false, nil
 	a.resp = nil
-	a.respErr = errCanceled
+	a.respErr = locales.ErrRequestCanceled()
 }
-
-// errCanceled is what the response pane says after ⌘. or Cancel.
-const errCanceled = "The request was canceled."
 
 func specOf(r model.Request) httpx.Spec {
 	return httpx.Spec{
@@ -767,7 +764,7 @@ func (a *app) sendFlowToComposer(f proxy.Flow) {
 	}
 	a.open(r, "")
 	a.mode = modeComposer
-	a.setNotice("Captured request opened in Composer")
+	a.setNotice(locales.NoticeCapturedOpened())
 }
 
 // replayable reports whether a captured header belongs in a request sent
@@ -797,7 +794,7 @@ func (a *app) curlText() (string, bool) {
 	if a.mode == modeInspector {
 		f := a.selectedFlow()
 		if f == nil {
-			a.setNotice("Choose a flow to copy it as cURL")
+			a.setNotice(locales.NoticeChooseFlowCurl())
 			return "", false
 		}
 		return flowCurl(*f), true
@@ -812,14 +809,14 @@ func (a *app) curlText() (string, bool) {
 
 func (a *app) copyCurl(c *ui.Context) {
 	if cmd, ok := a.curlText(); ok {
-		a.copyText(c, "cURL command copied", cmd)
+		a.copyText(c, locales.NoticeCurlCopied(), cmd)
 	}
 }
 
 // copyCurlPlain is copyCurl for the menu, which has no view to copy from.
 func (a *app) copyCurlPlain() {
 	if cmd, ok := a.curlText(); ok {
-		a.copyPlain("cURL command copied", cmd)
+		a.copyPlain(locales.NoticeCurlCopied(), cmd)
 	}
 }
 
@@ -839,13 +836,13 @@ func flowCurl(f proxy.Flow) string {
 
 func (a *app) startProxy() {
 	if a.prx == nil {
-		a.proxyErr = "The certificate authority is unavailable."
+		a.proxyErr = locales.NoticeProxyCAUnavailable()
 		a.setNotice(a.proxyErr)
 		return
 	}
 	if !validPort(a.proxyPort) {
-		a.proxyErr = errPort
-		a.setNotice(errPort)
+		a.proxyErr = locales.ErrPort()
+		a.setNotice(a.proxyErr)
 		return
 	}
 	a.prx.SetMITM(a.mitm)
@@ -859,7 +856,7 @@ func (a *app) startProxy() {
 	if _, port, err := splitHostPort(addr); err == nil {
 		a.proxyPort = port
 	}
-	a.setNotice("Proxy listening on " + addr)
+	a.setNotice(locales.NoticeProxyListening(addr))
 }
 
 func (a *app) stopProxy() {
@@ -867,7 +864,7 @@ func (a *app) stopProxy() {
 		return
 	}
 	a.prx.Stop()
-	a.setNotice("Proxy stopped")
+	a.setNotice(locales.NoticeProxyStopped())
 }
 
 func (a *app) toggleProxy() {
@@ -892,9 +889,6 @@ func (a *app) restartProxy() {
 func (a *app) proxyRunning() bool {
 	return a.prx != nil && a.prx.Running()
 }
-
-// errPort is what a port field says of a port the proxy cannot listen on.
-const errPort = "Use a port from 1 to 65535."
 
 func validPort(s string) bool {
 	n, err := strconv.Atoi(strings.TrimSpace(s))
@@ -965,7 +959,7 @@ func (a *app) clearFlows() {
 	if len(cleared) == 0 {
 		return
 	}
-	a.setUndo("Session cleared", func() {
+	a.setUndo(locales.NoticeSessionCleared(), func() {
 		a.flows = append(cleared, a.flows...)
 		a.capturedBytes = 0
 		for _, f := range a.flows {
@@ -984,30 +978,30 @@ func (a *app) clearFlows() {
 func (a *app) exportHAR() {
 	n := len(a.flows)
 	if n == 0 {
-		a.setNotice("There is no traffic to export")
+		a.setNotice(locales.NoticeNoTraffic())
 		return
 	}
 	data, err := proxy.HAR(a.flows, "OmniFlow", appVersion())
 	if err != nil {
-		a.setNotice("The capture could not be prepared: " + err.Error())
+		a.setNotice(locales.NoticeHARPrepareFailed(err.Error()))
 		return
 	}
 	go func() {
 		dest, err := mygo.Dialog.Save(mygo.SaveDialogOptions{
 			Parent:      a.win,
-			Title:       "Export HAR",
+			Title:       locales.ExportHAR(),
 			DefaultPath: "omniflow.har",
-			ButtonLabel: "Export",
+			ButtonLabel: locales.ExportHARButton(),
 		})
 		if err != nil {
-			a.update(func() { a.setNotice("The capture could not be exported: " + err.Error()) })
+			a.update(func() { a.setNotice(locales.NoticeHARExportFailed(err.Error())) })
 			return
 		}
 		if dest == "" {
 			return
 		}
 		if err := os.WriteFile(dest, data, 0o644); err != nil {
-			a.update(func() { a.setNotice("The capture could not be exported: " + err.Error()) })
+			a.update(func() { a.setNotice(locales.NoticeHARExportFailed(err.Error())) })
 			return
 		}
 		a.update(func() { a.setNotice(locales.NoticeExported(n, dest)) })
@@ -1156,29 +1150,29 @@ func (a *app) savePrefs() {
 
 func (a *app) exportCA() {
 	if a.ca == nil {
-		a.setNotice("The certificate authority is unavailable")
+		a.setNotice(locales.NoticeCAUnavailable())
 		return
 	}
 	go func() {
 		path, err := mygo.Dialog.Save(mygo.SaveDialogOptions{
 			Parent:      a.win,
-			Title:       "Save OmniFlow Root CA",
+			Title:       locales.CaSaveDialogTitle(),
 			DefaultPath: "OmniFlow-Root-CA.pem",
-			ButtonLabel: "Save",
-			Filters:     []mygo.FileFilter{{Name: "Certificates", Extensions: []string{"pem", "crt", "cer"}}},
+			ButtonLabel: locales.CommonSave(),
+			Filters:     []mygo.FileFilter{{Name: locales.CaFilterName(), Extensions: []string{"pem", "crt", "cer"}}},
 		})
 		if err != nil {
-			a.update(func() { a.setNotice("The certificate could not be saved: " + err.Error()) })
+			a.update(func() { a.setNotice(locales.NoticeCASaveFailed(err.Error())) })
 			return
 		}
 		if path == "" {
 			return
 		}
 		if err := os.WriteFile(path, a.ca.CertPEM(), 0o644); err != nil {
-			a.update(func() { a.setNotice("The certificate could not be saved: " + err.Error()) })
+			a.update(func() { a.setNotice(locales.NoticeCASaveFailed(err.Error())) })
 			return
 		}
-		a.update(func() { a.setNotice("Certificate saved to " + path) })
+		a.update(func() { a.setNotice(locales.NoticeCASaved(path)) })
 	}()
 }
 
@@ -1187,14 +1181,14 @@ func (a *app) revealCA() {
 		return
 	}
 	if err := exec.Command("open", "-R", a.ca.CertPath()).Run(); err != nil {
-		a.setNotice("Could not reveal the certificate: " + err.Error())
+		a.setNotice(locales.NoticeCARevealFailed(err.Error()))
 	}
 }
 
 // dataDir is where the collection, the history and the certificate live.
 func (a *app) dataDir() string {
 	if a.store == nil {
-		return "Unavailable"
+		return locales.CommonUnavailable()
 	}
 	return filepath.Dir(a.store.Path())
 }
@@ -1204,7 +1198,7 @@ func (a *app) revealData() {
 		return
 	}
 	if err := exec.Command("open", "-R", a.store.Path()).Run(); err != nil {
-		a.setNotice("Could not show the data folder: " + err.Error())
+		a.setNotice(locales.NoticeDataRevealFailed(err.Error()))
 	}
 }
 
@@ -1213,7 +1207,16 @@ func appVersion() string {
 	if v := mygo.App.Version(); v != "" {
 		return v
 	}
-	return "(development build)"
+	return locales.CommonDevelopmentBuild()
+}
+
+// displayRequestName is a request's name as the interface shows it: a
+// request still carrying the stored default reads in the app's language.
+func displayRequestName(r model.Request) string {
+	if r.DisplayName() == "Untitled Request" {
+		return locales.ComposerUntitledRequest()
+	}
+	return r.DisplayName()
 }
 
 func (a *app) copyText(c *ui.Context, label, text string) {
@@ -1231,59 +1234,59 @@ func (a *app) copyPlain(label, text string) {
 func (a *app) installMenu() {
 	mygo.App.SetMenu(mygo.NewMenu([]*mygo.MenuItem{
 		{Role: mygo.RoleAppMenu},
-		{Label: "File", Submenu: []*mygo.MenuItem{
-			{Label: "New Request", Accelerator: "CmdOrCtrl+N", Click: func(*mygo.MenuItem, *mygo.Window) {
+		{Label: locales.MenuFile(), Submenu: []*mygo.MenuItem{
+			{Label: locales.ComposerNewRequest(), Accelerator: "CmdOrCtrl+N", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(func() { a.newRequest() })
 			}},
-			{Label: "Save Request", Accelerator: "CmdOrCtrl+S", Click: func(*mygo.MenuItem, *mygo.Window) {
+			{Label: locales.MenuSaveRequest(), Accelerator: "CmdOrCtrl+S", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(a.saveRequest)
 			}},
 			mygo.Separator(),
-			{Label: "Send Request", Accelerator: "CmdOrCtrl+Enter", Click: func(*mygo.MenuItem, *mygo.Window) {
+			{Label: locales.MenuSendRequest(), Accelerator: "CmdOrCtrl+Enter", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(func() {
 					if a.mode == modeComposer {
 						a.send()
 					}
 				})
 			}},
-			{Label: "Cancel Request", Accelerator: "CmdOrCtrl+.", Click: func(*mygo.MenuItem, *mygo.Window) {
+			{Label: locales.MenuCancelRequest(), Accelerator: "CmdOrCtrl+.", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(a.cancelSend)
 			}},
-			{Label: "Copy as cURL", Accelerator: "CmdOrCtrl+Shift+C", Click: func(*mygo.MenuItem, *mygo.Window) {
+			{Label: locales.CommonCopyCurl(), Accelerator: "CmdOrCtrl+Shift+C", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(func() { a.copyCurlPlain() })
 			}},
 			mygo.Separator(),
-			{Label: "Settings…", Accelerator: "CmdOrCtrl+,", Click: func(*mygo.MenuItem, *mygo.Window) {
+			{Label: locales.CommonSettingsMenu(), Accelerator: "CmdOrCtrl+,", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(func() { a.settingsOpen = true })
 			}},
 			mygo.Separator(),
 			{Role: mygo.RoleClose},
 		}},
 		{Role: mygo.RoleEditMenu},
-		{Label: "View", Submenu: []*mygo.MenuItem{
-			{Label: "Composer", Accelerator: "CmdOrCtrl+1", Click: func(*mygo.MenuItem, *mygo.Window) {
+		{Label: locales.MenuView(), Submenu: []*mygo.MenuItem{
+			{Label: locales.ComposerMode(), Accelerator: "CmdOrCtrl+1", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(func() { a.mode = modeComposer })
 			}},
-			{Label: "Proxy Inspector", Accelerator: "CmdOrCtrl+2", Click: func(*mygo.MenuItem, *mygo.Window) {
+			{Label: locales.MenuProxyInspector(), Accelerator: "CmdOrCtrl+2", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(func() { a.mode = modeInspector })
 			}},
 			mygo.Separator(),
-			{Label: "Environments…", Accelerator: "CmdOrCtrl+E", Click: func(*mygo.MenuItem, *mygo.Window) {
+			{Label: locales.MenuEnvironments(), Accelerator: "CmdOrCtrl+E", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(a.openEnvs)
 			}},
 		}},
-		{Label: "Proxy", Submenu: []*mygo.MenuItem{
-			{Label: "Start or Stop", Accelerator: "CmdOrCtrl+Shift+P", Click: func(*mygo.MenuItem, *mygo.Window) {
+		{Label: locales.MenuProxy(), Submenu: []*mygo.MenuItem{
+			{Label: locales.MenuStartStop(), Accelerator: "CmdOrCtrl+Shift+P", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(a.toggleProxy)
 			}},
-			{Label: "Clear Session", Click: func(*mygo.MenuItem, *mygo.Window) {
+			{Label: locales.InspectorClearSession(), Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(a.clearFlows)
 			}},
-			{Label: "Export HAR…", Accelerator: "CmdOrCtrl+Shift+E", Click: func(*mygo.MenuItem, *mygo.Window) {
+			{Label: locales.MenuExportHAR(), Accelerator: "CmdOrCtrl+Shift+E", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(a.exportHAR)
 			}},
 			mygo.Separator(),
-			{Label: "Export Root CA…", Click: func(*mygo.MenuItem, *mygo.Window) { a.exportCA() }},
+			{Label: locales.MenuExportCA(), Click: func(*mygo.MenuItem, *mygo.Window) { a.exportCA() }},
 		}},
 		{Role: mygo.RoleWindowMenu},
 	}))

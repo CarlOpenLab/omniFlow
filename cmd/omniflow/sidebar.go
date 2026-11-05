@@ -106,7 +106,7 @@ func (a *app) composerSidebar(c *ui.Context, pal *uitokens.Palette) {
 func (a *app) requestRow(c *ui.Context, pal *uitokens.Palette, r model.Request) (act func()) {
 	selected := a.savedSel == r.ID
 	row := ui.ButtonBase(c.Key("req:"+r.ID)).Height(30).Padding(0, 8).Radius(7).Gap(7).
-		Label(r.DisplayName()).Tooltip(r.Method + " " + r.URL)
+		Label(displayRequestName(r)).Tooltip(r.Method + " " + r.URL)
 	if selected {
 		row.Background(pal.AccentSoft)
 	} else if row.Hovered() {
@@ -121,11 +121,11 @@ func (a *app) requestRow(c *ui.Context, pal *uitokens.Palette, r model.Request) 
 		if selected {
 			nameColor = pal.Accent
 		}
-		ui.Text(c, r.DisplayName()).FontSize(11.5).FontWeight(550).TextColor(nameColor).
+		ui.Text(c, displayRequestName(r)).FontSize(11.5).FontWeight(550).TextColor(nameColor).
 			SingleLine().Ellipsis("…").Grow(1).MinWidth(0)
 		switch {
 		case hovered:
-			del := iconButton(c, pal, iconTrash, locales.SidebarDeleteRequest(r.DisplayName()), 20)
+			del := iconButton(c, pal, iconTrash, locales.SidebarDeleteRequest(displayRequestName(r)), 20)
 			del.OnClick(func() { a.deleteRequest(r.ID) })
 		case a.hasDraft(r.ID):
 			ui.Box(c).Size(6, 6).Shrink(0).Radius(3).Background(pal.Warning).Margin(0, 7).
@@ -281,7 +281,7 @@ func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 			ui.Text(c, "127.0.0.1").FontSize(10.5).Font("monospace").TextColor(pal.TextFaint)
 		})
 		if !validPort(a.proxyPort) {
-			ui.Text(c, errPort).FontSize(10).TextColor(pal.Danger)
+			ui.Text(c, locales.ErrPort()).FontSize(10).TextColor(pal.Danger)
 		}
 		decrypt := ui.Row(c).Height(24).Gap(8)
 		decrypt.Children(func() {

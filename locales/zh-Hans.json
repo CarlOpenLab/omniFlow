@@ -237,5 +237,503 @@
   "timingReusedNote": "此请求复用了已有连接，因此没有在 DNS、连接或 TLS 上耗时。",
 
   "settingsLanguage": "语言",
-  "languageSystem": "跟随系统"
+  "languageSystem": "跟随系统",
+
+  "settingsTitle": "设置",
+
+  "settingsSubtitle": "外观、抓包与证书",
+
+  "settingsClose": "关闭设置",
+
+  "settingsAppearance": "外观",
+
+  "settingsTheme": "主题",
+
+  "settingsCardOpacity": "卡片不透明度",
+
+  "settingsMaterial": "材质",
+
+  "settingsAcrylicTitle": "亚克力背景",
+
+  "settingsAcrylicHint": "系统的磨砂材质透过窗口显现",
+
+  "settingsCapture": "抓包",
+
+  "settingsProxyPort": "代理端口",
+
+  "settingsTimeout": "超时",
+
+  "settingsSeconds": "秒",
+
+  "settingsTimeoutLabel": "超时秒数",
+
+  "settingsStopRedirects": "在重定向处停止",
+
+  "settingsSkipTLS": "跳过证书校验",
+
+  "settingsAutostart": "打开 OmniFlow 时启动代理",
+
+  "settingsDecrypt": "使用根证书解密 HTTPS",
+
+  "settingsManage": "管理…",
+
+  "settingsData": "数据",
+
+  "settingsKeepHistory": "保留请求历史",
+
+  "settingsDataHint": "集合、历史与证书",
+
+  "settingsShowInFinder": "在访达中显示",
+
+  "settingsAbout": "关于",
+
+  "settingsAboutLine": "OmniFlow {version} · 原生 GPU 绘制，无网页视图",
+  "@settingsAboutLine": {
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.2.0"
+      }
+    }
+  },
+
+  "commonDone": "完成",
+
+  "commonUnavailable": "不可用",
+
+  "commonDevelopmentBuild": "（开发版本）",
+
+  "composerUntitledRequest": "未命名请求",
+
+  "caClose": "关闭证书对话框",
+
+  "caSubtitle": "OmniFlow 读取 HTTPS 所需的唯一信任",
+
+  "caIntro": "OmniFlow 会为每个 HTTPS 主机即时签发证书，根证书颁发机构在这台机器上创建。把该根证书安装到设备的信任存储中，抓包面板才能读取加密流量。请只在你能控制的设备上安装。",
+
+  "caStep1Title": "保存证书",
+
+  "caStep1Body": "将根证书写入设备可以访问的文件。",
+
+  "caStep2Title": "安装证书",
+
+  "caStep2Body": "macOS：在“钥匙串访问”中双击它，并设为“始终信任”。Windows：导入到“受信任的根证书颁发机构”。iOS：安装描述文件，然后在“设置”→“通用”→“关于本机”中启用完全信任。",
+
+  "caStep3Title": "将设备指向代理",
+
+  "caStep3Body": "在这台机器上将 HTTP 代理设为 127.0.0.1:{port}；从其他设备访问时，设为这台 Mac 的地址。",
+  "@caStep3Body": {
+    "placeholders": {
+      "port": {
+        "type": "String",
+        "example": "9090"
+      }
+    }
+  },
+
+  "caStep4Title": "抓包",
+
+  "caStep4Body": "请求经过时会显示在抓包面板中。完成后请移除证书。",
+
+  "caCopyPath": "复制证书路径",
+
+  "caPathCopied": "已复制证书路径",
+
+  "caTrustUnknown": "尚未检查这台 Mac 是否信任该证书",
+
+  "caTrustChecking": "正在检查这台 Mac 是否信任该证书…",
+
+  "caTrustYes": "这台 Mac 已信任",
+
+  "caTrustNo": "这台 Mac 未信任 · 安装前 HTTPS 会发出警告",
+
+  "caCheckAgain": "重新检查",
+
+  "caReveal": "在访达中显示",
+
+  "caSave": "保存证书…",
+
+  "caSaveDialogTitle": "保存 OmniFlow 根证书",
+
+  "caFilterName": "证书",
+
+  "noticeCAUnavailable": "证书颁发机构不可用",
+
+  "noticeCASaveFailed": "无法保存证书：{error}",
+  "@noticeCASaveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+
+  "noticeCASaved": "证书已保存到 {path}",
+  "@noticeCASaved": {
+    "placeholders": {
+      "path": {
+        "type": "String",
+        "example": "/Users/me/OmniFlow-Root-CA.pem"
+      }
+    }
+  },
+
+  "noticeCARevealFailed": "无法在访达中显示证书：{error}",
+  "@noticeCARevealFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "open: no such file"
+      }
+    }
+  },
+
+  "noticeCACreateFailed": "无法创建抓包证书：{error}",
+  "@noticeCACreateFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+
+  "envMissingActive": "{count, plural, other {{names} 未在“{name}”中设置。请在“环境”中添加，或改用其他环境。}}",
+  "@envMissingActive": {
+    "placeholders": {
+      "names": {
+        "type": "String",
+        "example": "{{host}}"
+      },
+      "count": {
+        "type": "int",
+        "example": "1"
+      },
+      "name": {
+        "type": "String",
+        "example": "Staging"
+      }
+    }
+  },
+
+  "envMissingNone": "{count, plural, other {{names} 未设置：当前没有使用环境。可在侧边栏选择一个环境来填充。}}",
+  "@envMissingNone": {
+    "placeholders": {
+      "names": {
+        "type": "String",
+        "example": "{{host}}"
+      },
+      "count": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+
+  "envUsing": "正在使用“{name}”",
+  "@envUsing": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Staging"
+      }
+    }
+  },
+
+  "envNoneInUse": "未使用环境",
+
+  "envNew": "新建环境",
+
+  "envCopyName": "{name} 副本",
+  "@envCopyName": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Staging"
+      }
+    }
+  },
+
+  "envDeleted": "已删除“{name}”",
+  "@envDeleted": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Staging"
+      }
+    }
+  },
+
+  "envNoEnvironment": "无环境",
+
+  "envPickerTooltip": "环境变量 '{{variables}}' 从中取值",
+
+  "envManage": "管理环境…",
+
+  "envManagerTitle": "环境",
+
+  "envUse": "使用",
+
+  "envUseThis": "使用此环境",
+
+  "envInUse": "使用中",
+
+  "envEmptyTitle": "还没有环境",
+
+  "envEmptyHint": "环境保存请求在不同地点会有差异的值，例如主机名或密钥。在 URL、请求头或请求体中写 '{{name}}'，当前使用的环境会为它填值。",
+
+  "envNameLabel": "环境名称",
+
+  "envUntitled": "未命名",
+
+  "envPlaceholdersHint": "在请求的 URL、请求头、请求体或认证中写 '{{name}}'。内置变量：{builtins}。",
+  "@envPlaceholdersHint": {
+    "placeholders": {
+      "builtins": {
+        "type": "String",
+        "example": "$timestamp, $randomInt"
+      }
+    }
+  },
+
+  "envVarHint": "变量",
+
+  "envNoVariables": "还没有变量。",
+
+  "envDynamicMade": "{name} 在请求过程中生成",
+  "@envDynamicMade": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "$timestamp"
+      }
+    }
+  },
+
+  "envNotSet": "{name} 未设置",
+  "@envNotSet": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "host"
+      }
+    }
+  },
+
+  "noticeSettingsReadFailed": "无法读取设置：{error}",
+  "@noticeSettingsReadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+
+  "noticeRenamed": "已重命名为“{name}”",
+  "@noticeRenamed": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  },
+
+  "noticeDuplicated": "已创建副本“{name}”",
+  "@noticeDuplicated": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository Copy"
+      }
+    }
+  },
+
+  "noticeNeedsURL": "请求需要先填写 URL 才能保存",
+
+  "noticeSaved": "已将“{name}”保存到集合",
+  "@noticeSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  },
+
+  "noticeDeletedRequest": "已删除“{name}”",
+  "@noticeDeletedRequest": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  },
+
+  "noticeRestored": "已恢复“{name}”",
+  "@noticeRestored": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  },
+
+  "noticeBodyTooLarge": "请求体过大，未保留在历史中；其余内容已恢复",
+
+  "noticeRemovedHistory": "已从历史中移除",
+
+  "noticeHistoryCleared": "已清空历史",
+
+  "noticeSentMissing": "已发送，{names} 保持原样",
+  "@noticeSentMissing": {
+    "placeholders": {
+      "names": {
+        "type": "String",
+        "example": "{{host}}"
+      }
+    }
+  },
+
+  "noticeRequestFailed": "请求 {url} 失败",
+  "@noticeRequestFailed": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "https://example.com/"
+      }
+    }
+  },
+
+  "noticeCapturedOpened": "抓到的请求已在编辑器中打开",
+
+  "noticeChooseFlowCurl": "请选择一条流量以复制为 cURL",
+
+  "noticeCurlCopied": "已复制 cURL 命令",
+
+  "noticeProxyCAUnavailable": "证书颁发机构不可用。",
+
+  "noticeProxyListening": "代理正在监听 {addr}",
+  "@noticeProxyListening": {
+    "placeholders": {
+      "addr": {
+        "type": "String",
+        "example": "127.0.0.1:9090"
+      }
+    }
+  },
+
+  "noticeProxyStopped": "代理已停止",
+
+  "noticeSessionCleared": "已清空抓包会话",
+
+  "noticeNoTraffic": "没有可导出的流量",
+
+  "noticeHARPrepareFailed": "无法准备抓包导出：{error}",
+  "@noticeHARPrepareFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "no such file"
+      }
+    }
+  },
+
+  "noticeHARExportFailed": "无法导出抓包：{error}",
+  "@noticeHARExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+
+  "noticeDataRevealFailed": "无法显示数据文件夹：{error}",
+  "@noticeDataRevealFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "open: no such file"
+      }
+    }
+  },
+
+  "exportHAR": "导出 HAR",
+
+  "exportHARButton": "导出",
+
+  "harFilterName": "HAR 文件",
+
+  "errRequestCanceled": "请求已取消。",
+
+  "errPort": "请使用 1 到 65535 之间的端口。",
+
+  "errEnterURL": "请先填写要发送的 URL。",
+
+  "menuFile": "文件",
+
+  "menuSaveRequest": "保存请求",
+
+  "menuSendRequest": "发送请求",
+
+  "menuCancelRequest": "取消请求",
+
+  "menuView": "视图",
+
+  "menuProxyInspector": "抓包面板",
+
+  "menuEnvironments": "环境…",
+
+  "menuProxy": "代理",
+
+  "menuStartStop": "启动或停止",
+
+  "menuExportHAR": "导出 HAR…",
+
+  "menuExportCA": "导出根证书…",
+
+  "curlImportFailed": "无法导入 cURL 命令：{error}",
+  "@curlImportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "no URL in command"
+      }
+    }
+  },
+
+  "curlImportedNotes": "已从 cURL 导入；忽略了：{notes}。",
+  "@curlImportedNotes": {
+    "placeholders": {
+      "notes": {
+        "type": "String",
+        "example": "--insecure"
+      }
+    }
+  },
+
+  "curlImported": "已从 cURL 导入",
+
+  "blurNone": "无",
+
+  "blurSubtle": "轻",
+
+  "blurMedium": "中",
+
+  "blurDeep": "深",
+
+  "composerCopyName": "{name} 副本",
+  "@composerCopyName": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  }
 }

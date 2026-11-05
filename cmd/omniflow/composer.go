@@ -445,7 +445,7 @@ func (a *app) responsePane(c *ui.Context, pal *uitokens.Palette) {
 				switch a.respErr {
 				case "":
 					emptyState(c, pal, iconSend, locales.ComposerNothingSent(), locales.ComposerNothingSentHint())
-				case errCanceled:
+				case locales.ErrRequestCanceled():
 					a.canceledState(c, pal)
 				default:
 					a.errorState(c, pal, a.respErr)

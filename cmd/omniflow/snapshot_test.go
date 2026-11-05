@@ -15,6 +15,7 @@ import (
 	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/internal/proxy"
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 func newTestApp(t *testing.T) *app {
@@ -173,7 +174,7 @@ func TestSnapshots(t *testing.T) {
 	a.respErr = "dial tcp: lookup api.void.example: no such host"
 	tester.Frame()
 	saveSnapshot(t, tester, out+"/omniflow-composer-error.png")
-	a.respErr = errCanceled
+	a.respErr = locales.ErrRequestCanceled()
 	tester.Frame()
 	saveSnapshot(t, tester, out+"/omniflow-composer-canceled.png")
 	a.respErr = ""
