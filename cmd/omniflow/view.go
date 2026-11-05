@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/egoist/mygo/ui"
 
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 // view builds the window: the sidebar over the material, the floating card
@@ -80,17 +79,18 @@ func (a *app) modeSwitcher(c *ui.Context, pal *uitokens.Palette) {
 	track.Children(func() {
 		items := []struct {
 			mode     viewMode
+			id       string
 			icon     *ui.SVG
 			text     string
 			shortcut string
 		}{
-			{modeComposer, iconCompose, "Composer", "⌘1"},
-			{modeInspector, iconInspect, "Inspector", "⌘2"},
+			{modeComposer, "composer", iconCompose, locales.ComposerMode(), "⌘1"},
+			{modeInspector, "inspector", iconInspect, locales.InspectorMode(), "⌘2"},
 		}
 		for _, it := range items {
 			item := it
 			selected := a.mode == item.mode
-			b := ui.ButtonBase(c.Key("mode:"+item.text)).Height(26).Padding(0, 11).Radius(7).Gap(6).
+			b := ui.ButtonBase(c.Key("mode:"+item.id)).Height(26).Padding(0, 11).Radius(7).Gap(6).
 				Center().Label(item.text).Tooltip(item.text + " " + item.shortcut)
 			col := pal.TextMuted
 			if selected {
@@ -126,11 +126,11 @@ func (a *app) cardHeader(c *ui.Context, pal *uitokens.Palette) {
 		if a.mode == modeComposer {
 			a.saveButton(c, pal)
 			a.requestMenu(c, pal)
-			if b := iconButton(c, pal, iconPlus, "New Request", 28); b.Clicked() {
+			if b := iconButton(c, pal, iconPlus, locales.ComposerNewRequest(), 28); b.Clicked() {
 				a.newRequest()
 			}
 		}
-		if b := iconButton(c, pal, iconGear, "Settings", 28); b.Clicked() {
+		if b := iconButton(c, pal, iconGear, locales.CommonSettings(), 28); b.Clicked() {
 			a.settingsOpen = true
 		}
 	})
@@ -140,9 +140,10 @@ func (a *app) cardHeader(c *ui.Context, pal *uitokens.Palette) {
 // click, and says whether the collection has it as it is.
 func (a *app) composerTitle(c *ui.Context, pal *uitokens.Palette) {
 	ui.Column(c).Gap(1).Justify(ui.Center).MinWidth(0).Shrink(1).Children(func() {
-		name := a.req.DisplayName()
+		name := displayRequestName(a.req)
 		title := ui.EditableText(c.Key("request-name"), &name).FontSize(13.5).FontWeight(700).
-			TextColor(pal.Text).MaxWidth(420).Label("Request name").Tooltip("Double-click to rename")
+			TextColor(pal.Text).MaxWidth(420).Label(locales.ComposerRequestName()).
+			Tooltip(locales.ComposerRenameHint())
 		if title.Changed() {
 			a.renameRequest(name)
 		}
@@ -151,11 +152,11 @@ func (a *app) composerTitle(c *ui.Context, pal *uitokens.Palette) {
 				SingleLine().Ellipsis("…").MinWidth(0)
 			switch {
 			case a.savedSel == "":
-				ui.Text(c, "· Not saved").FontSize(10.5).TextColor(pal.TextFaint).Shrink(0)
+				ui.Text(c, locales.ComposerNotSaved()).FontSize(10.5).TextColor(pal.TextFaint).Shrink(0)
 			case a.edited():
-				ui.Text(c, "· Edited").FontSize(10.5).FontWeight(600).TextColor(pal.Warning).Shrink(0)
+				ui.Text(c, locales.ComposerEdited()).FontSize(10.5).FontWeight(600).TextColor(pal.Warning).Shrink(0)
 			default:
-				ui.Text(c, "· Saved").FontSize(10.5).TextColor(pal.TextFaint).Shrink(0)
+				ui.Text(c, locales.ComposerSaved()).FontSize(10.5).TextColor(pal.TextFaint).Shrink(0)
 			}
 		})
 	})
@@ -165,16 +166,16 @@ func (a *app) inspectorTitle(c *ui.Context, pal *uitokens.Palette) {
 	subtitle := ""
 	switch {
 	case a.proxyRunning():
-		subtitle = "Recording on 127.0.0.1:" + a.proxyPort + " · " + plural(len(a.flows), "flow")
-	case a.proxyErr != "":
-		subtitle = "Stopped · " + a.proxyErr
+		subtitle = locales.InspectorRecording("127.0.0.1:"+a.proxyPort, len(a.flows))
+	case a.proxyProblemText() != "":
+		subtitle = locales.InspectorStopped(a.proxyProblemText())
 	case len(a.flows) > 0:
-		subtitle = "Paused · " + plural(len(a.flows), "captured flow")
+		subtitle = locales.InspectorPausedCount(len(a.flows))
 	default:
-		subtitle = "Paused · no traffic captured"
+		subtitle = locales.InspectorPausedEmpty()
 	}
 	ui.Column(c).Gap(1).Justify(ui.Center).MinWidth(0).Shrink(1).Children(func() {
-		ui.Text(c, "Proxy Inspector").FontSize(13.5).FontWeight(700).TextColor(pal.Text).SingleLine()
+		ui.Text(c, locales.InspectorTitle()).FontSize(13.5).FontWeight(700).TextColor(pal.Text).SingleLine()
 		ui.Text(c, subtitle).FontSize(10.5).TextColor(pal.TextMuted).SingleLine().Ellipsis("…")
 	})
 }
@@ -183,12 +184,12 @@ func (a *app) inspectorTitle(c *ui.Context, pal *uitokens.Palette) {
 // what the collection does not.
 func (a *app) saveButton(c *ui.Context, pal *uitokens.Palette) {
 	edited := a.edited()
-	tip := "Save to the collection (⌘S)"
+	tip := locales.SaveTooltipNew()
 	if edited && a.savedSel != "" {
-		tip = "Save changes (⌘S)"
+		tip = locales.SaveTooltipChanges()
 	}
 	b := ui.ButtonBase(c.Key("save")).Height(28).Padding(0, 9).Radius(7).Gap(6).
-		Label("Save").Tooltip(tip)
+		Label(locales.CommonSave()).Tooltip(tip)
 	if b.Hovered() {
 		b.Background(pal.RowHover)
 	}
@@ -203,7 +204,7 @@ func (a *app) saveButton(c *ui.Context, pal *uitokens.Palette) {
 				ui.Box(c).Absolute().Top(-4).Right(-4).Size(7, 7).Radius(4).Background(pal.Accent)
 			}
 		})
-		ui.Text(c, "Save").FontSize(12).FontWeight(550).TextColor(col)
+		ui.Text(c, locales.CommonSave()).FontSize(12).FontWeight(550).TextColor(col)
 	})
 	if b.Clicked() {
 		a.saveRequest()
@@ -214,18 +215,18 @@ func (a *app) saveButton(c *ui.Context, pal *uitokens.Palette) {
 func (a *app) requestMenu(c *ui.Context, pal *uitokens.Palette) {
 	saved := a.savedSel
 	var act func()
-	iconButton(c, pal, iconMore, "More", 28).Menu(func(m *ui.Menu) {
-		if m.Item("Copy as cURL").Shortcut(ui.Cmd|ui.Shift, ui.KeyC).Chosen() {
+	iconButton(c, pal, iconMore, locales.CommonMore(), 28).Menu(func(m *ui.Menu) {
+		if m.Item(locales.CommonCopyCurl()).Shortcut(ui.Cmd|ui.Shift, ui.KeyC).Chosen() {
 			act = func() { a.copyCurl(c) }
 		}
-		if m.Item("Copy URL").Disabled(a.req.URL == "").Chosen() {
-			act = func() { a.copyText(c, "URL copied", a.req.URL) }
+		if m.Item(locales.CommonCopyURL()).Disabled(a.req.URL == "").Chosen() {
+			act = func() { a.copyText(c, locales.CommonURLCopied(), a.req.URL) }
 		}
 		m.Separator()
-		if m.Item("Duplicate").Disabled(saved == "").Chosen() {
+		if m.Item(locales.CommonDuplicate()).Disabled(saved == "").Chosen() {
 			act = func() { a.duplicateRequest(saved) }
 		}
-		if m.Item("Delete").Disabled(saved == "").Chosen() {
+		if m.Item(locales.CommonDelete()).Disabled(saved == "").Chosen() {
 			act = func() { a.deleteRequest(saved) }
 		}
 	})
@@ -245,12 +246,12 @@ func (a *app) footer(c *ui.Context, pal *uitokens.Palette) {
 					MinWidth(0).Ellipsis("…")
 				if a.undo != nil {
 					undo := ui.ButtonBase(c.Key("undo")).Height(20).Shrink(0).Padding(0, 7).
-						Radius(5).Label("Undo").Tooltip("Put it back")
+						Radius(5).Label(locales.CommonUndo()).Tooltip(locales.CommonUndoTooltip())
 					if undo.Hovered() {
 						undo.Background(pal.RowHover)
 					}
 					undo.Children(func() {
-						ui.Text(c, "Undo").FontSize(10.5).FontWeight(600).TextColor(pal.Accent)
+						ui.Text(c, locales.CommonUndo()).FontSize(10.5).FontWeight(600).TextColor(pal.Accent)
 					})
 					if undo.Clicked() {
 						a.runUndo()
@@ -258,10 +259,10 @@ func (a *app) footer(c *ui.Context, pal *uitokens.Palette) {
 				}
 				return
 			}
-			col, text := pal.TextFaint, "Proxy paused"
+			col, text := pal.TextFaint, locales.FooterProxyPaused()
 			if a.proxyRunning() {
 				col = pal.Success
-				text = "Proxy " + a.proxyPort + " · " + fmt.Sprint(len(a.flows)) + " captured"
+				text = locales.FooterProxyRunning(a.proxyPort, len(a.flows))
 			}
 			statusDot(c, col, 6)
 			ui.Text(c, text).FontSize(10.5).TextColor(pal.TextFaint).SingleLine().Grow(1).MinWidth(0).
@@ -269,16 +270,16 @@ func (a *app) footer(c *ui.Context, pal *uitokens.Palette) {
 		})
 		if a.mode == modeComposer {
 			if a.sending {
-				shortcutHint(c, pal, "⌘.", "Cancel")
+				shortcutHint(c, pal, "⌘.", locales.CommonCancel())
 			} else {
-				shortcutHint(c, pal, "⌘↩", "Send")
+				shortcutHint(c, pal, "⌘↩", locales.ComposerSend())
 			}
-			shortcutHint(c, pal, "⌘S", "Save")
-			shortcutHint(c, pal, "⌘2", "Inspector")
+			shortcutHint(c, pal, "⌘S", locales.CommonSave())
+			shortcutHint(c, pal, "⌘2", locales.InspectorMode())
 		} else {
-			shortcutHint(c, pal, "↑↓", "Move")
-			shortcutHint(c, pal, "⌘F", "Filter")
-			shortcutHint(c, pal, "⌘1", "Composer")
+			shortcutHint(c, pal, "↑↓", locales.FooterMove())
+			shortcutHint(c, pal, "⌘F", locales.FooterFilter())
+			shortcutHint(c, pal, "⌘1", locales.ComposerMode())
 		}
 	})
 }
@@ -291,13 +292,6 @@ func shortcutHint(c *ui.Context, pal *uitokens.Palette, keys, label string) {
 	})
 }
 
-func plural(n int, noun string) string {
-	if n == 1 {
-		return "1 " + noun
-	}
-	return fmt.Sprint(n) + " " + noun + "s"
-}
-
 // shortHost is the URL's host, for the header's second line.
 func shortHost(raw string) string {
 	s := raw
@@ -308,7 +302,7 @@ func shortHost(raw string) string {
 		}
 	}
 	if s == "" {
-		return "no URL yet"
+		return locales.ComposerNoURL()
 	}
 	for i := 0; i < len(s); i++ {
 		if s[i] == '/' || s[i] == '?' {

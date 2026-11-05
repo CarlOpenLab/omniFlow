@@ -1,0 +1,741 @@
+{
+  "@@locale": "zh-Hans",
+
+  "commonSave": "保存",
+  "commonCancel": "取消",
+  "commonUndo": "撤销",
+  "commonUndoTooltip": "恢复",
+  "commonOpen": "打开",
+  "commonDuplicate": "创建副本",
+  "commonDelete": "删除",
+  "commonCopyURL": "复制 URL",
+  "commonURLCopied": "已复制 URL",
+  "commonCopyCurl": "复制为 cURL",
+  "commonRemoveHistory": "从历史中移除",
+  "commonMore": "更多",
+  "commonSettings": "设置",
+  "commonSettingsTooltip": "设置 ⌘,",
+  "commonSettingsMenu": "设置…",
+  "commonAppearance": "外观",
+  "commonAppearanceTooltip": "外观：{name}",
+  "commonErrorShort": "错误",
+  "commonPort": "端口",
+  "commonEnterToApply": "回车应用",
+  "commonValuePlaceholder": "值",
+  "commonHeaderPlaceholder": "头部名",
+  "commonFieldPlaceholder": "字段名",
+  "caTitle": "根证书",
+
+  "themeSystem": "跟随系统",
+  "themeLight": "浅色",
+  "themeDark": "深色",
+
+  "composerMode": "请求编辑器",
+  "inspectorMode": "抓包",
+  "inspectorTitle": "代理抓包",
+
+  "composerNewRequest": "新建请求",
+  "composerRequestName": "请求名称",
+  "composerRenameHint": "双击重命名",
+  "composerNotSaved": "· 未保存",
+  "composerEdited": "· 已修改",
+  "composerSaved": "· 已保存",
+  "composerNoURL": "尚无 URL",
+  "composerCurlCopied": "已复制 cURL 命令",
+  "composerURLCopied": "已复制 URL",
+
+  "inspectorRecording": "正在录制 {addr} · {count, plural, other {# 条流量}}",
+  "inspectorStopped": "已停止 · {error}",
+  "inspectorPausedCount": "已暂停 · 已捕获 {count, plural, other {# 条流量}}",
+  "inspectorPausedEmpty": "已暂停 · 尚未捕获流量",
+
+  "saveTooltipNew": "保存到集合（⌘S）",
+  "saveTooltipChanges": "保存更改（⌘S）",
+
+  "footerProxyPaused": "代理已暂停",
+  "footerProxyRunning": "代理 {port} · 已捕获 {count}",
+  "noticeExported": "已导出 {count, plural, other {# 条流量}}到 {dest}",
+  "footerMove": "移动",
+  "footerFilter": "筛选",
+
+  "sidebarEnvironment": "环境",
+  "sidebarManageEnvs": "管理环境",
+  "sidebarCollections": "集合",
+  "sidebarNoRequests": "暂无保存的请求",
+  "sidebarHistory": "历史",
+  "sidebarClearHistory": "清空历史",
+  "sidebarHistoryEmpty": "发送过的请求会显示在这里",
+  "sidebarHistoryOff": "历史记录已在设置中关闭",
+  "sidebarDeleteRequest": "删除 {name}",
+  "sidebarEdited": "已修改",
+  "sidebarEditedHint": "已修改，尚未保存",
+  "sidebarEmptyURL": "（空）",
+  "sidebarCapture": "抓包",
+  "inspectorPaused": "已暂停",
+  "inspectorRecordingStatus": "正在录制",
+  "sidebarProxyToggle": "启动或停止代理",
+  "sidebarProxyToggleHint": "启动或停止代理（⇧⌘P）",
+  "sidebarStop": "停止",
+  "sidebarStart": "启动",
+  "sidebarDecryptHTTPS": "解密 HTTPS",
+  "sidebarDomains": "域名",
+  "sidebarShowAllDomains": "显示全部域名",
+  "sidebarAllTraffic": "全部流量",
+  "sidebarNoHosts": "尚未捕获主机",
+  "sidebarPointDevice": "让设备连接此代理",
+  "sidebarProxyHint": "HTTP 代理 {addr}。HTTPS 需安装并信任根证书。",
+  "historySent": "发送于 {at, date, ::MMMd} {at, time, ::Hms}",
+  "historyDuration": "{ms} 毫秒",
+
+  "composerMethodLabel": "方法 {method}",
+  "composerMethodTooltip": "选择 HTTP 方法",
+  "composerRequestURL": "请求 URL",
+  "composerSend": "发送",
+  "composerSendTooltip": "发送此请求（⌘↩）",
+  "composerSending": "发送中",
+  "composerTabParams": "参数",
+  "composerTabHeaders": "请求头",
+  "composerTabBody": "请求体",
+  "composerTabRespBody": "响应体",
+  "composerTabRespHeaders": "响应头",
+  "composerTabAuth": "认证",
+  "composerTiming": "耗时",
+  "composerTabCount": "{name}（{count}）",
+  "composerBodyKind": "{body} · {kind}",
+  "composerAuthKind": "{auth} · {kind}",
+  "composerKindJSON": "JSON",
+  "composerKindForm": "表单",
+  "composerKindText": "文本",
+  "composerFormat": "格式化",
+  "composerQueryParams": "查询参数",
+  "composerQueryParamsHint": "发送时附加到 URL",
+  "composerParamPlaceholder": "参数名",
+  "composerNoParams": "暂无查询参数。",
+  "composerRequestHeaders": "请求头",
+  "composerHeadersHint": "按原样发送",
+  "composerAuthAddedByTab": "Authorization 由「认证」页签添加",
+  "composerNoHeaders": "暂无请求头。",
+  "composerNoFormFields": "暂无表单字段。",
+  "composerBodyNone": "无",
+  "composerBodyJSON": "JSON",
+  "composerBodyText": "文本",
+  "composerBodyForm": "表单",
+  "composerFieldCount": "{count, plural, other {# 个字段}}",
+  "composerCharCount": "{count, plural, other {# 个字符}}",
+  "composerNoBody": "无请求体",
+  "composerNoBodyHint": "在上方选择 JSON、文本或表单。GET 请求即使写了请求体也不会发送。",
+  "composerJSONHint": "未指定 Content-Type 时自动添加 application/json。",
+  "composerFormHint": "以 application/x-www-form-urlencoded 编码发送，除非 Content-Type 另行指定。",
+  "composerTextHint": "未指定 Content-Type 时自动添加 text/plain; charset=utf-8。",
+  "composerNoBodyMethodHint": "此方法不发送请求体。切换到 POST、PUT 或 PATCH 即可发送。",
+  "composerJSONValid": "JSON 有效",
+  "composerJSONInvalid": "JSON 无效",
+  "composerJSONInvalidAt": "JSON 无效，位置 {line}:{column}",
+  "composerBearerHint": "令牌以 Authorization: Bearer <token> 发送。",
+  "composerToken": "令牌",
+  "composerBasicHint": "用户名和密码以 HTTP Basic 认证发送。",
+  "composerUsername": "用户名",
+  "composerPassword": "密码",
+  "composerAuthNone": "无",
+  "composerNoAuth": "不添加 Authorization 头部。",
+  "composerWaiting": "等待服务器响应",
+  "composerCancelTooltip": "取消此请求（⌘.）",
+  "composerNothingSent": "尚未发送",
+  "composerNothingSentHint": "在上方写好请求后按 ⌘↩。响应会连同头部、正文和耗时显示在这里。",
+  "composerTruncated": "正文超过 8 MB，这里只显示前 8 MB。",
+  "composerNoResponseHeaders": "响应没有头部。",
+  "composerResponse": "响应",
+  "composerTotalTime": "总耗时",
+  "composerBodySize": "正文大小",
+  "composerPrettyJSON": "美化 JSON",
+  "composerPrettyJSONHint": "缩进 JSON",
+  "composerPretty": "美化",
+  "composerCopyResponse": "复制响应",
+  "composerResponseCopied": "已复制响应",
+  "composerRequestFailed": "请求未完成",
+  "composerTryAgain": "重试",
+  "composerRequestCanceled": "请求已取消",
+  "composerCanceledHint": "不会再读取响应。准备好后可以重新发送。",
+  "composerSendAgain": "再次发送",
+
+  "commonCopy": "复制",
+  "commonClearFilter": "清除筛选",
+  "commonEmptyBody": "（空正文）",
+  "commonShowingFirst": "仅显示前 {cut}（共 {total}）；复制会取完整内容。",
+
+  "inspectorToggleCapture": "开始或停止抓包",
+  "inspectorToggleCaptureHint": "开始或停止抓包代理",
+  "inspectorStartCapture": "开始抓包",
+  "inspectorCopyAddr": "复制代理地址",
+  "inspectorCopyAddrHint": "复制 {addr}",
+  "inspectorAddrCopied": "已复制代理地址：{addr}",
+  "inspectorFilterCount": "{shown} / {total}",
+  "inspectorFilterTraffic": "筛选流量",
+  "inspectorFilterHint": "按方法、主机、路径或类型筛选（⌘F）",
+  "inspectorFollow": "跟随新流量",
+  "inspectorFollowHint": "跟随新流量：每条到达时自动选中",
+  "inspectorExportHAR": "导出 HAR",
+  "inspectorClearSession": "清空会话",
+  "inspectorNoMatch": "没有流量匹配此筛选",
+  "inspectorClearFilters": "清除筛选",
+  "inspectorColMethod": "方法",
+  "inspectorColStatus": "状态",
+  "inspectorFilterByStatus": "按状态筛选",
+  "inspectorColHost": "主机",
+  "inspectorColPath": "路径",
+  "inspectorColSize": "大小",
+  "inspectorColTime": "耗时",
+  "inspectorColAt": "时间",
+  "inspectorStatusAll": "全部状态",
+  "inspectorStatus2xx": "2xx · 成功",
+  "inspectorStatus3xx": "3xx · 重定向",
+  "inspectorStatus4xx": "4xx · 客户端错误",
+  "inspectorStatus5xx": "5xx · 服务器错误",
+  "inspectorStatusErr": "错误 · 无响应",
+  "inspectorSendToComposer": "发送到请求编辑器",
+  "inspectorShowOnly": "仅显示 {host}",
+  "inspectorWaiting": "等待流量",
+  "inspectorWaitingHint": "让应用或设备连接 {addr}，或点击开始抓包。HTTPS 需要安装并信任根证书。",
+  "inspectorProxyPausedTitle": "代理已暂停",
+  "inspectorPausedHint": "开始抓包，再把客户端的 HTTP 代理设为 {addr}。流量经过时会显示在这里。",
+  "inspectorRootCA": "根证书…",
+  "inspectorSelectFlow": "选择一条流量",
+  "inspectorSelectFlowHint": "点击上方任意一行查看请求和响应。双击可发送到请求编辑器。",
+  "inspectorTabRequest": "请求",
+  "inspectorTabResponse": "响应",
+  "inspectorProxyError": "代理错误",
+  "inspectorResponseSize": "响应大小",
+  "inspectorCopyReqHeaders": "复制请求头",
+  "inspectorReqHeadersCopied": "已复制请求头",
+  "inspectorCopyRespHeaders": "复制响应头",
+  "inspectorRespHeadersCopied": "已复制响应头",
+  "inspectorReplayHint": "在请求编辑器中重放此请求",
+  "inspectorCopyBody": "复制正文",
+  "inspectorBodyCopied": "已复制正文",
+  "inspectorCopyHeaders": "复制头部",
+  "inspectorHeadersCopied": "已复制头部",
+  "inspectorTruncated": "正文超过抓包保留上限，这里只显示开头。",
+  "inspectorNoHeaders": "此消息没有头部。",
+
+  "bodyImageLabel": "图片正文",
+  "bodyImageMeta": "{type} · {width} × {height} px · {size}",
+  "bodyBinaryData": "二进制数据",
+  "bodyBinaryTitle": "二进制正文",
+  "bodyBinaryHint": "{type}，{size}。这不是文本，因此不显示内容；保存后可用其他应用打开。",
+  "bodySave": "保存正文…",
+  "bodySaveDialogTitle": "保存正文",
+  "bodySaveFailed": "正文保存失败：{error}",
+  "bodySaved": "正文已保存到 {dest}",
+
+  "kvSendRow": "发送此行",
+  "kvRemoveRow": "删除此行",
+  "kvAddRow": "添加行",
+  "timingConnect": "连接",
+  "timingWaiting": "等待",
+  "timingDownload": "下载",
+  "timingTotal": "总计",
+  "timingReused": "复用",
+  "timingNote": "每个阶段都从上一阶段结束处开始。复用连接会跳过 DNS、连接和 TLS。",
+  "timingReusedNote": "此请求复用了已有连接，因此没有在 DNS、连接或 TLS 上耗时。",
+
+  "settingsLanguage": "语言",
+  "languageSystem": "跟随系统",
+
+  "settingsTitle": "设置",
+
+  "settingsSubtitle": "外观、抓包与证书",
+
+  "settingsClose": "关闭设置",
+
+  "settingsAppearance": "外观",
+
+  "settingsTheme": "主题",
+
+  "settingsCardOpacity": "卡片不透明度",
+
+  "settingsMaterial": "材质",
+
+  "settingsAcrylicTitle": "亚克力背景",
+
+  "settingsAcrylicHint": "系统的磨砂材质透过窗口显现",
+
+  "settingsCapture": "抓包",
+
+  "settingsProxyPort": "代理端口",
+
+  "settingsTimeout": "超时",
+
+  "settingsSeconds": "秒",
+
+  "settingsTimeoutLabel": "超时秒数",
+
+  "settingsStopRedirects": "在重定向处停止",
+
+  "settingsSkipTLS": "跳过证书校验",
+
+  "settingsAutostart": "打开 OmniFlow 时启动代理",
+
+  "settingsDecrypt": "使用根证书解密 HTTPS",
+
+  "settingsManage": "管理…",
+
+  "settingsData": "数据",
+
+  "settingsKeepHistory": "保留请求历史",
+
+  "settingsDataHint": "集合、历史与证书",
+
+  "settingsShowInFinder": "在访达中显示",
+
+  "settingsAbout": "关于",
+
+  "settingsAboutLine": "OmniFlow {version} · 原生 GPU 绘制，无网页视图",
+  "@settingsAboutLine": {
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.2.0"
+      }
+    }
+  },
+
+  "commonDone": "完成",
+
+  "commonUnavailable": "不可用",
+
+  "commonDevelopmentBuild": "（开发版本）",
+
+  "composerUntitledRequest": "未命名请求",
+
+  "caClose": "关闭证书对话框",
+
+  "caSubtitle": "OmniFlow 读取 HTTPS 所需的唯一信任",
+
+  "caIntro": "OmniFlow 会为每个 HTTPS 主机即时签发证书，根证书颁发机构在这台机器上创建。把该根证书安装到设备的信任存储中，抓包面板才能读取加密流量。请只在你能控制的设备上安装。",
+
+  "caStep1Title": "保存证书",
+
+  "caStep1Body": "将根证书写入设备可以访问的文件。",
+
+  "caStep2Title": "安装证书",
+
+  "caStep2Body": "macOS：在“钥匙串访问”中双击它，并设为“始终信任”。Windows：导入到“受信任的根证书颁发机构”。iOS：安装描述文件，然后在“设置”→“通用”→“关于本机”中启用完全信任。",
+
+  "caStep3Title": "将设备指向代理",
+
+  "caStep3Body": "在这台机器上将 HTTP 代理设为 127.0.0.1:{port}；从其他设备访问时，设为这台 Mac 的地址。",
+  "@caStep3Body": {
+    "placeholders": {
+      "port": {
+        "type": "String",
+        "example": "9090"
+      }
+    }
+  },
+
+  "caStep4Title": "抓包",
+
+  "caStep4Body": "请求经过时会显示在抓包面板中。完成后请移除证书。",
+
+  "caCopyPath": "复制证书路径",
+
+  "caPathCopied": "已复制证书路径",
+
+  "caTrustUnknown": "尚未检查这台 Mac 是否信任该证书",
+
+  "caTrustChecking": "正在检查这台 Mac 是否信任该证书…",
+
+  "caTrustYes": "这台 Mac 已信任",
+
+  "caTrustNo": "这台 Mac 未信任 · 安装前 HTTPS 会发出警告",
+
+  "caCheckAgain": "重新检查",
+
+  "caReveal": "在访达中显示",
+
+  "caSave": "保存证书…",
+
+  "caSaveDialogTitle": "保存 OmniFlow 根证书",
+
+  "caFilterName": "证书",
+
+  "noticeCAUnavailable": "证书颁发机构不可用",
+
+  "noticeCASaveFailed": "无法保存证书：{error}",
+  "@noticeCASaveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+
+  "noticeCASaved": "证书已保存到 {path}",
+  "@noticeCASaved": {
+    "placeholders": {
+      "path": {
+        "type": "String",
+        "example": "/Users/me/OmniFlow-Root-CA.pem"
+      }
+    }
+  },
+
+  "noticeCARevealFailed": "无法在访达中显示证书：{error}",
+  "@noticeCARevealFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "open: no such file"
+      }
+    }
+  },
+
+  "noticeCACreateFailed": "无法创建抓包证书：{error}",
+  "@noticeCACreateFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+
+  "envMissingActive": "{count, plural, other {{names} 未在“{name}”中设置。请在“环境”中添加，或改用其他环境。}}",
+  "@envMissingActive": {
+    "placeholders": {
+      "names": {
+        "type": "String",
+        "example": "{{host}}"
+      },
+      "count": {
+        "type": "int",
+        "example": "1"
+      },
+      "name": {
+        "type": "String",
+        "example": "Staging"
+      }
+    }
+  },
+
+  "envMissingNone": "{count, plural, other {{names} 未设置：当前没有使用环境。可在侧边栏选择一个环境来填充。}}",
+  "@envMissingNone": {
+    "placeholders": {
+      "names": {
+        "type": "String",
+        "example": "{{host}}"
+      },
+      "count": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+
+  "envUsing": "正在使用“{name}”",
+  "@envUsing": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Staging"
+      }
+    }
+  },
+
+  "envNoneInUse": "未使用环境",
+
+  "envNew": "新建环境",
+
+  "envCopyName": "{name} 副本",
+  "@envCopyName": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Staging"
+      }
+    }
+  },
+
+  "envDeleted": "已删除“{name}”",
+  "@envDeleted": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Staging"
+      }
+    }
+  },
+
+  "envNoEnvironment": "无环境",
+
+  "envPickerTooltip": "环境变量 '{{variables}}' 从中取值",
+
+  "envManage": "管理环境…",
+
+  "envManagerTitle": "环境",
+
+  "envUse": "使用",
+
+  "envUseThis": "使用此环境",
+
+  "envInUse": "使用中",
+
+  "envEmptyTitle": "还没有环境",
+
+  "envEmptyHint": "环境保存请求在不同地点会有差异的值，例如主机名或密钥。在 URL、请求头或请求体中写 '{{name}}'，当前使用的环境会为它填值。",
+
+  "envNameLabel": "环境名称",
+
+  "envUntitled": "未命名",
+
+  "envPlaceholdersHint": "在请求的 URL、请求头、请求体或认证中写 '{{name}}'。内置变量：{builtins}。",
+  "@envPlaceholdersHint": {
+    "placeholders": {
+      "builtins": {
+        "type": "String",
+        "example": "$timestamp, $randomInt"
+      }
+    }
+  },
+
+  "envVarHint": "变量",
+
+  "envNoVariables": "还没有变量。",
+
+  "envDynamicMade": "{name} 在请求过程中生成",
+  "@envDynamicMade": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "$timestamp"
+      }
+    }
+  },
+
+  "envNotSet": "{name} 未设置",
+  "@envNotSet": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "host"
+      }
+    }
+  },
+
+  "noticeSettingsReadFailed": "无法读取设置：{error}",
+  "@noticeSettingsReadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+
+  "noticeRenamed": "已重命名为“{name}”",
+  "@noticeRenamed": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  },
+
+  "noticeDuplicated": "已创建副本“{name}”",
+  "@noticeDuplicated": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository Copy"
+      }
+    }
+  },
+
+  "noticeNeedsURL": "请求需要先填写 URL 才能保存",
+
+  "noticeSaved": "已将“{name}”保存到集合",
+  "@noticeSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  },
+
+  "noticeDeletedRequest": "已删除“{name}”",
+  "@noticeDeletedRequest": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  },
+
+  "noticeRestored": "已恢复“{name}”",
+  "@noticeRestored": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  },
+
+  "noticeBodyTooLarge": "请求体过大，未保留在历史中；其余内容已恢复",
+
+  "noticeRemovedHistory": "已从历史中移除",
+
+  "noticeHistoryCleared": "已清空历史",
+
+  "noticeSentMissing": "已发送，{names} 保持原样",
+  "@noticeSentMissing": {
+    "placeholders": {
+      "names": {
+        "type": "String",
+        "example": "{{host}}"
+      }
+    }
+  },
+
+  "noticeRequestFailed": "请求 {url} 失败",
+  "@noticeRequestFailed": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "https://example.com/"
+      }
+    }
+  },
+
+  "noticeCapturedOpened": "抓到的请求已在编辑器中打开",
+
+  "noticeChooseFlowCurl": "请选择一条流量以复制为 cURL",
+
+  "noticeCurlCopied": "已复制 cURL 命令",
+
+  "noticeProxyCAUnavailable": "证书颁发机构不可用。",
+
+  "noticeProxyListening": "代理正在监听 {addr}",
+  "@noticeProxyListening": {
+    "placeholders": {
+      "addr": {
+        "type": "String",
+        "example": "127.0.0.1:9090"
+      }
+    }
+  },
+
+  "noticeProxyStopped": "代理已停止",
+
+  "noticeSessionCleared": "已清空抓包会话",
+
+  "noticeNoTraffic": "没有可导出的流量",
+
+  "noticeHARPrepareFailed": "无法准备抓包导出：{error}",
+  "@noticeHARPrepareFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "no such file"
+      }
+    }
+  },
+
+  "noticeHARExportFailed": "无法导出抓包：{error}",
+  "@noticeHARExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+
+  "noticeDataRevealFailed": "无法显示数据文件夹：{error}",
+  "@noticeDataRevealFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "open: no such file"
+      }
+    }
+  },
+
+  "exportHAR": "导出 HAR",
+
+  "exportHARButton": "导出",
+
+  "harFilterName": "HAR 文件",
+
+  "errRequestCanceled": "请求已取消。",
+
+  "errPort": "请使用 1 到 65535 之间的端口。",
+
+  "errEnterURL": "请先填写要发送的 URL。",
+
+  "menuFile": "文件",
+
+  "menuSaveRequest": "保存请求",
+
+  "menuSendRequest": "发送请求",
+
+  "menuCancelRequest": "取消请求",
+
+  "menuView": "视图",
+
+  "menuProxyInspector": "抓包面板",
+
+  "menuEnvironments": "环境…",
+
+  "menuProxy": "代理",
+
+  "menuStartStop": "启动或停止",
+
+  "menuExportHAR": "导出 HAR…",
+
+  "menuExportCA": "导出根证书…",
+
+  "curlImportFailed": "无法导入 cURL 命令：{error}",
+  "@curlImportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "no URL in command"
+      }
+    }
+  },
+
+  "curlImportedNotes": "已从 cURL 导入；忽略了：{notes}。",
+  "@curlImportedNotes": {
+    "placeholders": {
+      "notes": {
+        "type": "String",
+        "example": "--insecure"
+      }
+    }
+  },
+
+  "curlImported": "已从 cURL 导入",
+
+  "blurNone": "无",
+
+  "blurSubtle": "轻",
+
+  "blurMedium": "中",
+
+  "blurDeep": "深",
+
+  "composerCopyName": "{name} 副本",
+  "@composerCopyName": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  }
+}

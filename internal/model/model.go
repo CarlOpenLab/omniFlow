@@ -177,8 +177,11 @@ type HistoryEntry struct {
 // its zero value from an older file, so each is named for that zero to be
 // the default: StopAtRedirects rather than FollowRedirects.
 type Prefs struct {
-	Theme          string `json:"theme"`     // "", light or dark
-	ProxyPort      string `json:"proxyPort"` // loopback port
+	Theme     string `json:"theme"`     // "", light or dark
+	ProxyPort string `json:"proxyPort"` // loopback port
+	// Language is the language the app shows: "", "en" or "zh-Hans";
+	// "" follows the system's preferred languages.
+	Language       string `json:"language,omitempty"`
 	ProxyAutostart bool   `json:"proxyAutostart"`
 	DecryptHTTPS   bool   `json:"decryptHTTPS"`
 	FollowFlows    bool   `json:"followFlows"`

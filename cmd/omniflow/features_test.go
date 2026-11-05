@@ -63,11 +63,12 @@ func TestEnvironmentFillsPlaceholders(t *testing.T) {
 	// fill it in.
 	a.req.URL = "https://{{host}}/{{missing}}/things"
 	a.send()
-	if a.sending || a.respErr == "" || !strings.Contains(a.respErr, "{{missing}}") {
-		t.Fatalf("sending a URL with a missing variable said %q", a.respErr)
+	msg := a.respProblemText()
+	if a.sending || msg == "" || !strings.Contains(msg, "{{missing}}") {
+		t.Fatalf("sending a URL with a missing variable said %q", msg)
 	}
-	if !strings.Contains(a.respErr, "Staging") {
-		t.Errorf("the message does not name the environment: %q", a.respErr)
+	if !strings.Contains(msg, "Staging") {
+		t.Errorf("the message does not name the environment: %q", msg)
 	}
 }
 

@@ -3,5 +3,6 @@
   "identifier": "dev.carl.omniflow",
   "version": "0.1.0",
   "main": "./cmd/omniflow",
-  "icon": "resources/icon.png"
+  "icon": "resources/icon.png",
+  "i18n": { "dir": "locales", "source": "en" }
 }

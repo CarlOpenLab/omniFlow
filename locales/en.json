@@ -1,0 +1,868 @@
+{
+  "@@locale": "en",
+
+  "commonSave": "Save",
+  "commonCancel": "Cancel",
+  "commonUndo": "Undo",
+  "commonUndoTooltip": "Put it back",
+  "commonOpen": "Open",
+  "commonDuplicate": "Duplicate",
+  "commonDelete": "Delete",
+  "commonCopyURL": "Copy URL",
+  "commonURLCopied": "URL copied",
+  "commonCopyCurl": "Copy as cURL",
+  "commonRemoveHistory": "Remove from History",
+  "commonMore": "More",
+  "commonSettings": "Settings",
+  "commonSettingsTooltip": "Settings ⌘,",
+  "commonSettingsMenu": "Settings…",
+  "commonAppearance": "Appearance",
+  "commonAppearanceTooltip": "Appearance: {name}",
+  "@commonAppearanceTooltip": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "commonErrorShort": "ERR",
+  "commonPort": "Port",
+  "commonEnterToApply": "Enter to apply",
+  "commonValuePlaceholder": "value",
+  "commonHeaderPlaceholder": "header",
+  "commonFieldPlaceholder": "field",
+  "caTitle": "Root CA Certificate",
+
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+
+  "composerMode": "Composer",
+  "inspectorMode": "Inspector",
+  "inspectorTitle": "Proxy Inspector",
+
+  "composerNewRequest": "New Request",
+  "composerRequestName": "Request name",
+  "composerRenameHint": "Double-click to rename",
+  "composerNotSaved": "· Not saved",
+  "composerEdited": "· Edited",
+  "composerSaved": "· Saved",
+  "composerNoURL": "no URL yet",
+  "composerCurlCopied": "cURL command copied",
+  "composerURLCopied": "URL copied",
+
+  "inspectorRecording": "Recording on {addr} · {count, plural, one {# flow} other {# flows}}",
+  "@inspectorRecording": {
+    "description": "The inspector's title line while the proxy records.",
+    "placeholders": {
+      "addr": { "type": "String", "example": "127.0.0.1:9090" },
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+  "inspectorStopped": "Stopped · {error}",
+  "@inspectorStopped": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "inspectorPausedCount": "Paused · {count, plural, one {# captured flow} other {# captured flows}}",
+  "@inspectorPausedCount": {
+    "placeholders": { "count": { "type": "int", "example": "3" } }
+  },
+  "inspectorPausedEmpty": "Paused · no traffic captured",
+
+  "saveTooltipNew": "Save to the collection (⌘S)",
+  "saveTooltipChanges": "Save changes (⌘S)",
+
+  "footerProxyPaused": "Proxy paused",
+  "footerProxyRunning": "Proxy {port} · {count} captured",
+  "@footerProxyRunning": {
+    "placeholders": {
+      "port": { "type": "String", "example": "9090" },
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+  "noticeExported": "Exported {count, plural, one {# flow} other {# flows}} to {dest}",
+  "@noticeExported": {
+    "placeholders": {
+      "count": { "type": "int", "example": "3" },
+      "dest": { "type": "String", "example": "/Users/me/capture.har" }
+    }
+  },
+  "footerMove": "Move",
+  "footerFilter": "Filter",
+
+  "sidebarEnvironment": "Environment",
+  "sidebarManageEnvs": "Manage Environments",
+  "sidebarCollections": "Collections",
+  "sidebarNoRequests": "No saved requests",
+  "sidebarHistory": "History",
+  "sidebarClearHistory": "Clear History",
+  "sidebarHistoryEmpty": "Requests you send appear here",
+  "sidebarHistoryOff": "History is off in Settings",
+  "sidebarDeleteRequest": "Delete {name}",
+  "@sidebarDeleteRequest": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "sidebarEdited": "Edited",
+  "sidebarEditedHint": "Edited, not saved",
+  "sidebarEmptyURL": "(empty)",
+  "sidebarCapture": "Capture",
+  "inspectorPaused": "Paused",
+  "inspectorRecordingStatus": "Recording",
+  "sidebarProxyToggle": "Start or stop the proxy",
+  "sidebarProxyToggleHint": "Start or stop the proxy (⇧⌘P)",
+  "sidebarStop": "Stop",
+  "sidebarStart": "Start",
+  "sidebarDecryptHTTPS": "Decrypt HTTPS",
+  "sidebarDomains": "Domains",
+  "sidebarShowAllDomains": "Show All Domains",
+  "sidebarAllTraffic": "All traffic",
+  "sidebarNoHosts": "No hosts captured yet",
+  "sidebarPointDevice": "Point a device at this proxy",
+  "sidebarProxyHint": "HTTP proxy {addr}. For HTTPS, install the Root CA and trust it.",
+  "@sidebarProxyHint": {
+    "placeholders": { "addr": { "type": "String", "example": "127.0.0.1:9090" } }
+  },
+  "historySent": "Sent {at, date, ::MMMd}, {at, time, ::Hms}",
+  "@historySent": {
+    "description": "A history row's tooltip, under the request line.",
+    "placeholders": { "at": { "type": "DateTime" } }
+  },
+  "historyDuration": "{ms} ms",
+  "@historyDuration": {
+    "placeholders": { "ms": { "type": "int", "example": "284" } }
+  },
+
+  "composerMethodLabel": "Method {method}",
+  "@composerMethodLabel": {
+    "placeholders": { "method": { "type": "String", "example": "GET" } }
+  },
+  "composerMethodTooltip": "Choose the HTTP method",
+  "composerRequestURL": "Request URL",
+  "composerSend": "Send",
+  "composerSendTooltip": "Send this request (⌘↩)",
+  "composerSending": "Sending",
+  "composerTabParams": "Params",
+  "composerTabHeaders": "Headers",
+  "composerTabBody": "Body",
+  "composerTabRespBody": "Body",
+  "composerTabRespHeaders": "Headers",
+  "composerTabAuth": "Auth",
+  "composerTiming": "Timing",
+  "composerTabCount": "{name} · {count}",
+  "@composerTabCount": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+  "composerBodyKind": "{body} · {kind}",
+  "@composerBodyKind": {
+    "placeholders": {
+      "body": { "type": "String" },
+      "kind": { "type": "String" }
+    }
+  },
+  "composerAuthKind": "{auth} · {kind}",
+  "@composerAuthKind": {
+    "placeholders": {
+      "auth": { "type": "String" },
+      "kind": { "type": "String" }
+    }
+  },
+  "composerKindJSON": "JSON",
+  "composerKindForm": "Form",
+  "composerKindText": "Text",
+  "composerFormat": "Format",
+  "composerQueryParams": "Query Parameters",
+  "composerQueryParamsHint": "appended to the URL when sent",
+  "composerParamPlaceholder": "parameter",
+  "composerNoParams": "No query parameters yet.",
+  "composerRequestHeaders": "Request Headers",
+  "composerHeadersHint": "sent as written",
+  "composerAuthAddedByTab": "Authorization is added by the Auth tab",
+  "composerNoHeaders": "No headers yet.",
+  "composerNoFormFields": "No form fields yet.",
+  "composerBodyNone": "None",
+  "composerBodyJSON": "JSON",
+  "composerBodyText": "Text",
+  "composerBodyForm": "Form",
+  "composerFieldCount": "{count, plural, one {# field} other {# fields}}",
+  "@composerFieldCount": {
+    "placeholders": { "count": { "type": "int", "example": "3" } }
+  },
+  "composerCharCount": "{count, plural, one {# character} other {# characters}}",
+  "@composerCharCount": {
+    "placeholders": { "count": { "type": "int", "example": "120" } }
+  },
+  "composerNoBody": "No body",
+  "composerNoBodyHint": "Choose JSON, Text or Form above. A GET request sends no body even when one is written.",
+  "composerJSONHint": "application/json is added when no Content-Type header says otherwise.",
+  "composerFormHint": "Sent URL-encoded as application/x-www-form-urlencoded, unless a Content-Type header says otherwise.",
+  "composerTextHint": "text/plain; charset=utf-8 is added when no Content-Type header says otherwise.",
+  "composerNoBodyMethodHint": "This method sends no body. Switch to POST, PUT or PATCH to send it.",
+  "composerJSONValid": "Valid JSON",
+  "composerJSONInvalid": "Invalid JSON",
+  "composerJSONInvalidAt": "Invalid JSON at {line}:{column}",
+  "@composerJSONInvalidAt": {
+    "placeholders": {
+      "line": { "type": "int", "example": "3" },
+      "column": { "type": "int", "example": "14" }
+    }
+  },
+  "composerBearerHint": "The token is sent as Authorization: Bearer <token>.",
+  "composerToken": "Token",
+  "composerBasicHint": "The username and password are sent as HTTP Basic authentication.",
+  "composerUsername": "Username",
+  "composerPassword": "Password",
+  "composerAuthNone": "None",
+  "composerNoAuth": "No Authorization header is added.",
+  "composerWaiting": "Waiting for the server",
+  "composerCancelTooltip": "Cancel this request (⌘.)",
+  "composerNothingSent": "Nothing sent yet",
+  "composerNothingSentHint": "Write a request above and press ⌘↩. The response lands here with its headers, body and timing.",
+  "composerTruncated": "The body is larger than 8 MB; this is the first 8 MB.",
+  "composerNoResponseHeaders": "The response carries no headers.",
+  "composerResponse": "Response",
+  "composerTotalTime": "Total time",
+  "composerBodySize": "Body size",
+  "composerPrettyJSON": "Pretty JSON",
+  "composerPrettyJSONHint": "Indent the JSON",
+  "composerPretty": "Pretty",
+  "composerCopyResponse": "Copy Response",
+  "composerResponseCopied": "Response copied",
+  "composerRequestFailed": "The request did not complete",
+  "composerTryAgain": "Try Again",
+  "composerRequestCanceled": "Request canceled",
+  "composerCanceledHint": "Nothing more will be read from it. Send it again when you are ready.",
+  "composerSendAgain": "Send Again",
+
+  "commonCopy": "Copy",
+  "commonClearFilter": "Clear Filter",
+  "commonEmptyBody": "(empty body)",
+  "commonShowingFirst": "Showing the first {cut} of {total}; Copy takes all of it.",
+  "@commonShowingFirst": {
+    "placeholders": {
+      "cut": { "type": "String", "example": "1 MB" },
+      "total": { "type": "String", "example": "3 MB" }
+    }
+  },
+
+  "inspectorToggleCapture": "Start or stop capture",
+  "inspectorToggleCaptureHint": "Start or stop the capture proxy",
+  "inspectorStartCapture": "Start Capture",
+  "inspectorCopyAddr": "Copy proxy address",
+  "inspectorCopyAddrHint": "Copy {addr}",
+  "@inspectorCopyAddrHint": {
+    "placeholders": { "addr": { "type": "String", "example": "127.0.0.1:9090" } }
+  },
+  "inspectorAddrCopied": "Proxy address copied: {addr}",
+  "@inspectorAddrCopied": {
+    "placeholders": { "addr": { "type": "String", "example": "127.0.0.1:9090" } }
+  },
+  "inspectorFilterCount": "{shown} of {total}",
+  "@inspectorFilterCount": {
+    "placeholders": {
+      "shown": { "type": "int", "example": "4" },
+      "total": { "type": "int", "example": "12" }
+    }
+  },
+  "inspectorFilterTraffic": "Filter traffic",
+  "inspectorFilterHint": "Filter by method, host, path or type (⌘F)",
+  "inspectorFollow": "Follow new flows",
+  "inspectorFollowHint": "Follow new flows: choose each one as it arrives",
+  "inspectorExportHAR": "Export HAR",
+  "inspectorClearSession": "Clear Session",
+  "inspectorNoMatch": "No flows match this filter",
+  "inspectorClearFilters": "Clear Filters",
+  "inspectorColMethod": "Method",
+  "inspectorColStatus": "Status",
+  "inspectorFilterByStatus": "Filter by status",
+  "inspectorColHost": "Host",
+  "inspectorColPath": "Path",
+  "inspectorColSize": "Size",
+  "inspectorColTime": "Time",
+  "inspectorColAt": "At",
+  "inspectorStatusAll": "All Statuses",
+  "inspectorStatus2xx": "2xx · Success",
+  "inspectorStatus3xx": "3xx · Redirect",
+  "inspectorStatus4xx": "4xx · Client Error",
+  "inspectorStatus5xx": "5xx · Server Error",
+  "inspectorStatusErr": "Errors · no response",
+  "inspectorSendToComposer": "Send to Composer",
+  "inspectorShowOnly": "Show Only {host}",
+  "@inspectorShowOnly": {
+    "placeholders": { "host": { "type": "String", "example": "api.github.com" } }
+  },
+  "inspectorWaiting": "Waiting for traffic",
+  "inspectorWaitingHint": "Point an app or device at {addr}, or press Start Capture. HTTPS needs the Root CA installed and trusted.",
+  "@inspectorWaitingHint": {
+    "placeholders": { "addr": { "type": "String", "example": "127.0.0.1:9090" } }
+  },
+  "inspectorProxyPausedTitle": "The proxy is paused",
+  "inspectorPausedHint": "Start the capture, then set a client's HTTP proxy to {addr}. The flows appear here as they pass.",
+  "@inspectorPausedHint": {
+    "placeholders": { "addr": { "type": "String", "example": "127.0.0.1:9090" } }
+  },
+  "inspectorRootCA": "Root CA…",
+  "inspectorSelectFlow": "Select a flow",
+  "inspectorSelectFlowHint": "Click a row above to read its request and response. Double-click sends it to the Composer.",
+  "inspectorTabRequest": "Request",
+  "inspectorTabResponse": "Response",
+  "inspectorProxyError": "proxy error",
+  "inspectorResponseSize": "Response size",
+  "inspectorCopyReqHeaders": "Copy Request Headers",
+  "inspectorReqHeadersCopied": "Request headers copied",
+  "inspectorCopyRespHeaders": "Copy Response Headers",
+  "inspectorRespHeadersCopied": "Response headers copied",
+  "inspectorReplayHint": "Replay this request in the Composer",
+  "inspectorCopyBody": "Copy Body",
+  "inspectorBodyCopied": "Body copied",
+  "inspectorCopyHeaders": "Copy Headers",
+  "inspectorHeadersCopied": "Headers copied",
+  "inspectorTruncated": "The body is larger than the inspector keeps; this is the beginning.",
+  "inspectorNoHeaders": "This message carries no headers.",
+
+  "bodyImageLabel": "Image body",
+  "bodyImageMeta": "{type} · {width} × {height} px · {size}",
+  "@bodyImageMeta": {
+    "placeholders": {
+      "type": { "type": "String", "example": "image/png" },
+      "width": { "type": "int", "example": "800" },
+      "height": { "type": "int", "example": "600" },
+      "size": { "type": "String", "example": "12 KB" }
+    }
+  },
+  "bodyBinaryData": "Binary data",
+  "bodyBinaryTitle": "Binary body",
+  "bodyBinaryHint": "{type}, {size}. It is not text, so it is not shown; save it to open it with another app.",
+  "@bodyBinaryHint": {
+    "placeholders": {
+      "type": { "type": "String", "example": "application/pdf" },
+      "size": { "type": "String", "example": "12 KB" }
+    }
+  },
+  "bodySave": "Save Body…",
+  "bodySaveDialogTitle": "Save Body",
+  "bodySaveFailed": "The body could not be saved: {error}",
+  "@bodySaveFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "bodySaved": "Body saved to {dest}",
+  "@bodySaved": {
+    "placeholders": { "dest": { "type": "String", "example": "/Users/me/photo.png" } }
+  },
+
+  "kvSendRow": "Send this row",
+  "kvRemoveRow": "Remove row",
+  "kvAddRow": "Add row",
+  "timingConnect": "Connect",
+  "timingWaiting": "Waiting",
+  "timingDownload": "Download",
+  "timingTotal": "Total",
+  "timingReused": "reused",
+  "timingNote": "Each phase starts where the one before it ended. A connection that is reused skips DNS, connect and TLS.",
+  "timingReusedNote": "This request reused an open connection, so it spent no time on DNS, connect or TLS.",
+
+  "settingsLanguage": "Language",
+  "@settingsLanguage": {
+    "description": "The label of the language row in Settings."
+  },
+  "languageSystem": "Follow System",
+  "@languageSystem": {
+    "description": "The Language row's option that follows the system's preferred languages."
+  },
+
+  "settingsTitle": "Settings",
+
+  "settingsSubtitle": "Appearance, capture and the certificate",
+
+  "settingsClose": "Close Settings",
+
+  "settingsAppearance": "Appearance",
+
+  "settingsTheme": "Theme",
+
+  "settingsCardOpacity": "Card opacity",
+
+  "settingsMaterial": "Material",
+
+  "settingsAcrylicTitle": "Acrylic background",
+
+  "settingsAcrylicHint": "The system's frosted material shows through the window",
+
+  "settingsCapture": "Capture",
+
+  "settingsProxyPort": "Proxy port",
+
+  "settingsTimeout": "Timeout",
+
+  "settingsSeconds": "seconds",
+
+  "settingsTimeoutLabel": "Timeout in seconds",
+
+  "settingsStopRedirects": "Stop at redirects",
+
+  "settingsSkipTLS": "Skip certificate verification",
+
+  "settingsAutostart": "Start the proxy when OmniFlow opens",
+
+  "settingsDecrypt": "Decrypt HTTPS with the Root CA",
+
+  "settingsManage": "Manage…",
+
+  "settingsData": "Data",
+
+  "settingsKeepHistory": "Keep request history",
+
+  "settingsDataHint": "Collection, history and certificate",
+
+  "settingsShowInFinder": "Show in Finder",
+
+  "settingsAbout": "About",
+
+  "settingsAboutLine": "OmniFlow {version} · drawn natively on the GPU, with no web view",
+  "@settingsAboutLine": {
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.2.0"
+      }
+    }
+  },
+
+  "commonDone": "Done",
+
+  "commonUnavailable": "Unavailable",
+
+  "commonDevelopmentBuild": "(development build)",
+
+  "composerUntitledRequest": "Untitled Request",
+
+  "caClose": "Close Certificate Dialog",
+
+  "caSubtitle": "The one trust OmniFlow needs to read HTTPS",
+
+  "caIntro": "OmniFlow signs a certificate for each HTTPS host on the fly, with a root authority created on this machine. Installing that root in a device's trust store is what lets the inspector read encrypted traffic. Only install it on devices you control.",
+
+  "caStep1Title": "Save the certificate",
+
+  "caStep1Body": "Write the root certificate to a file you can reach from the device.",
+
+  "caStep2Title": "Install it",
+
+  "caStep2Body": "macOS: double-click it in Keychain Access and set Always Trust. Windows: import it into Trusted Root Certification Authorities. iOS: install the profile, then enable full trust in Settings → General → About.",
+
+  "caStep3Title": "Point the device at the proxy",
+
+  "caStep3Body": "Set the HTTP proxy to 127.0.0.1:{port} on this machine, or to this Mac's address from another device.",
+  "@caStep3Body": {
+    "placeholders": {
+      "port": {
+        "type": "String",
+        "example": "9090"
+      }
+    }
+  },
+
+  "caStep4Title": "Capture",
+
+  "caStep4Body": "Requests appear in the Inspector as they pass. Remove the certificate when you are done.",
+
+  "caCopyPath": "Copy Certificate Path",
+
+  "caPathCopied": "Certificate path copied",
+
+  "caTrustUnknown": "Trust on this Mac has not been checked",
+
+  "caTrustChecking": "Checking whether this Mac trusts the certificate…",
+
+  "caTrustYes": "Trusted on this Mac",
+
+  "caTrustNo": "Not trusted on this Mac · HTTPS will warn until it is installed",
+
+  "caCheckAgain": "Check Again",
+
+  "caReveal": "Reveal in Finder",
+
+  "caSave": "Save Certificate…",
+
+  "caSaveDialogTitle": "Save OmniFlow Root CA",
+
+  "caFilterName": "Certificates",
+
+  "noticeCAUnavailable": "The certificate authority is unavailable",
+
+  "noticeCASaveFailed": "The certificate could not be saved: {error}",
+  "@noticeCASaveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+
+  "noticeCASaved": "Certificate saved to {path}",
+  "@noticeCASaved": {
+    "placeholders": {
+      "path": {
+        "type": "String",
+        "example": "/Users/me/OmniFlow-Root-CA.pem"
+      }
+    }
+  },
+
+  "noticeCARevealFailed": "Could not reveal the certificate: {error}",
+  "@noticeCARevealFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "open: no such file"
+      }
+    }
+  },
+
+  "noticeCACreateFailed": "The capture certificate could not be created: {error}",
+  "@noticeCACreateFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+
+  "envMissingActive": "{names} {count, plural, one {is} other {are}} not set in “{name}”. Add it under Environments, or choose another.",
+  "@envMissingActive": {
+    "placeholders": {
+      "names": {
+        "type": "String",
+        "example": "{{host}}"
+      },
+      "count": {
+        "type": "int",
+        "example": "1"
+      },
+      "name": {
+        "type": "String",
+        "example": "Staging"
+      }
+    }
+  },
+
+  "envMissingNone": "{names} {count, plural, one {is} other {are}} not set: no environment is in use. Choose one in the sidebar to fill it in.",
+  "@envMissingNone": {
+    "placeholders": {
+      "names": {
+        "type": "String",
+        "example": "{{host}}"
+      },
+      "count": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+
+  "envUsing": "Using “{name}”",
+  "@envUsing": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Staging"
+      }
+    }
+  },
+
+  "envNoneInUse": "No environment in use",
+
+  "envNew": "New Environment",
+
+  "envCopyName": "{name} Copy",
+  "@envCopyName": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Staging"
+      }
+    }
+  },
+
+  "envDeleted": "Deleted “{name}”",
+  "@envDeleted": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Staging"
+      }
+    }
+  },
+
+  "envNoEnvironment": "No Environment",
+
+  "envPickerTooltip": "The environment '{{variables}}' are filled in from",
+
+  "envManage": "Manage Environments…",
+
+  "envManagerTitle": "Environments",
+
+  "envUse": "Use",
+
+  "envUseThis": "Use this environment",
+
+  "envInUse": "In Use",
+
+  "envEmptyTitle": "No environments yet",
+
+  "envEmptyHint": "An environment holds values that differ between places a request goes, as a host or a key. Write '{{name}}' in a URL, a header or a body, and the environment in use fills it in.",
+
+  "envNameLabel": "Environment name",
+
+  "envUntitled": "Untitled",
+
+  "envPlaceholdersHint": "Write '{{name}}' in a request's URL, headers, body or auth. Built in: {builtins}.",
+  "@envPlaceholdersHint": {
+    "placeholders": {
+      "builtins": {
+        "type": "String",
+        "example": "$timestamp, $randomInt"
+      }
+    }
+  },
+
+  "envVarHint": "variable",
+
+  "envNoVariables": "No variables yet.",
+
+  "envDynamicMade": "{name} is made as the request goes",
+  "@envDynamicMade": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "$timestamp"
+      }
+    }
+  },
+
+  "envNotSet": "{name} is not set",
+  "@envNotSet": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "host"
+      }
+    }
+  },
+
+  "noticeSettingsReadFailed": "Settings could not be read: {error}",
+  "@noticeSettingsReadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+
+  "noticeRenamed": "Renamed to “{name}”",
+  "@noticeRenamed": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  },
+
+  "noticeDuplicated": "Duplicated as “{name}”",
+  "@noticeDuplicated": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository Copy"
+      }
+    }
+  },
+
+  "noticeNeedsURL": "A request needs a URL before it can be saved",
+
+  "noticeSaved": "Saved “{name}” to the collection",
+  "@noticeSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  },
+
+  "noticeDeletedRequest": "Deleted “{name}”",
+  "@noticeDeletedRequest": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  },
+
+  "noticeRestored": "Restored “{name}”",
+  "@noticeRestored": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  },
+
+  "noticeBodyTooLarge": "The body was too large to keep in history; the rest is restored",
+
+  "noticeRemovedHistory": "Removed from history",
+
+  "noticeHistoryCleared": "History cleared",
+
+  "noticeSentMissing": "Sent with {names} left as written",
+  "@noticeSentMissing": {
+    "placeholders": {
+      "names": {
+        "type": "String",
+        "example": "{{host}}"
+      }
+    }
+  },
+
+  "noticeRequestFailed": "Request to {url} failed",
+  "@noticeRequestFailed": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "https://example.com/"
+      }
+    }
+  },
+
+  "noticeCapturedOpened": "Captured request opened in Composer",
+
+  "noticeChooseFlowCurl": "Choose a flow to copy it as cURL",
+
+  "noticeCurlCopied": "cURL command copied",
+
+  "noticeProxyCAUnavailable": "The certificate authority is unavailable.",
+
+  "noticeProxyListening": "Proxy listening on {addr}",
+  "@noticeProxyListening": {
+    "placeholders": {
+      "addr": {
+        "type": "String",
+        "example": "127.0.0.1:9090"
+      }
+    }
+  },
+
+  "noticeProxyStopped": "Proxy stopped",
+
+  "noticeSessionCleared": "Session cleared",
+
+  "noticeNoTraffic": "There is no traffic to export",
+
+  "noticeHARPrepareFailed": "The capture could not be prepared: {error}",
+  "@noticeHARPrepareFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "no such file"
+      }
+    }
+  },
+
+  "noticeHARExportFailed": "The capture could not be exported: {error}",
+  "@noticeHARExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+
+  "noticeDataRevealFailed": "Could not show the data folder: {error}",
+  "@noticeDataRevealFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "open: no such file"
+      }
+    }
+  },
+
+  "exportHAR": "Export HAR",
+
+  "exportHARButton": "Export",
+
+  "harFilterName": "HAR files",
+
+  "errRequestCanceled": "The request was canceled.",
+
+  "errPort": "Use a port from 1 to 65535.",
+
+  "errEnterURL": "Enter a URL to send.",
+
+  "menuFile": "File",
+
+  "menuSaveRequest": "Save Request",
+
+  "menuSendRequest": "Send Request",
+
+  "menuCancelRequest": "Cancel Request",
+
+  "menuView": "View",
+
+  "menuProxyInspector": "Proxy Inspector",
+
+  "menuEnvironments": "Environments…",
+
+  "menuProxy": "Proxy",
+
+  "menuStartStop": "Start or Stop",
+
+  "menuExportHAR": "Export HAR…",
+
+  "menuExportCA": "Export Root CA…",
+
+  "curlImportFailed": "Could not import the cURL command: {error}",
+  "@curlImportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "no URL in command"
+      }
+    }
+  },
+
+  "curlImportedNotes": "Imported from cURL; left out: {notes}.",
+  "@curlImportedNotes": {
+    "placeholders": {
+      "notes": {
+        "type": "String",
+        "example": "--insecure"
+      }
+    }
+  },
+
+  "curlImported": "Imported from cURL",
+
+  "blurNone": "None",
+
+  "blurSubtle": "Subtle",
+
+  "blurMedium": "Medium",
+
+  "blurDeep": "Deep",
+
+  "composerCopyName": "{name} Copy",
+  "@composerCopyName": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "GitHub — Repository"
+      }
+    }
+  }
+}

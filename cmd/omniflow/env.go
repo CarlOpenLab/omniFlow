@@ -9,6 +9,7 @@ import (
 
 	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 // --- environments ---------------------------------------------------------
@@ -69,16 +70,10 @@ func braces(names []string) string {
 // missingMessage says why variables were not filled in, and where to fill
 // them.
 func (a *app) missingMessage(names []string) string {
-	verb := "is"
-	if len(names) > 1 {
-		verb = "are"
-	}
 	if e, ok := a.activeEnv(); ok {
-		return fmt.Sprintf("%s %s not set in “%s”. Add it under Environments, or choose another.",
-			braces(names), verb, e.Name)
+		return locales.EnvMissingActive(braces(names), len(names), e.Name)
 	}
-	return fmt.Sprintf("%s %s not set: no environment is in use. Choose one in the sidebar to fill it in.",
-		braces(names), verb)
+	return locales.EnvMissingNone(braces(names), len(names))
 }
 
 func (a *app) setActiveEnv(id string) {
@@ -88,9 +83,9 @@ func (a *app) setActiveEnv(id string) {
 	a.prefs.Environment = id
 	a.savePrefs()
 	if e, ok := a.envByID(id); ok {
-		a.setNotice("Using “" + e.Name + "”")
+		a.setNotice(locales.EnvUsing(e.Name))
 	} else {
-		a.setNotice("No environment in use")
+		a.setNotice(locales.EnvNoneInUse())
 	}
 }
 
@@ -113,7 +108,7 @@ func (a *app) openEnvs() {
 // edited as a start when there is one: environments differ in their values
 // far more often than in their names.
 func (a *app) addEnv() {
-	e := model.NewEnvironment(uniqueEnvName(a.envs, "New Environment"))
+	e := model.NewEnvironment(uniqueEnvName(a.envs, locales.EnvNew()))
 	if from, ok := a.envByID(a.envEdit); ok {
 		var vars []model.KV
 		for _, kv := range from.Vars {
@@ -141,7 +136,7 @@ func (a *app) duplicateEnv(id string) {
 		return
 	}
 	cp := a.envs[i].Clone()
-	cp.ID, cp.Name = model.NewID("env"), uniqueEnvName(a.envs, a.envs[i].Name+" Copy")
+	cp.ID, cp.Name = model.NewID("env"), uniqueEnvName(a.envs, locales.EnvCopyName(a.envs[i].Name))
 	for j := range cp.Vars {
 		cp.Vars[j].ID = model.NewID("kv")
 	}
@@ -169,7 +164,7 @@ func (a *app) deleteEnv(id string) {
 		}
 	}
 	a.persistEnvs()
-	a.setUndo("Deleted “"+removed.Name+"”", func() {
+	a.setUndo(locales.EnvDeleted(removed.Name), func() {
 		a.envs = slices.Insert(a.envs, min(i, len(a.envs)), removed)
 		if wasActive {
 			a.prefs.Environment = removed.ID
@@ -192,12 +187,12 @@ func uniqueEnvName(envs []model.Environment, base string) string {
 
 // envPicker is the sidebar's row choosing the environment in use.
 func (a *app) envPicker(c *ui.Context, pal *uitokens.Palette) {
-	label, col := "No Environment", pal.TextMuted
+	label, col := locales.EnvNoEnvironment(), pal.TextMuted
 	if e, ok := a.activeEnv(); ok {
 		label, col = e.Name, pal.Text
 	}
 	b := ui.ButtonBase(c.Key("env-picker")).Height(30).Padding(0, 8).Radius(7).Gap(7).
-		Label("Environment").Tooltip("The environment {{variables}} are filled in from")
+		Label(locales.SidebarEnvironment()).Tooltip(locales.EnvPickerTooltip())
 	b.Background(pal.Chip)
 	if b.Hovered() {
 		b.Background(pal.WashSelected)
@@ -214,7 +209,7 @@ func (a *app) envPicker(c *ui.Context, pal *uitokens.Palette) {
 	})
 	var act func()
 	b.Menu(func(m *ui.Menu) {
-		if m.Item("No Environment").Checked(a.prefs.Environment == "").Chosen() {
+		if m.Item(locales.EnvNoEnvironment()).Checked(a.prefs.Environment == "").Chosen() {
 			act = func() { a.setActiveEnv("") }
 		}
 		if len(a.envs) > 0 {
@@ -227,7 +222,7 @@ func (a *app) envPicker(c *ui.Context, pal *uitokens.Palette) {
 			}
 		}
 		m.Separator()
-		if m.Item("Manage Environments…").Shortcut(ui.Cmd, ui.KeyE).Chosen() {
+		if m.Item(locales.EnvManage()).Shortcut(ui.Cmd, ui.KeyE).Chosen() {
 			act = a.openEnvs
 		}
 	})
@@ -265,8 +260,8 @@ func (a *app) envList(c *ui.Context, pal *uitokens.Palette) {
 	ui.Column(c).Width(210).Shrink(0).Background(pal.Chip).BorderWidth(0, 1, 0, 0).
 		BorderColor(pal.Divider).Children(func() {
 		ui.Row(c).Height(54).Shrink(0).Padding(0, 10, 0, 16).Gap(6).Children(func() {
-			ui.Text(c, "Environments").FontSize(14).FontWeight(700).TextColor(pal.Text).Grow(1)
-			if b := iconButton(c, pal, iconPlus, "New Environment", 26); b.Clicked() {
+			ui.Text(c, locales.EnvManagerTitle()).FontSize(14).FontWeight(700).TextColor(pal.Text).Grow(1)
+			if b := iconButton(c, pal, iconPlus, locales.EnvNew(), 26); b.Clicked() {
 				act = a.addEnv
 			}
 		})
@@ -297,14 +292,14 @@ func (a *app) envList(c *ui.Context, pal *uitokens.Palette) {
 						ui.Text(c, fmt.Sprint(len(env.Values()))).FontSize(10).TextColor(pal.TextFaint)
 					})
 					row.ContextMenu(func(m *ui.Menu) {
-						if m.Item("Use").Disabled(a.prefs.Environment == env.ID).Chosen() {
+						if m.Item(locales.EnvUse()).Disabled(a.prefs.Environment == env.ID).Chosen() {
 							act = func() { a.setActiveEnv(env.ID) }
 						}
-						if m.Item("Duplicate").Chosen() {
+						if m.Item(locales.CommonDuplicate()).Chosen() {
 							act = func() { a.duplicateEnv(env.ID) }
 						}
 						m.Separator()
-						if m.Item("Delete").Chosen() {
+						if m.Item(locales.CommonDelete()).Chosen() {
 							act = func() { a.deleteEnv(env.ID) }
 						}
 					})
@@ -324,14 +319,13 @@ func (a *app) envEditor(c *ui.Context, pal *uitokens.Palette) {
 	e, ok := a.envByID(a.envEdit)
 	if !ok {
 		ui.Box(c).Grow(1).MinHeight(0).Children(func() {
-			emptyState(c, pal, iconLayers, "No environments yet",
-				"An environment holds values that differ between places a request goes, as a host or a key. Write {{name}} in a URL, a header or a body, and the environment in use fills it in.")
+			emptyState(c, pal, iconLayers, locales.EnvEmptyTitle(), locales.EnvEmptyHint())
 		})
 		ui.Row(c).Height(32).Gap(8).Justify(ui.End).Children(func() {
-			if ui.Button(c.Key("env-done-empty"), "Done").Clicked() {
+			if ui.Button(c.Key("env-done-empty"), locales.CommonDone()).Clicked() {
 				a.envOpen = false
 			}
-			if ui.PrimaryButton(c.Key("env-first"), "New Environment").Clicked() {
+			if ui.PrimaryButton(c.Key("env-first"), locales.EnvNew()).Clicked() {
 				a.addEnv()
 			}
 		})
@@ -339,15 +333,15 @@ func (a *app) envEditor(c *ui.Context, pal *uitokens.Palette) {
 	}
 	ui.Row(c).Height(34).Shrink(0).Gap(10).Children(func() {
 		ui.TextInput(c.Key("env-name:"+e.ID), &e.Name).Height(30).Grow(1).MinWidth(0).FontSize(13).
-			FontWeight(650).Padding(0, 10).Background(pal.Chip).Border(1, pal.Edge).Label("Environment name")
+			FontWeight(650).Padding(0, 10).Background(pal.Chip).Border(1, pal.Edge).Label(locales.EnvNameLabel())
 		active := a.prefs.Environment == e.ID
-		use := ui.Button(c.Key("env-use"), "").Label("Use this environment").Disabled(active)
+		use := ui.Button(c.Key("env-use"), "").Label(locales.EnvUseThis()).Disabled(active)
 		use.Children(func() {
 			if active {
 				ui.Icon(c, iconCheck).Size(12, 12).TextColor(pal.Success)
-				ui.Text(c, "In Use")
+				ui.Text(c, locales.EnvInUse())
 			} else {
-				ui.Text(c, "Use")
+				ui.Text(c, locales.EnvUse())
 			}
 		})
 		if use.Clicked() {
@@ -355,22 +349,22 @@ func (a *app) envEditor(c *ui.Context, pal *uitokens.Palette) {
 		}
 	})
 	if strings.TrimSpace(e.Name) == "" {
-		e.Name = "Untitled"
+		e.Name = locales.EnvUntitled()
 	}
-	ui.Text(c, "Write {{name}} in a request's URL, headers, body or auth. Built in: "+
-		braces(model.DynamicVariables)+".").FontSize(10.5).TextColor(pal.TextFaint).LineHeight(1.4)
+	ui.Text(c, locales.EnvPlaceholdersHint(braces(model.DynamicVariables))).
+		FontSize(10.5).TextColor(pal.TextFaint).LineHeight(1.4)
 	ui.Scroll(c).Grow(1).MinHeight(0).Children(func() {
 		if len(e.Vars) == 0 {
 			e.Vars = []model.KV{model.NewKV()}
 		}
-		kvEditor(c, pal, &e.Vars, "variable", "value", "No variables yet.")
+		kvEditor(c, pal, &e.Vars, locales.EnvVarHint(), locales.CommonValuePlaceholder(), locales.EnvNoVariables())
 	})
 	ui.Row(c).Height(32).Shrink(0).Gap(8).Children(func() {
-		if b := iconAction(c, pal, iconTrash, "Delete"); b.Clicked() {
+		if b := iconAction(c, pal, iconTrash, locales.CommonDelete()); b.Clicked() {
 			a.deleteEnv(e.ID)
 		}
 		ui.Spacer(c)
-		if ui.PrimaryButton(c.Key("env-done"), "Done").Clicked() {
+		if ui.PrimaryButton(c.Key("env-done"), locales.CommonDone()).Clicked() {
 			a.envOpen = false
 		}
 	})
@@ -415,9 +409,9 @@ func (a *app) varTip(s string) string {
 		case ok:
 			lines = append(lines, "{{"+p.Name+"}} = "+ellipsize(v, 60))
 		case model.Dynamic(p.Name):
-			lines = append(lines, "{{"+p.Name+"}} is made as the request goes")
+			lines = append(lines, locales.EnvDynamicMade(braces([]string{p.Name})))
 		default:
-			lines = append(lines, "{{"+p.Name+"}} is not set")
+			lines = append(lines, locales.EnvNotSet(braces([]string{p.Name})))
 		}
 	}
 	return strings.Join(lines, "\n")

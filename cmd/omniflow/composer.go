@@ -12,6 +12,7 @@ import (
 	"github.com/CarlOpenLab/omniflow/internal/httpx"
 	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 // composer is the active half of the app: a request on top, its answer
@@ -34,7 +35,8 @@ func (a *app) urlBar(c *ui.Context, pal *uitokens.Palette) {
 	row.Children(func() {
 		// Method: a token that opens the verb list.
 		method := ui.ButtonBase(c.Key("method")).Width(108).Height(34).Shrink(0).Radius(8).
-			Padding(0, 10).Gap(6).Label("Method " + a.req.Method).Tooltip("Choose the HTTP method")
+			Padding(0, 10).Gap(6).Label(locales.ComposerMethodLabel(a.req.Method)).
+			Tooltip(locales.ComposerMethodTooltip())
 		method.Background(pal.Chip)
 		if method.Hovered() {
 			method.Background(pal.WashSelected)
@@ -54,7 +56,7 @@ func (a *app) urlBar(c *ui.Context, pal *uitokens.Palette) {
 		// URL
 		in := ui.TextInput(c.Key("url"), &a.req.URL).Height(34).Grow(1).MinWidth(0).
 			FontSize(12.5).Padding(0, 12).Radius(8).
-			Background(pal.Chip).Border(1, pal.Edge).Label("Request URL").
+			Background(pal.Chip).Border(1, pal.Edge).Label(locales.ComposerRequestURL()).
 			Placeholder("https://api.example.com/v1/things")
 		in = in.Bind(&a.urlFocus)
 		if in.Focused() {
@@ -80,14 +82,14 @@ func (a *app) urlBar(c *ui.Context, pal *uitokens.Palette) {
 		// Send. While a request is out it stays put and says so; Cancel is in
 		// the response pane, away from where a second click on Send lands.
 		send := ui.PrimaryButton(c.Key("send"), "").Height(34).Shrink(0).Padding(0, 16).
-			Radius(8).Gap(6).Label("Send").Tooltip("Send this request (⌘↩)").Disabled(a.sending)
+			Radius(8).Gap(6).Label(locales.ComposerSend()).Tooltip(locales.ComposerSendTooltip()).Disabled(a.sending)
 		send.Children(func() {
 			if a.sending {
 				ui.Spinner(c).Size(13, 13)
-				ui.Text(c, "Sending").FontSize(12).FontWeight(650)
+				ui.Text(c, locales.ComposerSending()).FontSize(12).FontWeight(650)
 			} else {
 				ui.Icon(c, iconSend).Size(13, 13)
-				ui.Text(c, "Send").FontSize(12).FontWeight(650)
+				ui.Text(c, locales.ComposerSend()).FontSize(12).FontWeight(650)
 			}
 		})
 		if send.Clicked() {
@@ -134,16 +136,16 @@ func (a *app) requestEditor(c *ui.Context, pal *uitokens.Palette) {
 	pane := ui.Column(c).Fill().MinHeight(0)
 	pane.Children(func() {
 		labels := []string{
-			countLabel("Params", enabledCount(a.req.Params)),
-			countLabel("Headers", enabledCount(a.req.Headers)),
-			"Body",
-			"Auth",
+			countLabel(locales.ComposerTabParams(), enabledCount(a.req.Params)),
+			countLabel(locales.ComposerTabHeaders(), enabledCount(a.req.Headers)),
+			locales.ComposerTabBody(),
+			locales.ComposerTabAuth(),
 		}
 		if a.req.BodyKind != model.BodyNone {
-			labels[2] = "Body · " + bodyKindLabel(a.req.BodyKind)
+			labels[2] = locales.ComposerBodyKind(locales.ComposerTabBody(), bodyKindLabel(a.req.BodyKind))
 		}
 		if a.req.AuthType != model.AuthNone {
-			labels[3] = "Auth · " + authLabel(a.req.AuthType)
+			labels[3] = locales.ComposerAuthKind(locales.ComposerTabAuth(), authLabel(a.req.AuthType))
 		}
 		lineTabs(c, pal, &a.reqTab, labels)
 		ui.Box(c).Grow(1).MinHeight(0).Children(func() {
@@ -166,17 +168,17 @@ func countLabel(name string, n int) string {
 	if n == 0 {
 		return name
 	}
-	return fmt.Sprintf("%s · %d", name, n)
+	return locales.ComposerTabCount(name, n)
 }
 
 func bodyKindLabel(kind string) string {
 	switch kind {
 	case model.BodyJSON:
-		return "JSON"
+		return locales.ComposerKindJSON()
 	case model.BodyForm:
-		return "Form"
+		return locales.ComposerKindForm()
 	}
-	return "Text"
+	return locales.ComposerKindText()
 }
 
 func authLabel(kind string) string {
@@ -213,8 +215,8 @@ func (a *app) paramsTab(c *ui.Context, pal *uitokens.Palette) {
 	ui.Scroll(c).Grow(1).Children(func() {
 		col := ui.Column(c).Padding(12, 14).Gap(8)
 		col.Children(func() {
-			tabCaption(c, pal, "Query Parameters", "appended to the URL when sent", nil)
-			kvEditor(c, pal, &a.req.Params, "parameter", "value", "No query parameters yet.")
+			tabCaption(c, pal, locales.ComposerQueryParams(), locales.ComposerQueryParamsHint(), nil)
+			kvEditor(c, pal, &a.req.Params, locales.ComposerParamPlaceholder(), locales.CommonValuePlaceholder(), locales.ComposerNoParams())
 		})
 	})
 }
@@ -223,13 +225,13 @@ func (a *app) headersTab(c *ui.Context, pal *uitokens.Palette) {
 	ui.Scroll(c).Grow(1).Children(func() {
 		col := ui.Column(c).Padding(12, 14).Gap(8)
 		col.Children(func() {
-			tabCaption(c, pal, "Request Headers", "sent as written", func() {
+			tabCaption(c, pal, locales.ComposerRequestHeaders(), locales.ComposerHeadersHint(), func() {
 				if a.req.AuthType != model.AuthNone {
-					ui.Text(c, "Authorization is added by the Auth tab").FontSize(10.5).
+					ui.Text(c, locales.ComposerAuthAddedByTab()).FontSize(10.5).
 						TextColor(pal.TextFaint)
 				}
 			})
-			kvEditor(c, pal, &a.req.Headers, "header", "value", "No headers yet.")
+			kvEditor(c, pal, &a.req.Headers, locales.CommonHeaderPlaceholder(), locales.CommonValuePlaceholder(), locales.ComposerNoHeaders())
 		})
 	})
 }
@@ -240,7 +242,7 @@ func (a *app) bodyTab(c *ui.Context, pal *uitokens.Palette) {
 	if idx < 0 {
 		idx = 0
 	}
-	segments := []string{"None", "JSON", "Text", "Form"}
+	segments := []string{locales.ComposerBodyNone(), locales.ComposerBodyJSON(), locales.ComposerBodyText(), locales.ComposerBodyForm()}
 	col := ui.Column(c).Fill().MinHeight(0).Padding(12, 14).Gap(8)
 	col.Children(func() {
 		row := ui.Row(c).Height(30).Gap(10)
@@ -250,14 +252,14 @@ func (a *app) bodyTab(c *ui.Context, pal *uitokens.Palette) {
 			switch a.req.BodyKind {
 			case model.BodyJSON:
 				a.jsonState(c, pal)
-				if b := iconAction(c, pal, iconSpark, "Format"); b.Clicked() {
+				if b := iconAction(c, pal, iconSpark, locales.ComposerFormat()); b.Clicked() {
 					a.req.Body = formatJSON(a.req.Body)
 				}
 			case model.BodyForm:
-				ui.Text(c, plural(enabledCount(a.req.Form), "field")).FontSize(10.5).TextColor(pal.TextFaint)
+				ui.Text(c, locales.ComposerFieldCount(enabledCount(a.req.Form))).FontSize(10.5).TextColor(pal.TextFaint)
 			}
 			if a.req.BodyKind == model.BodyJSON || a.req.BodyKind == model.BodyText {
-				ui.Text(c, plural(len([]rune(a.req.Body)), "character")).
+				ui.Text(c, locales.ComposerCharCount(len([]rune(a.req.Body)))).
 					FontSize(10.5).TextColor(pal.TextFaint)
 			}
 		})
@@ -266,23 +268,22 @@ func (a *app) bodyTab(c *ui.Context, pal *uitokens.Palette) {
 		}
 		if a.req.BodyKind == model.BodyNone {
 			ui.Box(c).Grow(1).MinHeight(0).Children(func() {
-				emptyState(c, pal, iconCode, "No body",
-					"Choose JSON, Text or Form above. A GET request sends no body even when one is written.")
+				emptyState(c, pal, iconCode, locales.ComposerNoBody(), locales.ComposerNoBodyHint())
 			})
 			return
 		}
 		hint := ""
 		switch a.req.BodyKind {
 		case model.BodyJSON:
-			hint = "application/json is added when no Content-Type header says otherwise."
+			hint = locales.ComposerJSONHint()
 		case model.BodyForm:
-			hint = "Sent URL-encoded as application/x-www-form-urlencoded, unless a Content-Type header says otherwise."
+			hint = locales.ComposerFormHint()
 		default:
-			hint = "text/plain; charset=utf-8 is added when no Content-Type header says otherwise."
+			hint = locales.ComposerTextHint()
 		}
 		hintColor := pal.TextFaint
 		if a.req.Method == "GET" || a.req.Method == "HEAD" {
-			hint = "This method sends no body. Switch to POST, PUT or PATCH to send it."
+			hint = locales.ComposerNoBodyMethodHint()
 			hintColor = pal.Warning
 		}
 		ui.Text(c, hint).FontSize(10.5).TextColor(hintColor)
@@ -291,7 +292,7 @@ func (a *app) bodyTab(c *ui.Context, pal *uitokens.Palette) {
 				a.req.Form = []model.KV{model.NewKV()}
 			}
 			ui.Scroll(c).Grow(1).MinHeight(0).Children(func() {
-				kvEditor(c, pal, &a.req.Form, "field", "value", "No form fields yet.")
+				kvEditor(c, pal, &a.req.Form, locales.CommonFieldPlaceholder(), locales.CommonValuePlaceholder(), locales.ComposerNoFormFields())
 			})
 			return
 		}
@@ -302,11 +303,13 @@ func (a *app) bodyTab(c *ui.Context, pal *uitokens.Palette) {
 }
 
 // jsonCheck is the last JSON body checked, so the check runs as the body
-// changes rather than in every frame.
+// changes rather than in every frame. Where the parser stopped is kept as
+// numbers, so the message can be written in the language on screen now.
 type jsonCheck struct {
-	body string
-	ok   bool
-	msg  string
+	body   string
+	ok     bool
+	line   int
+	column int
 }
 
 // jsonState says whether the JSON body parses, and where it stops if not.
@@ -315,33 +318,41 @@ func (a *app) jsonState(c *ui.Context, pal *uitokens.Palette) {
 		return
 	}
 	if a.jsonChecked.body != a.req.Body {
-		ok, msg := checkJSON(a.req.Body)
-		a.jsonChecked = jsonCheck{body: a.req.Body, ok: ok, msg: msg}
+		check := checkJSON(a.req.Body)
+		check.body = a.req.Body
+		a.jsonChecked = check
 	}
 	col, icon := pal.Success, iconValid
 	if !a.jsonChecked.ok {
 		col, icon = pal.Danger, iconWarning
 	}
+	msg := locales.ComposerJSONValid()
+	if !a.jsonChecked.ok {
+		msg = locales.ComposerJSONInvalid()
+		if a.jsonChecked.line > 0 {
+			msg = locales.ComposerJSONInvalidAt(a.jsonChecked.line, a.jsonChecked.column)
+		}
+	}
 	ui.Row(c).Gap(5).Shrink(0).Children(func() {
 		ui.Icon(c, icon).Size(12, 12).TextColor(col)
-		ui.Text(c, a.jsonChecked.msg).FontSize(10.5).FontWeight(600).TextColor(col)
+		ui.Text(c, msg).FontSize(10.5).FontWeight(600).TextColor(col)
 	})
 }
 
 // checkJSON reports whether s is one JSON document, and if not, where the
 // parser gave up, as a line and column a person can find.
-func checkJSON(s string) (bool, string) {
+func checkJSON(s string) jsonCheck {
 	if json.Valid([]byte(s)) {
-		return true, "Valid JSON"
+		return jsonCheck{ok: true}
 	}
 	var v any
 	err := json.Unmarshal([]byte(s), &v)
 	var syntax *json.SyntaxError
 	if errors.As(err, &syntax) {
 		line, col := lineCol(s, int(syntax.Offset))
-		return false, fmt.Sprintf("Invalid JSON at %d:%d", line, col)
+		return jsonCheck{line: line, column: col}
 	}
-	return false, "Invalid JSON"
+	return jsonCheck{}
 }
 
 // lineCol turns a byte offset into a 1-based line and column of runes.
@@ -361,22 +372,22 @@ func (a *app) authTab(c *ui.Context, pal *uitokens.Palette) {
 	}
 	col := ui.Column(c).Padding(14, 16).Gap(12)
 	col.Children(func() {
-		segmented(c, pal, &idx, []string{"None", "Bearer", "Basic"})
+		segmented(c, pal, &idx, []string{locales.ComposerAuthNone(), "Bearer", "Basic"})
 		if idx != indexOf(types, a.req.AuthType) {
 			a.req.AuthType = types[idx]
 		}
 		switch a.req.AuthType {
 		case model.AuthBearer:
-			ui.Text(c, "The token is sent as Authorization: Bearer <token>.").
+			ui.Text(c, locales.ComposerBearerHint()).
 				FontSize(10.5).TextColor(pal.TextFaint)
-			a.labelInput(c, pal, "Token", &a.req.Token, false)
+			a.labelInput(c, pal, locales.ComposerToken(), &a.req.Token, false)
 		case model.AuthBasic:
-			ui.Text(c, "The username and password are sent as HTTP Basic authentication.").
+			ui.Text(c, locales.ComposerBasicHint()).
 				FontSize(10.5).TextColor(pal.TextFaint)
-			a.labelInput(c, pal, "Username", &a.req.User, false)
-			a.labelInput(c, pal, "Password", &a.req.Pass, true)
+			a.labelInput(c, pal, locales.ComposerUsername(), &a.req.User, false)
+			a.labelInput(c, pal, locales.ComposerPassword(), &a.req.Pass, true)
 		default:
-			ui.Text(c, "No Authorization header is added.").FontSize(11).TextColor(pal.TextFaint)
+			ui.Text(c, locales.ComposerNoAuth()).FontSize(11).TextColor(pal.TextFaint)
 		}
 	})
 }
@@ -421,14 +432,15 @@ func (a *app) responsePane(c *ui.Context, pal *uitokens.Palette) {
 			ui.Box(c).Grow(1).MinHeight(0).Children(func() {
 				ui.Column(c).Fill().Center().Gap(10).Children(func() {
 					ui.Spinner(c).Size(22, 22).TextColor(pal.Accent)
-					ui.Text(c, "Waiting for the server").FontSize(12).TextColor(pal.TextMuted)
+					ui.Text(c, locales.ComposerWaiting()).FontSize(12).TextColor(pal.TextMuted)
 					cancel := ui.ButtonBase(c.Key("cancel-send")).Height(28).Padding(0, 10).
-						Radius(7).Gap(6).Label("Cancel").Tooltip("Cancel this request (⌘.)")
+						Radius(7).Gap(6).Label(locales.CommonCancel()).
+						Tooltip(locales.ComposerCancelTooltip())
 					if cancel.Hovered() {
 						cancel.Background(pal.RowHover)
 					}
 					cancel.Children(func() {
-						ui.Text(c, "Cancel").FontSize(11.5).TextColor(pal.TextMuted)
+						ui.Text(c, locales.CommonCancel()).FontSize(11.5).TextColor(pal.TextMuted)
 						kbd(c, pal, "⌘.")
 					})
 					if cancel.Clicked() {
@@ -440,14 +452,14 @@ func (a *app) responsePane(c *ui.Context, pal *uitokens.Palette) {
 		}
 		if a.resp == nil {
 			ui.Box(c).Grow(1).MinHeight(0).Children(func() {
-				switch a.respErr {
-				case "":
-					emptyState(c, pal, iconSend, "Nothing sent yet",
-						"Write a request above and press ⌘↩. The response lands here with its headers, body and timing.")
-				case errCanceled:
+				msg := a.respProblemText()
+				switch {
+				case msg == "":
+					emptyState(c, pal, iconSend, locales.ComposerNothingSent(), locales.ComposerNothingSentHint())
+				case a.respProblem == respCanceled:
 					a.canceledState(c, pal)
 				default:
-					a.errorState(c, pal, a.respErr)
+					a.errorState(c, pal, msg)
 				}
 			})
 			return
@@ -467,7 +479,7 @@ func (a *app) responsePane(c *ui.Context, pal *uitokens.Palette) {
 				})
 		}
 		prettyText, isJSON := httpx.Pretty(resp.Body)
-		labels := []string{"Body", countLabel("Headers", len(resp.Headers)), "Timing"}
+		labels := []string{locales.ComposerTabRespBody(), countLabel(locales.ComposerTabRespHeaders(), len(resp.Headers)), locales.ComposerTiming()}
 		lineTabs(c, pal, &a.respTab, labels)
 		ui.Box(c).Grow(1).MinHeight(0).Children(func() {
 			switch a.respTab {
@@ -478,12 +490,12 @@ func (a *app) responsePane(c *ui.Context, pal *uitokens.Palette) {
 				}
 				note := ""
 				if resp.Truncated {
-					note = "The body is larger than 8 MB; this is the first 8 MB."
+					note = locales.ComposerTruncated()
 				}
 				a.bodyView(c, pal, fmt.Sprintf("resp:%p", resp), a.req.URL, resp.Body,
 					contentTypeOf(resp.Headers), text, note)
 			case 1:
-				headerList(c, pal, resp.Headers, "The response carries no headers.")
+				headerList(c, pal, resp.Headers, locales.ComposerNoResponseHeaders())
 			default:
 				timingRows(c, pal, resp)
 			}
@@ -505,7 +517,7 @@ func (a *app) responseHeader(c *ui.Context, pal *uitokens.Palette) {
 	row := ui.Row(c).Height(40).Shrink(0).Padding(0, 12).Gap(8).
 		BorderWidth(0, 0, 1, 0).BorderColor(pal.Divider)
 	row.Children(func() {
-		ui.Text(c, "Response").FontSize(11.5).FontWeight(650).TextColor(pal.TextMuted)
+		ui.Text(c, locales.ComposerResponse()).FontSize(11.5).FontWeight(650).TextColor(pal.TextMuted)
 		resp := a.resp
 		if resp != nil && resp.Status > 0 {
 			statusBadge(c, pal, resp.Status)
@@ -514,16 +526,16 @@ func (a *app) responseHeader(c *ui.Context, pal *uitokens.Palette) {
 			ui.Text(c, resp.Proto).FontSize(10).TextColor(pal.TextFaint)
 			ui.Box(c).Width(1).Height(14).Background(pal.Divider)
 			ui.Text(c, httpx.FormatDuration(resp.Duration)).FontSize(10.5).Font("monospace").
-				TextColor(pal.TextMuted).Tooltip("Total time")
+				TextColor(pal.TextMuted).Tooltip(locales.ComposerTotalTime())
 			ui.Text(c, httpx.FormatBytes(resp.Size)).FontSize(10.5).Font("monospace").
-				TextColor(pal.TextMuted).Tooltip("Body size")
+				TextColor(pal.TextMuted).Tooltip(locales.ComposerBodySize())
 		}
 		ui.Spacer(c)
 		if resp != nil && resp.Status > 0 && a.respTab == 0 {
 			_, isJSON := httpx.Pretty(resp.Body)
 			if isJSON {
 				pretty := ui.ButtonBase(c.Key("pretty")).Height(24).Padding(0, 8).Radius(6).Gap(4).
-					Label("Pretty JSON").Tooltip("Indent the JSON")
+					Label(locales.ComposerPrettyJSON()).Tooltip(locales.ComposerPrettyJSONHint())
 				if a.pretty {
 					pretty.Background(pal.AccentSoft)
 				} else if pretty.Hovered() {
@@ -535,19 +547,19 @@ func (a *app) responseHeader(c *ui.Context, pal *uitokens.Palette) {
 						col = pal.Accent
 					}
 					ui.Icon(c, iconCode).Size(11, 11).TextColor(col)
-					ui.Text(c, "Pretty").FontSize(10.5).FontWeight(600).TextColor(col)
+					ui.Text(c, locales.ComposerPretty()).FontSize(10.5).FontWeight(600).TextColor(col)
 				})
 				if pretty.Clicked() {
 					a.pretty = !a.pretty
 				}
 			}
 			if shapeOf(resp.Body, contentTypeOf(resp.Headers)) == shapeText {
-				if b := iconButton(c, pal, iconCopy, "Copy Response", 24); b.Clicked() {
+				if b := iconButton(c, pal, iconCopy, locales.ComposerCopyResponse(), 24); b.Clicked() {
 					text := string(resp.Body)
 					if prettyText, ok := httpx.Pretty(resp.Body); ok && a.pretty {
 						text = prettyText
 					}
-					a.copyText(c, "Response copied", text)
+					a.copyText(c, locales.ComposerResponseCopied(), text)
 				}
 			}
 		}
@@ -559,11 +571,11 @@ func (a *app) errorState(c *ui.Context, pal *uitokens.Palette, msg string) {
 		ui.Box(c).Size(48, 48).Radius(13).Center().Background(pal.Danger.Alpha(0.1)).Children(func() {
 			ui.Icon(c, iconWarning).Size(22, 22).TextColor(pal.Danger)
 		})
-		ui.Text(c, "The request did not complete").FontSize(13.5).FontWeight(650).
+		ui.Text(c, locales.ComposerRequestFailed()).FontSize(13.5).FontWeight(650).
 			TextColor(pal.Text)
 		ui.Text(c, msg).FontSize(11.5).TextColor(pal.TextMuted).TextAlign(ui.Center).
 			MaxWidth(440).LineHeight(1.4).Selectable()
-		if quietButton(c, pal, "retry", "Try Again").Clicked() {
+		if quietButton(c, pal, "retry", locales.ComposerTryAgain()).Clicked() {
 			a.send()
 		}
 	})
@@ -576,10 +588,10 @@ func (a *app) canceledState(c *ui.Context, pal *uitokens.Palette) {
 		ui.Box(c).Size(48, 48).Radius(13).Center().Background(pal.Chip).Children(func() {
 			ui.Icon(c, iconCancel).Size(22, 22).TextColor(pal.TextMuted)
 		})
-		ui.Text(c, "Request canceled").FontSize(13.5).FontWeight(650).TextColor(pal.Text)
-		ui.Text(c, "Nothing more will be read from it. Send it again when you are ready.").
+		ui.Text(c, locales.ComposerRequestCanceled()).FontSize(13.5).FontWeight(650).TextColor(pal.Text)
+		ui.Text(c, locales.ComposerCanceledHint()).
 			FontSize(11.5).TextColor(pal.TextMuted).TextAlign(ui.Center).MaxWidth(440).LineHeight(1.4)
-		if quietButton(c, pal, "send-again", "Send Again").Clicked() {
+		if quietButton(c, pal, "send-again", locales.ComposerSendAgain()).Clicked() {
 			a.send()
 		}
 	})

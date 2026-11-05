@@ -17,6 +17,7 @@ import (
 	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/internal/proxy"
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 func seedFlows(a *app) {
@@ -420,12 +421,12 @@ func TestPortIsCheckedBeforeTheProxyStarts(t *testing.T) {
 	a.mode = modeInspector
 	a.proxyPort = "99999"
 	tt := newTester(t, a)
-	if !tt.HasText(errPort) {
+	if !tt.HasText(locales.ErrPort()) {
 		t.Error("the sidebar does not flag the port")
 	}
 	a.startProxy()
-	if a.proxyRunning() || a.proxyErr != errPort {
-		t.Errorf("the proxy started on %s, or said %q", a.proxyPort, a.proxyErr)
+	if a.proxyRunning() || a.proxyProblemText() != locales.ErrPort() {
+		t.Errorf("the proxy started on %s, or said %q", a.proxyPort, a.proxyProblemText())
 	}
 }
 

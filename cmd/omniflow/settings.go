@@ -5,9 +5,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/egoist/mygo/i18n"
 	"github.com/egoist/mygo/ui"
 
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 // settingsDialog is the one place appearance and capture are configured.
@@ -21,23 +23,23 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 		head := ui.Row(c).Height(32).Gap(8)
 		head.Children(func() {
 			ui.Column(c).Gap(1).Grow(1).Children(func() {
-				ui.Text(c, "Settings").FontSize(16).FontWeight(700).TextColor(pal.Text)
-				ui.Text(c, "Appearance, capture and the certificate").FontSize(10.5).
+				ui.Text(c, locales.SettingsTitle()).FontSize(16).FontWeight(700).TextColor(pal.Text)
+				ui.Text(c, locales.SettingsSubtitle()).FontSize(10.5).
 					TextColor(pal.TextFaint)
 			})
-			if b := iconButton(c, pal, iconX, "Close Settings", 26); b.Clicked() {
+			if b := iconButton(c, pal, iconX, locales.SettingsClose(), 26); b.Clicked() {
 				a.settingsOpen = false
 			}
 		})
 		ui.Box(c).Height(12)
 
 		// Appearance
-		a.settingsLabel(c, pal, "Appearance")
+		a.settingsLabel(c, pal, locales.SettingsAppearance())
 		mode := themeMode(a.prefs.Theme)
 		labels := make([]string, len(themes))
 		current := 0
 		for i, t := range themes {
-			labels[i] = t.label
+			labels[i] = t.label()
 			if t.mode == mode {
 				current = i
 			}
@@ -45,11 +47,35 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 		tidx := current
 		themeRow := ui.Row(c).Height(30).Gap(10)
 		themeRow.Children(func() {
-			ui.Text(c, "Theme").FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
-			segmented(c, pal, &tidx, labels)
+			ui.Text(c, locales.SettingsTheme()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
+			segmentedKey(c, pal, "theme:", &tidx, labels)
 		})
 		if tidx != current && tidx >= 0 && tidx < len(themes) {
 			a.setTheme(themes[tidx].mode)
+		}
+
+		// Language: the system's, or one of the languages the app is
+		// written in, each named in itself.
+		langTags := []string{"", "en", "zh-Hans"}
+		langLabels := []string{
+			locales.LanguageSystem(),
+			i18n.Autonym("en"),
+			i18n.Autonym("zh-Hans"),
+		}
+		langNow := 0
+		for i, tag := range langTags {
+			if tag == normalizeLanguage(a.prefs.Language) {
+				langNow = i
+			}
+		}
+		lidx := langNow
+		langRow := ui.Row(c).Height(30).Gap(10)
+		langRow.Children(func() {
+			ui.Text(c, locales.SettingsLanguage()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
+			segmentedKey(c, pal, "lang:", &lidx, langLabels)
+		})
+		if lidx != langNow && lidx >= 0 && lidx < len(langTags) {
+			a.setLanguage(langTags[lidx])
 		}
 		ui.Box(c).Height(4)
 
@@ -59,9 +85,9 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 		opacity := a.cardOpacity()
 		opacityRow := ui.Row(c).Height(30).Gap(10)
 		opacityRow.Children(func() {
-			ui.Text(c, "Card opacity").FontSize(11.5).TextColor(pal.TextMuted).Width(96).Shrink(0)
+			ui.Text(c, locales.SettingsCardOpacity()).FontSize(11.5).TextColor(pal.TextMuted).Width(96).Shrink(0)
 			ui.Slider(c.Key("settings-opacity"), &opacity, uitokens.OpacityMin, uitokens.OpacityMax).
-				Step(0.05).Grow(1).MinWidth(0).Label("Card opacity")
+				Step(0.05).Grow(1).MinWidth(0).Label(locales.SettingsCardOpacity())
 			ui.Text(c, fmt.Sprintf("%.0f%%", opacity*100)).Width(38).Shrink(0).FontSize(11).
 				Font("monospace").TextColor(pal.TextMuted).TextAlign(ui.End)
 		})
@@ -76,7 +102,7 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 		blurLabels := make([]string, len(blurs))
 		blurNow := 0
 		for i, b := range blurs {
-			blurLabels[i] = b.label
+			blurLabels[i] = b.label()
 			if b.id == a.blurInUse() {
 				blurNow = i
 			}
@@ -84,7 +110,7 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 		bidx := blurNow
 		blurRow := ui.Row(c).Height(30).Gap(10)
 		blurRow.Children(func() {
-			ui.Text(c, "Material").FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
+			ui.Text(c, locales.SettingsMaterial()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
 			segmented(c, pal, &bidx, blurLabels)
 		})
 		if bidx != blurNow && bidx >= 0 && bidx < len(blurs) {
@@ -108,21 +134,21 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 					Background(pal.Card.Alpha(0.90)).Shadow(0, 1, 2, 0, pal.CardShadow)
 			})
 			ui.Column(c).Gap(1).Justify(ui.Center).Children(func() {
-				ui.Text(c, "Acrylic background").FontSize(11.5).FontWeight(600).TextColor(pal.Text)
-				ui.Text(c, "The system's frosted material shows through the window").FontSize(10).
+				ui.Text(c, locales.SettingsAcrylicTitle()).FontSize(11.5).FontWeight(600).TextColor(pal.Text)
+				ui.Text(c, locales.SettingsAcrylicHint()).FontSize(10).
 					TextColor(pal.TextFaint)
 			})
 		})
 		ui.Box(c).Height(14)
 
 		// Capture
-		a.settingsLabel(c, pal, "Capture")
+		a.settingsLabel(c, pal, locales.SettingsCapture())
 		portRow := ui.Row(c).Height(30).Gap(10)
 		portRow.Children(func() {
-			ui.Text(c, "Proxy port").FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
-			hint, hintColor := "Enter to apply", pal.TextFaint
+			ui.Text(c, locales.SettingsProxyPort()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
+			hint, hintColor := locales.CommonEnterToApply(), pal.TextFaint
 			if !validPort(a.proxyPort) {
-				hint, hintColor = errPort, pal.Danger
+				hint, hintColor = locales.ErrPort(), pal.Danger
 			}
 			ui.Text(c, hint).FontSize(10).TextColor(hintColor)
 			in := ui.TextInput(c.Key("settings-port"), &a.proxyPort).Width(86).Height(26).
@@ -139,11 +165,11 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 		timeoutOK := timeoutErr == nil && timeoutSec >= 1 && timeoutSec <= 600
 		timeoutRow := ui.Row(c).Height(30).Gap(10)
 		timeoutRow.Children(func() {
-			ui.Text(c, "Timeout").FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
-			ui.Text(c, "seconds").FontSize(10).TextColor(pal.TextFaint)
+			ui.Text(c, locales.SettingsTimeout()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
+			ui.Text(c, locales.SettingsSeconds()).FontSize(10).TextColor(pal.TextFaint)
 			in := ui.TextInput(c.Key("settings-timeout"), &a.timeoutText).Width(64).Height(26).
 				FontSize(11.5).Font("monospace").Padding(0, 8).Background(pal.CodeBg).
-				Border(1, pal.Edge).Label("Timeout in seconds")
+				Border(1, pal.Edge).Label(locales.SettingsTimeoutLabel())
 			if !timeoutOK {
 				in.Border(1, pal.Danger)
 			}
@@ -154,10 +180,10 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 				}
 			}
 		})
-		a.settingSwitch(c, pal, "Stop at redirects", &a.prefs.StopAtRedirects)
-		a.settingSwitch(c, pal, "Skip certificate verification", &a.prefs.SkipTLSVerify)
-		a.settingSwitch(c, pal, "Start the proxy when OmniFlow opens", &a.prefs.ProxyAutostart)
-		a.settingSwitch(c, pal, "Decrypt HTTPS with the Root CA", &a.mitm)
+		a.settingSwitch(c, pal, locales.SettingsStopRedirects(), &a.prefs.StopAtRedirects)
+		a.settingSwitch(c, pal, locales.SettingsSkipTLS(), &a.prefs.SkipTLSVerify)
+		a.settingSwitch(c, pal, locales.SettingsAutostart(), &a.prefs.ProxyAutostart)
+		a.settingSwitch(c, pal, locales.SettingsDecrypt(), &a.mitm)
 		if a.mitm != a.prefs.DecryptHTTPS {
 			a.prefs.DecryptHTTPS = a.mitm
 			a.savePrefs()
@@ -169,39 +195,39 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 		caRow := ui.Row(c).Height(30).Gap(8)
 		caRow.Children(func() {
 			ui.Icon(c, iconShield).Size(13, 13).TextColor(pal.TextMuted)
-			ui.Text(c, "Root CA Certificate").FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
-			if ui.Button(c.Key("settings-ca"), "Manage…").Clicked() {
+			ui.Text(c, locales.CaTitle()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
+			if ui.Button(c.Key("settings-ca"), locales.SettingsManage()).Clicked() {
 				a.caOpen = true
 			}
 		})
 		ui.Box(c).Height(10)
 
 		// Data
-		a.settingsLabel(c, pal, "Data")
-		a.settingSwitch(c, pal, "Keep request history", &a.prefs.KeepHistory)
+		a.settingsLabel(c, pal, locales.SettingsData())
+		a.settingSwitch(c, pal, locales.SettingsKeepHistory(), &a.prefs.KeepHistory)
 		dataRow := ui.Row(c).Height(30).Gap(8)
 		dataRow.Children(func() {
 			ui.Icon(c, iconFolder).Size(13, 13).TextColor(pal.TextMuted)
 			ui.Column(c).Gap(0).Grow(1).MinWidth(0).Justify(ui.Center).Children(func() {
-				ui.Text(c, "Collection, history and certificate").FontSize(11.5).TextColor(pal.TextMuted)
+				ui.Text(c, locales.SettingsDataHint()).FontSize(11.5).TextColor(pal.TextMuted)
 				ui.Text(c, shortenPath(a.dataDir(), 56)).FontSize(10).Font("monospace").
 					TextColor(pal.TextFaint).SingleLine().Ellipsis("…")
 			})
-			if ui.Button(c.Key("settings-data"), "Show in Finder").Clicked() {
+			if ui.Button(c.Key("settings-data"), locales.SettingsShowInFinder()).Clicked() {
 				a.revealData()
 			}
 		})
 		ui.Box(c).Height(10)
 
 		// About
-		a.settingsLabel(c, pal, "About")
+		a.settingsLabel(c, pal, locales.SettingsAbout())
 		ui.Row(c).Gap(8).Children(func() {
-			ui.Text(c, "OmniFlow "+appVersion()+" · drawn natively on the GPU, with no web view").
+			ui.Text(c, locales.SettingsAboutLine(appVersion())).
 				FontSize(10.5).TextColor(pal.TextFaint).Grow(1).LineHeight(1.4)
 		})
 		ui.Box(c).Height(16)
 		ui.Row(c).Height(32).Justify(ui.End).Children(func() {
-			if ui.PrimaryButton(c.Key("settings-done"), "Done").Clicked() {
+			if ui.PrimaryButton(c.Key("settings-done"), locales.CommonDone()).Clicked() {
 				a.settingsOpen = false
 			}
 		})
@@ -248,24 +274,24 @@ func (a *app) caDialog(c *ui.Context, pal *uitokens.Palette) {
 				ui.Icon(c, iconShield).Size(18, 18).TextColor(pal.Accent)
 			})
 			ui.Column(c).Gap(0).Grow(1).Justify(ui.Center).Children(func() {
-				ui.Text(c, "Root CA Certificate").FontSize(15.5).FontWeight(700).TextColor(pal.Text)
-				ui.Text(c, "The one trust OmniFlow needs to read HTTPS").FontSize(10.5).
+				ui.Text(c, locales.CaTitle()).FontSize(15.5).FontWeight(700).TextColor(pal.Text)
+				ui.Text(c, locales.CaSubtitle()).FontSize(10.5).
 					TextColor(pal.TextFaint)
 			})
-			if b := iconButton(c, pal, iconX, "Close Certificate Dialog", 26); b.Clicked() {
+			if b := iconButton(c, pal, iconX, locales.CaClose(), 26); b.Clicked() {
 				a.caOpen = false
 			}
 		})
 		ui.Box(c).Height(14)
-		ui.Text(c, "OmniFlow signs a certificate for each HTTPS host on the fly, with a root authority created on this machine. Installing that root in a device's trust store is what lets the inspector read encrypted traffic. Only install it on devices you control.").
+		ui.Text(c, locales.CaIntro()).
 			FontSize(11.5).TextColor(pal.TextMuted).LineHeight(1.5)
 		ui.Box(c).Height(12)
 
 		steps := []struct{ n, title, body string }{
-			{"1", "Save the certificate", "Write the root certificate to a file you can reach from the device."},
-			{"2", "Install it", "macOS: double-click it in Keychain Access and set Always Trust. Windows: import it into Trusted Root Certification Authorities. iOS: install the profile, then enable full trust in Settings → General → About."},
-			{"3", "Point the device at the proxy", "Set the HTTP proxy to 127.0.0.1:" + a.proxyPort + " on this machine, or to this Mac's address from another device."},
-			{"4", "Capture", "Requests appear in the Inspector as they pass. Remove the certificate when you are done."},
+			{"1", locales.CaStep1Title(), locales.CaStep1Body()},
+			{"2", locales.CaStep2Title(), locales.CaStep2Body()},
+			{"3", locales.CaStep3Title(), locales.CaStep3Body(a.proxyPort)},
+			{"4", locales.CaStep4Title(), locales.CaStep4Body()},
 		}
 		for _, s := range steps {
 			step := s
@@ -282,7 +308,7 @@ func (a *app) caDialog(c *ui.Context, pal *uitokens.Palette) {
 			})
 		}
 		ui.Box(c).Height(6)
-		path := "Unavailable"
+		path := locales.CommonUnavailable()
 		if a.ca != nil {
 			path = a.ca.CertPath()
 		}
@@ -292,39 +318,39 @@ func (a *app) caDialog(c *ui.Context, pal *uitokens.Palette) {
 			ui.Icon(c, iconKey).Size(12, 12).TextColor(pal.TextFaint)
 			ui.Text(c, shortenPath(path, 64)).Font("monospace").FontSize(10).
 				TextColor(pal.TextMuted).Grow(1).MinWidth(0).SingleLine().Ellipsis("…")
-			if b := iconButton(c, pal, iconCopy, "Copy Certificate Path", 24); b.Clicked() {
-				a.copyText(c, "Certificate path copied", path)
+			if b := iconButton(c, pal, iconCopy, locales.CaCopyPath(), 24); b.Clicked() {
+				a.copyText(c, locales.CaPathCopied(), path)
 			}
 		})
 		ui.Box(c).Height(8)
 		trustRow := ui.Row(c).Height(24).Gap(8)
 		trustRow.Children(func() {
-			col, text := pal.TextFaint, "Trust on this Mac has not been checked"
+			col, text := pal.TextFaint, locales.CaTrustUnknown()
 			switch a.caTrust {
 			case trustChecking:
-				col, text = pal.TextMuted, "Checking whether this Mac trusts the certificate…"
+				col, text = pal.TextMuted, locales.CaTrustChecking()
 			case trustYes:
-				col, text = pal.Success, "Trusted on this Mac"
+				col, text = pal.Success, locales.CaTrustYes()
 			case trustNo:
-				col, text = pal.Warning, "Not trusted on this Mac · HTTPS will warn until it is installed"
+				col, text = pal.Warning, locales.CaTrustNo()
 			}
 			statusDot(c, col, 6)
 			ui.Text(c, text).FontSize(10.5).TextColor(col).Grow(1).SingleLine().Ellipsis("…")
 			if a.caTrust != trustChecking {
-				if ui.Button(c.Key("ca-recheck"), "Check Again").Clicked() {
+				if ui.Button(c.Key("ca-recheck"), locales.CaCheckAgain()).Clicked() {
 					a.checkTrust()
 				}
 			}
 		})
 		ui.Box(c).Height(10)
 		ui.Row(c).Height(32).Gap(8).Justify(ui.End).Children(func() {
-			if ui.Button(c.Key("ca-reveal"), "Reveal in Finder").Clicked() {
+			if ui.Button(c.Key("ca-reveal"), locales.CaReveal()).Clicked() {
 				a.revealCA()
 			}
-			if ui.Button(c.Key("ca-cancel"), "Done").Clicked() {
+			if ui.Button(c.Key("ca-cancel"), locales.CommonDone()).Clicked() {
 				a.caOpen = false
 			}
-			if ui.PrimaryButton(c.Key("ca-save"), "Save Certificate…").Clicked() {
+			if ui.PrimaryButton(c.Key("ca-save"), locales.CaSave()).Clicked() {
 				a.exportCA()
 			}
 		})

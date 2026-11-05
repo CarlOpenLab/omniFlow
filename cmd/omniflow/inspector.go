@@ -10,6 +10,7 @@ import (
 	"github.com/CarlOpenLab/omniflow/internal/httpx"
 	"github.com/CarlOpenLab/omniflow/internal/proxy"
 	"github.com/CarlOpenLab/omniflow/internal/uitokens"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 // inspector is the passive half: live traffic on top, the selected
@@ -32,7 +33,8 @@ func (a *app) captureToolbar(c *ui.Context, pal *uitokens.Palette) {
 	row.Children(func() {
 		running := a.proxyRunning()
 		rec := ui.ButtonBase(c.Key("capture")).Height(28).Shrink(0).Padding(0, 10).
-			Radius(7).Gap(6).Label("Start or stop capture").Tooltip("Start or stop the capture proxy")
+			Radius(7).Gap(6).Label(locales.InspectorToggleCapture()).
+			Tooltip(locales.InspectorToggleCaptureHint())
 		if running {
 			rec.Background(pal.Danger.Alpha(0.11))
 		} else {
@@ -44,10 +46,10 @@ func (a *app) captureToolbar(c *ui.Context, pal *uitokens.Palette) {
 		rec.Children(func() {
 			if running {
 				statusDot(c, pal.Danger, 7)
-				ui.Text(c, "Recording").FontSize(11.5).FontWeight(650).TextColor(pal.Danger)
+				ui.Text(c, locales.InspectorRecordingStatus()).FontSize(11.5).FontWeight(650).TextColor(pal.Danger)
 			} else {
 				ui.Icon(c, iconPlay).Size(11, 11).TextColor(pal.Accent)
-				ui.Text(c, "Start Capture").FontSize(11.5).FontWeight(650).TextColor(pal.Accent)
+				ui.Text(c, locales.InspectorStartCapture()).FontSize(11.5).FontWeight(650).TextColor(pal.Accent)
 			}
 		})
 		if rec.Clicked() {
@@ -56,7 +58,7 @@ func (a *app) captureToolbar(c *ui.Context, pal *uitokens.Palette) {
 
 		addr := "127.0.0.1:" + a.proxyPort
 		addrChip := ui.ButtonBase(c.Key("addr")).Height(28).Shrink(0).Padding(0, 9).
-			Radius(7).Gap(6).Label("Copy proxy address").Tooltip("Copy " + addr)
+			Radius(7).Gap(6).Label(locales.InspectorCopyAddr()).Tooltip(locales.InspectorCopyAddrHint(addr))
 		if addrChip.Hovered() {
 			addrChip.Background(pal.RowHover)
 		}
@@ -66,27 +68,27 @@ func (a *app) captureToolbar(c *ui.Context, pal *uitokens.Palette) {
 			ui.Text(c, addr).Font("monospace").FontSize(10.5).TextColor(pal.TextMuted)
 		})
 		if addrChip.Clicked() {
-			a.copyText(c, "Proxy address copied: "+addr, addr)
+			a.copyText(c, locales.InspectorAddrCopied(addr), addr)
 		}
-		if a.proxyErr != "" {
+		if text := a.proxyProblemText(); text != "" {
 			ui.Row(c).Height(28).Padding(0, 8).Radius(7).Background(pal.Danger.Alpha(0.1)).
 				Children(func() {
 					ui.Icon(c, iconWarning).Size(11, 11).TextColor(pal.Danger)
-					ui.Text(c, a.proxyErr).FontSize(10.5).TextColor(pal.Danger).SingleLine().
+					ui.Text(c, text).FontSize(10.5).TextColor(pal.Danger).SingleLine().
 						Ellipsis("…").MaxWidth(280)
 				})
 		}
 		ui.Spacer(c)
 
 		if a.filtering() && len(a.flows) > 0 {
-			ui.Text(c, fmt.Sprintf("%d of %d", len(a.visibleFlows()), len(a.flows))).FontSize(10.5).
+			ui.Text(c, locales.InspectorFilterCount(len(a.visibleFlows()), len(a.flows))).FontSize(10.5).
 				Font("monospace").TextColor(pal.TextFaint).Shrink(0)
 		}
-		searchField(c, pal, &a.searchFocus, &a.flowFilter, "Filter traffic").
+		searchField(c, pal, &a.searchFocus, &a.flowFilter, locales.InspectorFilterTraffic()).
 			Width(230).Shrink(0)
 
 		follow := ui.ButtonBase(c.Key("follow")).Height(28).Width(28).Radius(7).Center().
-			Label("Follow new flows").Tooltip("Follow new flows: choose each one as it arrives")
+			Label(locales.InspectorFollow()).Tooltip(locales.InspectorFollowHint())
 		if a.follow {
 			follow.Background(pal.AccentSoft)
 		} else if follow.Hovered() {
@@ -109,13 +111,13 @@ func (a *app) captureToolbar(c *ui.Context, pal *uitokens.Palette) {
 			a.prefs.FollowFlows = a.follow
 			a.savePrefs()
 		}
-		if b := iconButton(c, pal, iconExport, "Export HAR", 28); b.Clicked() {
+		if b := iconButton(c, pal, iconExport, locales.InspectorExportHAR(), 28); b.Clicked() {
 			a.exportHAR()
 		}
-		if b := iconButton(c, pal, iconTrash, "Clear Session", 28); b.Clicked() {
+		if b := iconButton(c, pal, iconTrash, locales.InspectorClearSession(), 28); b.Clicked() {
 			a.clearFlows()
 		}
-		if b := iconButton(c, pal, iconShield, "Root CA Certificate", 28); b.Clicked() {
+		if b := iconButton(c, pal, iconShield, locales.CaTitle(), 28); b.Clicked() {
 			a.caOpen = true
 		}
 	})
@@ -134,8 +136,8 @@ func (a *app) flowListPane(c *ui.Context, pal *uitokens.Palette) {
 			if len(ordered) == 0 {
 				ui.Column(c).Fill().Center().Gap(8).Children(func() {
 					ui.Icon(c, iconFilter).Size(20, 20).TextColor(pal.TextFaint)
-					ui.Text(c, "No flows match this filter").FontSize(12).TextColor(pal.TextMuted)
-					if quietButton(c, pal, "clear-filters", "Clear Filters").Clicked() {
+					ui.Text(c, locales.InspectorNoMatch()).FontSize(12).TextColor(pal.TextMuted)
+					if quietButton(c, pal, "clear-filters", locales.InspectorClearFilters()).Clicked() {
 						a.clearFilters()
 					}
 				})
@@ -164,14 +166,14 @@ func (a *app) flowListHeader(c *ui.Context, pal *uitokens.Palette) {
 			ui.Text(c, strings.ToUpper(text)).Width(w).Shrink(0).FontSize(9).
 				FontWeight(700).LetterSpacing(0.6).TextColor(pal.TextFaint).TextAlign(align)
 		}
-		label("Method", 52, ui.Start)
+		label(locales.InspectorColMethod(), 52, ui.Start)
 		a.statusHead(c, pal)
-		label("Host", 160, ui.Start)
-		ui.Text(c, strings.ToUpper("Path")).Grow(1).MinWidth(0).FontSize(9).
+		label(locales.InspectorColHost(), 160, ui.Start)
+		ui.Text(c, strings.ToUpper(locales.InspectorColPath())).Grow(1).MinWidth(0).FontSize(9).
 			FontWeight(700).LetterSpacing(0.6).TextColor(pal.TextFaint)
-		label("Size", 58, ui.End)
-		label("Time", 54, ui.End)
-		ui.Text(c, strings.ToUpper("At")).Width(54).Shrink(0).FontSize(9).FontWeight(700).
+		label(locales.InspectorColSize(), 58, ui.End)
+		label(locales.InspectorColTime(), 54, ui.End)
+		ui.Text(c, strings.ToUpper(locales.InspectorColAt())).Width(54).Shrink(0).FontSize(9).FontWeight(700).
 			LetterSpacing(0.6).TextColor(pal.TextFaint).TextAlign(ui.End)
 	})
 }
@@ -179,12 +181,13 @@ func (a *app) flowListHeader(c *ui.Context, pal *uitokens.Palette) {
 // statusHead is the Status column's heading and the list's status filter:
 // the chosen class is named in the accent.
 func (a *app) statusHead(c *ui.Context, pal *uitokens.Palette) {
-	label, col := "STATUS", pal.TextFaint
+	label, col := strings.ToUpper(locales.InspectorColStatus()), pal.TextFaint
 	if a.statusFilter != "" {
-		label, col = strings.ToUpper(a.statusFilter), pal.Accent
+		label, col = statusFilterHead(a.statusFilter), pal.Accent
 	}
 	b := ui.ButtonBase(c.Key("status-filter")).Height(22).Width(52).Shrink(0).Padding(0, 6).
-		Radius(5).Gap(3).Label("Filter by status").Tooltip("Filter by status")
+		Radius(5).Gap(3).Label(locales.InspectorFilterByStatus()).
+		Tooltip(locales.InspectorFilterByStatus())
 	if a.statusFilter != "" {
 		b.Background(pal.AccentSoft)
 	} else if b.Hovered() {
@@ -195,20 +198,32 @@ func (a *app) statusHead(c *ui.Context, pal *uitokens.Palette) {
 		ui.Icon(c, iconChevron).Size(8, 8).TextColor(col)
 	})
 	b.Menu(func(m *ui.Menu) {
-		groups := []struct{ value, label string }{
-			{"", "All Statuses"},
-			{"2xx", "2xx · Success"},
-			{"3xx", "3xx · Redirect"},
-			{"4xx", "4xx · Client Error"},
-			{"5xx", "5xx · Server Error"},
-			{"err", "Errors · no response"},
+		groups := []struct {
+			value string
+			label func() string
+		}{
+			{"", locales.InspectorStatusAll},
+			{"2xx", locales.InspectorStatus2xx},
+			{"3xx", locales.InspectorStatus3xx},
+			{"4xx", locales.InspectorStatus4xx},
+			{"5xx", locales.InspectorStatus5xx},
+			{"err", locales.InspectorStatusErr},
 		}
 		for _, g := range groups {
-			if m.Item(g.label).Checked(a.statusFilter == g.value).Chosen() {
+			if m.Item(g.label()).Checked(a.statusFilter == g.value).Chosen() {
 				a.statusFilter = g.value
 			}
 		}
 	})
+}
+
+// statusFilterHead is the status heading while a class is chosen: the
+// class in the accent, or ERR when no response came back.
+func statusFilterHead(value string) string {
+	if value == "err" {
+		return locales.CommonErrorShort()
+	}
+	return strings.ToUpper(value)
 }
 
 func (a *app) flowRow(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow, index int) {
@@ -232,7 +247,7 @@ func (a *app) flowRow(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow, index
 		statusText := fmt.Sprint(f.Status)
 		if f.Status == 0 {
 			// No answer came back: the proxy could not reach the server.
-			statusText, statusColor = "ERR", pal.Danger
+			statusText, statusColor = locales.CommonErrorShort(), pal.Danger
 		}
 		ui.Text(c, statusText).Width(52).Shrink(0).FontSize(10).FontWeight(650).
 			TextColor(statusColor)
@@ -285,22 +300,22 @@ func (a *app) flowRow(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow, index
 
 // flowMenu is what a flow's row and its detail offer to do with it.
 func (a *app) flowMenu(c *ui.Context, m *ui.Menu, f *proxy.Flow) {
-	if m.Item("Send to Composer").Chosen() {
+	if m.Item(locales.InspectorSendToComposer()).Chosen() {
 		a.sendFlowToComposer(*f)
 	}
 	m.Separator()
-	if m.Item("Copy URL").Chosen() {
-		a.copyText(c, "URL copied", f.URL)
+	if m.Item(locales.CommonCopyURL()).Chosen() {
+		a.copyText(c, locales.CommonURLCopied(), f.URL)
 	}
-	if m.Item("Copy as cURL").Shortcut(ui.Cmd|ui.Shift, ui.KeyC).Chosen() {
-		a.copyText(c, "cURL command copied", flowCurl(*f))
+	if m.Item(locales.CommonCopyCurl()).Shortcut(ui.Cmd|ui.Shift, ui.KeyC).Chosen() {
+		a.copyText(c, locales.ComposerCurlCopied(), flowCurl(*f))
 	}
 	m.Separator()
 	if a.domainFilter == "" {
-		if m.Item("Show Only " + f.Host).Chosen() {
+		if m.Item(locales.InspectorShowOnly(f.Host)).Chosen() {
 			a.domainFilter = f.Host
 		}
-	} else if m.Item("Show All Domains").Chosen() {
+	} else if m.Item(locales.SidebarShowAllDomains()).Chosen() {
 		a.domainFilter = ""
 	}
 }
@@ -310,22 +325,22 @@ func (a *app) captureEmpty(c *ui.Context, pal *uitokens.Palette) {
 		ui.Box(c).Size(50, 50).Radius(14).Center().Background(pal.AccentSoft).Children(func() {
 			ui.Icon(c, iconInspect).Size(23, 23).TextColor(pal.Accent)
 		})
-		title := "Waiting for traffic"
-		body := "Point an app or device at 127.0.0.1:" + a.proxyPort + ", or press Start Capture. HTTPS needs the Root CA installed and trusted."
+		title := locales.InspectorWaiting()
+		body := locales.InspectorWaitingHint("127.0.0.1:" + a.proxyPort)
 		if !a.proxyRunning() {
-			title = "The proxy is paused"
-			body = "Start the capture, then set a client's HTTP proxy to 127.0.0.1:" + a.proxyPort + ". The flows appear here as they pass."
+			title = locales.InspectorProxyPausedTitle()
+			body = locales.InspectorPausedHint("127.0.0.1:" + a.proxyPort)
 		}
 		ui.Text(c, title).FontSize(13.5).FontWeight(650).TextColor(pal.Text)
 		ui.Text(c, body).FontSize(11.5).TextColor(pal.TextMuted).TextAlign(ui.Center).
 			MaxWidth(430).LineHeight(1.4)
 		ui.Row(c).Gap(8).Children(func() {
 			if !a.proxyRunning() {
-				if ui.PrimaryButton(c.Key("start-empty"), "Start Capture").Clicked() {
+				if ui.PrimaryButton(c.Key("start-empty"), locales.InspectorStartCapture()).Clicked() {
 					a.startProxy()
 				}
 			}
-			if quietButton(c, pal, "ca-empty", "Root CA…").Clicked() {
+			if quietButton(c, pal, "ca-empty", locales.InspectorRootCA()).Clicked() {
 				a.caOpen = true
 			}
 		})
@@ -336,15 +351,14 @@ func (a *app) flowDetailPane(c *ui.Context, pal *uitokens.Palette) {
 	f := a.selectedFlow()
 	if f == nil {
 		ui.Box(c).Fill().Children(func() {
-			emptyState(c, pal, iconGlobe, "Select a flow",
-				"Click a row above to read its request and response. Double-click sends it to the Composer.")
+			emptyState(c, pal, iconGlobe, locales.InspectorSelectFlow(), locales.InspectorSelectFlowHint())
 		})
 		return
 	}
 	col := ui.Column(c).Fill().MinHeight(0)
 	col.Children(func() {
 		a.flowDetailHeader(c, pal, f)
-		lineTabs(c, pal, &a.detailTab, []string{"Request", "Response"})
+		lineTabs(c, pal, &a.detailTab, []string{locales.InspectorTabRequest(), locales.InspectorTabResponse()})
 		a.flowDetailBody(c, pal, f)
 	})
 }
@@ -365,39 +379,39 @@ func (a *app) flowDetailHeader(c *ui.Context, pal *uitokens.Palette, f *proxy.Fl
 		if f.Err != "" {
 			ui.Row(c).Center().Height(20).Padding(0, 6).Radius(5).
 				Background(pal.Danger.Alpha(0.12)).Children(func() {
-				ui.Text(c, "proxy error").FontSize(9.5).FontWeight(650).TextColor(pal.Danger)
+				ui.Text(c, locales.InspectorProxyError()).FontSize(9.5).FontWeight(650).TextColor(pal.Danger)
 			})
 		}
 		ui.Text(c, httpx.FormatDuration(f.Duration)).Font("monospace").FontSize(10).
-			TextColor(pal.TextMuted).Tooltip("Total time")
+			TextColor(pal.TextMuted).Tooltip(locales.ComposerTotalTime())
 		if f.Status > 0 {
 			ui.Text(c, httpx.FormatBytes(f.RespSize)).Font("monospace").FontSize(10).
-				TextColor(pal.TextFaint).Tooltip("Response size")
+				TextColor(pal.TextFaint).Tooltip(locales.InspectorResponseSize())
 		}
-		iconButton(c, pal, iconCopy, "Copy", 26).Menu(func(m *ui.Menu) {
-			if m.Item("Copy URL").Chosen() {
-				a.copyText(c, "URL copied", f.URL)
+		iconButton(c, pal, iconCopy, locales.CommonCopy(), 26).Menu(func(m *ui.Menu) {
+			if m.Item(locales.CommonCopyURL()).Chosen() {
+				a.copyText(c, locales.CommonURLCopied(), f.URL)
 			}
-			if m.Item("Copy as cURL").Shortcut(ui.Cmd|ui.Shift, ui.KeyC).Chosen() {
-				a.copyText(c, "cURL command copied", flowCurl(*f))
+			if m.Item(locales.CommonCopyCurl()).Shortcut(ui.Cmd|ui.Shift, ui.KeyC).Chosen() {
+				a.copyText(c, locales.ComposerCurlCopied(), flowCurl(*f))
 			}
 			m.Separator()
-			if m.Item("Copy Request Headers").Disabled(len(f.ReqHeaders) == 0).Chosen() {
-				a.copyText(c, "Request headers copied", headersText(f.ReqHeaders))
+			if m.Item(locales.InspectorCopyReqHeaders()).Disabled(len(f.ReqHeaders) == 0).Chosen() {
+				a.copyText(c, locales.InspectorReqHeadersCopied(), headersText(f.ReqHeaders))
 			}
-			if m.Item("Copy Response Headers").Disabled(len(f.RespHeaders) == 0).Chosen() {
-				a.copyText(c, "Response headers copied", headersText(f.RespHeaders))
+			if m.Item(locales.InspectorCopyRespHeaders()).Disabled(len(f.RespHeaders) == 0).Chosen() {
+				a.copyText(c, locales.InspectorRespHeadersCopied(), headersText(f.RespHeaders))
 			}
 		})
 		send := ui.ButtonBase(c.Key("to-composer")).Height(26).Padding(0, 10).Radius(7).Gap(6).
-			Label("Send to Composer").Tooltip("Replay this request in the Composer")
+			Label(locales.InspectorSendToComposer()).Tooltip(locales.InspectorReplayHint())
 		send.Background(pal.AccentSoft)
 		if send.Hovered() {
 			send.Opacity(0.85)
 		}
 		send.Children(func() {
 			ui.Icon(c, iconCompose).Size(11, 11).TextColor(pal.Accent)
-			ui.Text(c, "Send to Composer").FontSize(10.5).FontWeight(650).TextColor(pal.Accent)
+			ui.Text(c, locales.InspectorSendToComposer()).FontSize(10.5).FontWeight(650).TextColor(pal.Accent)
 		})
 		if send.Clicked() {
 			a.sendFlowToComposer(*f)
@@ -422,11 +436,18 @@ func (a *app) flowDetailBody(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow
 		sub := ui.Row(c).Height(34).Shrink(0).Padding(0, 12).Gap(8).
 			BorderWidth(0, 0, 1, 0).BorderColor(pal.Divider.Alpha(0.7))
 		sub.Children(func() {
-			bodyLabel := "Body"
+			// The tabs name the side shown: the request's own words for
+			// one, the answer's for the other.
+			bodyLabel := locales.ComposerTabBody()
+			headersLabel := locales.ComposerTabHeaders()
+			if a.detailTab == 1 {
+				bodyLabel = locales.ComposerTabRespBody()
+				headersLabel = locales.ComposerTabRespHeaders()
+			}
 			if len(body) > 0 {
 				bodyLabel += " · " + httpx.FormatBytes(int64(len(body)))
 			}
-			segmented(c, pal, &a.detailSub, []string{bodyLabel, countLabel("Headers", len(headers))})
+			segmented(c, pal, &a.detailSub, []string{bodyLabel, countLabel(headersLabel, len(headers))})
 			ui.Spacer(c)
 			if contentType != "" {
 				ui.Row(c).Center().Height(20).Padding(0, 7).Radius(5).Background(pal.Chip).
@@ -438,7 +459,7 @@ func (a *app) flowDetailBody(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow
 			if a.detailSub == 0 && shape == shapeText {
 				if _, isJSON := httpx.Pretty(body); isJSON {
 					pretty := ui.ButtonBase(c.Key("flow-pretty")).Height(22).Padding(0, 7).Radius(6).
-						Label("Pretty JSON")
+						Label(locales.ComposerPrettyJSON())
 					if a.pretty {
 						pretty.Background(pal.AccentSoft)
 					}
@@ -447,18 +468,18 @@ func (a *app) flowDetailBody(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow
 						if a.pretty {
 							col = pal.Accent
 						}
-						ui.Text(c, "Pretty").FontSize(10).FontWeight(600).TextColor(col)
+						ui.Text(c, locales.ComposerPretty()).FontSize(10).FontWeight(600).TextColor(col)
 					})
 					if pretty.Clicked() {
 						a.pretty = !a.pretty
 					}
 				}
-				if b := iconButton(c, pal, iconCopy, "Copy Body", 24); b.Clicked() {
-					a.copyText(c, "Body copied", a.displayFlowBody(body))
+				if b := iconButton(c, pal, iconCopy, locales.InspectorCopyBody(), 24); b.Clicked() {
+					a.copyText(c, locales.InspectorBodyCopied(), a.displayFlowBody(body))
 				}
 			} else if a.detailSub == 1 {
-				if b := iconButton(c, pal, iconCopy, "Copy Headers", 24); b.Clicked() {
-					a.copyText(c, "Headers copied", headersText(headers))
+				if b := iconButton(c, pal, iconCopy, locales.InspectorCopyHeaders(), 24); b.Clicked() {
+					a.copyText(c, locales.InspectorHeadersCopied(), headersText(headers))
 				}
 			}
 		})
@@ -474,7 +495,7 @@ func (a *app) flowDetailBody(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow
 				}
 				note := ""
 				if truncated {
-					note = "The body is larger than the inspector keeps; this is the beginning."
+					note = locales.InspectorTruncated()
 				}
 				key := fmt.Sprintf("flow:%d:%d", f.ID, a.detailTab)
 				ui.Box(c).Grow(1).MinHeight(0).Children(func() {
@@ -486,7 +507,7 @@ func (a *app) flowDetailBody(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow
 			for _, h := range headers {
 				rows = append(rows, headerRow{Key: h.Key, Value: h.Value})
 			}
-			keyValueList(c, pal, rows, "This message carries no headers.")
+			keyValueList(c, pal, rows, locales.InspectorNoHeaders())
 		})
 	})
 }

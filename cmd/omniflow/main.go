@@ -29,6 +29,9 @@ func main() {
 			mygo.App.Quit()
 		})
 		a.installMenu()
+		// The app's own menu labels are built here, not by MyGo, so they
+		// are made again in the new language when the app shows another.
+		mygo.App.OnLocaleChanged(func(string) { a.installMenu() })
 		if a.prefs.ProxyAutostart {
 			a.startProxy()
 		}
