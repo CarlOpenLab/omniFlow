@@ -1,3 +1,6 @@
 /out/
 /omniflow
+/.claude/
+/.mygo/
+/.ryugi/
 .DS_Store
