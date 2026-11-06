@@ -1,8 +1,12 @@
 {
   "name": "OmniFlow",
   "identifier": "dev.carl.omniflow",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "./cmd/omniflow",
   "icon": "resources/icon.png",
-  "i18n": { "dir": "locales", "source": "en" }
+  "i18n": { "dir": "locales", "source": "en" },
+  "updates": {
+    "publicKey": "M/Mt8p7LPxS152U3jePphgKQApn8fAk++31iCg9l7Wo=",
+    "github": "CarlOpenLab/omniFlow"
+  }
 }

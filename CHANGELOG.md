@@ -4,6 +4,11 @@ Notable changes per release. The release workflow lifts the section matching the
 pushed tag straight into the GitHub release notes, so keep the headings exactly
 `## <version>`.
 
+## 0.1.2
+
+**Settings is a window of pages, and OmniFlow can update itself.** Settings is now a 760×560 dialog with Appearance, Capture, Data, Updates and About down the left and the chosen page on a card of its own at the right, each page scrolling separately instead of every section stacked in one column. The new Updates page shows the version and the last check, switches automatic checks and automatic downloads, and offers **Check for Updates…**; a development build or a package-managed install says why it cannot update itself. Releases now carry signed update archives, so an installed app can move to this version and later ones in place.
+— 设置改为分页窗口：760×560 的对话框中，左侧列出外观、抓包、数据、更新与关于，右侧单独显示所选页面，各页独立滚动，不再是所有设置堆叠在一列。新增的更新页显示版本与上次检查时间，可开关自动检查与自动下载，并提供 **检查更新…**；开发版或由包管理器安装的版本会说明为何不能自更新。发布包现在附带签名的更新归档，已安装的应用可以原地升级到本版本及后续版本。
+
 ## 0.1.1
 
 **Bodies of any size scroll, stay colored and read whole.** Response and inspector bodies are drawn by a virtualized editor: the full body is shown rather than the first 1 MiB, scrolling reaches its last line, JSON keeps its colors at any size, and ⌘F finds in the editor's own bar — every match counted, typing no longer re-lays out the body. A **Wrap** switch in the body header folds long log lines at the panel width, so one screen shows the whole line.

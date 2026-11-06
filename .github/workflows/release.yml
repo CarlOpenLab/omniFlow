@@ -2,8 +2,12 @@ name: release
 
 # Pushing a vX.Y.Z tag builds the macOS, Windows and Linux apps and attaches
 # them to the release the prepare job publishes. The assets are self-signed:
-# macOS builds are ad-hoc signed and not notarized. This version has no
-# updater, so no MYGO_UPDATER_PRIVATE_KEY is needed.
+# macOS builds are ad-hoc signed and not notarized.
+#
+# The desktop jobs build with -upload, so mygo also signs the update archives
+# with MYGO_UPDATER_PRIVATE_KEY (the repository secret) and attaches them and
+# their update-<platform>.json manifests, which installed apps read. Without
+# that secret -upload cannot sign and the release has no updates.
 on:
   push:
     tags: ["v*"]
@@ -87,7 +91,9 @@ jobs:
       # universal only: the DMG is named "<name> <version>.dmg" without the arch,
       # so building arm64 and amd64 side by side would produce colliding assets.
       - name: Build the app bundle and disk image
-        run: go tool mygo build -platform darwin/universal
+        env:
+          MYGO_UPDATER_PRIVATE_KEY: ${{ secrets.MYGO_UPDATER_PRIVATE_KEY }}
+        run: go tool mygo build -platform darwin/universal -upload
 
       - name: Upload
         env:
@@ -110,7 +116,9 @@ jobs:
           go-version-file: go.mod
 
       - name: Build the Debian packages and tarballs
-        run: go tool mygo build -platform linux/amd64,linux/arm64
+        env:
+          MYGO_UPDATER_PRIVATE_KEY: ${{ secrets.MYGO_UPDATER_PRIVATE_KEY }}
+        run: go tool mygo build -platform linux/amd64,linux/arm64 -upload
 
       - name: Upload
         env:
@@ -151,7 +159,9 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y nsis
 
       - name: Build the installer and the portable executable
-        run: go tool mygo build -platform windows/amd64
+        env:
+          MYGO_UPDATER_PRIVATE_KEY: ${{ secrets.MYGO_UPDATER_PRIVATE_KEY }}
+        run: go tool mygo build -platform windows/amd64 -upload
 
       - name: Upload
         env:
