@@ -99,6 +99,58 @@ func TestCanFindOnlyInTextBodies(t *testing.T) {
 	}
 }
 
+func TestWrapButtonFoldsLongLines(t *testing.T) {
+	a := newTestApp(t)
+	a.pretty = false
+	a.resp = &httpx.Result{
+		Status:  200,
+		Headers: []httpx.Header{{Key: "Content-Type", Value: "text/plain"}},
+		Body:    []byte(strings.Repeat("GET /api/v1/items?page=1 ", 40) + "END OF LOG"),
+	}
+	tt := newTester(t, a)
+	tt.Frame()
+	if a.body.st == nil {
+		t.Fatal("the response body has no editor")
+	}
+	if a.body.st.SoftWrap {
+		t.Fatal("the body wraps before the wrap button was clicked")
+	}
+	if err := tt.Click("Wrap"); err != nil {
+		t.Fatalf("there is no wrap button: %v", err)
+	}
+	tt.Frame()
+	if !a.body.st.SoftWrap {
+		t.Fatal("the wrap button did not wrap the body")
+	}
+	if err := tt.Click("Wrap"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if a.body.st.SoftWrap {
+		t.Fatal("the wrap button did not unwrap the body")
+	}
+}
+
+func TestInspectorWrapButtonFoldsLongLines(t *testing.T) {
+	a := newTestApp(t)
+	seedFlows(a)
+	a.mode = modeInspector
+	a.flowSelID = 4
+	a.detailTab = 1
+	tt := newTester(t, a)
+	tt.Frame()
+	if a.body.st == nil {
+		t.Fatal("the inspector's body has no editor")
+	}
+	if err := tt.Click("Wrap"); err != nil {
+		t.Fatalf("the inspector has no wrap button: %v", err)
+	}
+	tt.Frame()
+	if !a.body.st.SoftWrap {
+		t.Fatal("the inspector's wrap button did not wrap the body")
+	}
+}
+
 func TestPrettyBodyIsFormattedOnce(t *testing.T) {
 	a := newTestApp(t)
 	a.pretty = true

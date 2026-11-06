@@ -476,6 +476,7 @@ func (a *app) flowDetailBody(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow
 						a.pretty = !a.pretty
 					}
 				}
+				wrapToggle(c, pal, &a.wrapBody)
 				if b := iconButton(c, pal, iconCopy, locales.InspectorCopyBody(), 24); b.Clicked() {
 					a.copyText(c, locales.InspectorBodyCopied(), text)
 				}

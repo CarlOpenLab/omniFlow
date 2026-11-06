@@ -37,6 +37,7 @@ var (
 	iconServer  = svg(`<rect x="2" y="2.5" width="12" height="4.5" rx="1.3"/><rect x="2" y="9" width="12" height="4.5" rx="1.3"/><path d="M4.5 4.7h.01M4.5 11.2h.01"/>`)
 	iconShield  = svg(`<path d="M8 1.8 13 3.5v4.2c0 3-2.1 5.3-5 6.5-2.9-1.2-5-3.5-5-6.5V3.5z"/><path d="m5.5 8 1.8 1.8 3.4-3.4"/>`)
 	iconCode    = svg(`<path d="m5 4-4 4 4 4M11 4l4 4-4 4M9.5 2.5l-3 11"/>`)
+	iconWrap    = svg24(`<path d="M3 6h18"/><path d="M3 12h15a3 3 0 1 1 0 6h-5"/><path d="m16 15-3 3 3 3"/><path d="M3 18h7"/>`)
 	iconFilter  = svg(`<path d="M2 3h12L9 8.5V13l-2-1V8.5z"/>`)
 	iconSearch  = svg(`<circle cx="7" cy="7" r="4.5"/><path d="m10.4 10.4 3.6 3.6"/>`)
 	iconPlay    = svg(`<path d="M5 3.2 12.5 8 5 12.8z"/>`)

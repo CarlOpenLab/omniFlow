@@ -151,6 +151,8 @@
   "composerPrettyJSON": "美化 JSON",
   "composerPrettyJSONHint": "缩进 JSON",
   "composerPretty": "美化",
+  "composerWrap": "换行",
+  "composerWrapHint": "长行按窗口宽度折行",
   "composerCopyResponse": "复制响应",
   "composerResponseCopied": "已复制响应",
   "composerRequestFailed": "请求未完成",

@@ -225,6 +225,8 @@
   "composerPrettyJSON": "Pretty JSON",
   "composerPrettyJSONHint": "Indent the JSON",
   "composerPretty": "Pretty",
+  "composerWrap": "Wrap",
+  "composerWrapHint": "Wrap long lines to the width",
   "composerCopyResponse": "Copy Response",
   "composerResponseCopied": "Response copied",
   "composerRequestFailed": "The request did not complete",

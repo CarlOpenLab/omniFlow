@@ -85,6 +85,7 @@ type app struct {
 	respProblem   respProblem
 	respMissing   []string
 	pretty        bool
+	wrapBody      bool
 	composerSplit float32
 	urlFocus      ui.Handle
 	methodOpen    bool

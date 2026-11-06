@@ -551,6 +551,7 @@ func (a *app) responseHeader(c *ui.Context, pal *uitokens.Palette) {
 				}
 			}
 			if shapeOf(resp.Body, contentTypeOf(resp.Headers)) == shapeText {
+				wrapToggle(c, pal, &a.wrapBody)
 				if b := iconButton(c, pal, iconCopy, locales.ComposerCopyResponse(), 24); b.Clicked() {
 					a.copyText(c, locales.ComposerResponseCopied(), text)
 				}

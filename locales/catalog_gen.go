@@ -1479,6 +1479,26 @@ func (msgs Messages) ComposerPretty() string {
 	return Catalog.Format(msgs.locale, "composerPretty", nil)
 }
 
+// ComposerWrap says "Wrap"
+// in the language the app shows.
+func ComposerWrap() string { return In(i18n.Locale()).ComposerWrap() }
+
+// ComposerWrap says "Wrap"
+// in the language of msgs.
+func (msgs Messages) ComposerWrap() string {
+	return Catalog.Format(msgs.locale, "composerWrap", nil)
+}
+
+// ComposerWrapHint says "Wrap long lines to the width"
+// in the language the app shows.
+func ComposerWrapHint() string { return In(i18n.Locale()).ComposerWrapHint() }
+
+// ComposerWrapHint says "Wrap long lines to the width"
+// in the language of msgs.
+func (msgs Messages) ComposerWrapHint() string {
+	return Catalog.Format(msgs.locale, "composerWrapHint", nil)
+}
+
 // ComposerCopyResponse says "Copy Response"
 // in the language the app shows.
 func ComposerCopyResponse() string { return In(i18n.Locale()).ComposerCopyResponse() }

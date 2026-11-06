@@ -101,6 +101,30 @@ func bodyEditorTheme(pal *uitokens.Palette) *editor.Theme {
 	return th
 }
 
+// wrapToggle is the body's soft-wrap switch: long lines fold at the width
+// instead of running off to the right.
+func wrapToggle(c *ui.Context, pal *uitokens.Palette, on *bool) ui.Element {
+	b := ui.ButtonBase(c.Key("wrap")).Height(24).Padding(0, 8).Radius(6).Gap(4).
+		Label(locales.ComposerWrap()).Tooltip(locales.ComposerWrapHint())
+	if *on {
+		b.Background(pal.AccentSoft)
+	} else if b.Hovered() {
+		b.Background(pal.RowHover)
+	}
+	b.Children(func() {
+		col := pal.TextMuted
+		if *on {
+			col = pal.Accent
+		}
+		ui.Icon(c, iconWrap).Size(11, 11).TextColor(col)
+		ui.Text(c, locales.ComposerWrap()).FontSize(10.5).FontWeight(600).TextColor(col)
+	})
+	if b.Clicked() {
+		*on = !*on
+	}
+	return b
+}
+
 // codeView shows text in the body's virtualized editor: only the lines in
 // view are laid out, so a body of any size scrolls, selects and searches as
 // one of a few. note, when there is one, says why the body ends early.
@@ -118,6 +142,9 @@ func (a *app) codeView(c *ui.Context, pal *uitokens.Palette, key, text string, i
 			return
 		}
 		st := a.body.state(key, text, isJSON, pal)
+		// The editor reads this each frame, so the switch folds the body
+		// where it stands rather than rebuilding it and losing its place.
+		st.SoftWrap = a.wrapBody
 		if a.findBody {
 			st.Run(editor.Find)
 			a.findBody = false
