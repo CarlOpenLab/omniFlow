@@ -478,22 +478,18 @@ func (a *app) responsePane(c *ui.Context, pal *uitokens.Palette) {
 					ui.Text(c, resp.Err).FontSize(10.5).TextColor(pal.Warning).SingleLine().Ellipsis("…")
 				})
 		}
-		prettyText, isJSON := httpx.Pretty(resp.Body)
+		text, isJSON := a.shownBody(fmt.Sprintf("resp:%p", resp), resp.Body)
 		labels := []string{locales.ComposerTabRespBody(), countLabel(locales.ComposerTabRespHeaders(), len(resp.Headers)), locales.ComposerTiming()}
 		lineTabs(c, pal, &a.respTab, labels)
 		ui.Box(c).Grow(1).MinHeight(0).Children(func() {
 			switch a.respTab {
 			case 0:
-				text := string(resp.Body)
-				if isJSON && a.pretty {
-					text = prettyText
-				}
 				note := ""
 				if resp.Truncated {
 					note = locales.ComposerTruncated()
 				}
-				a.bodyView(c, pal, fmt.Sprintf("resp:%p", resp), a.req.URL, resp.Body,
-					contentTypeOf(resp.Headers), text, note)
+				a.bodyView(c, pal, fmt.Sprintf("resp:%p:%v", resp, a.pretty), a.req.URL, resp.Body,
+					contentTypeOf(resp.Headers), text, isJSON, note)
 			case 1:
 				headerList(c, pal, resp.Headers, locales.ComposerNoResponseHeaders())
 			default:
@@ -532,7 +528,8 @@ func (a *app) responseHeader(c *ui.Context, pal *uitokens.Palette) {
 		}
 		ui.Spacer(c)
 		if resp != nil && resp.Status > 0 && a.respTab == 0 {
-			_, isJSON := httpx.Pretty(resp.Body)
+			bodyKey := fmt.Sprintf("resp:%p", resp)
+			text, isJSON := a.shownBody(bodyKey, resp.Body)
 			if isJSON {
 				pretty := ui.ButtonBase(c.Key("pretty")).Height(24).Padding(0, 8).Radius(6).Gap(4).
 					Label(locales.ComposerPrettyJSON()).Tooltip(locales.ComposerPrettyJSONHint())
@@ -555,10 +552,6 @@ func (a *app) responseHeader(c *ui.Context, pal *uitokens.Palette) {
 			}
 			if shapeOf(resp.Body, contentTypeOf(resp.Headers)) == shapeText {
 				if b := iconButton(c, pal, iconCopy, locales.ComposerCopyResponse(), 24); b.Clicked() {
-					text := string(resp.Body)
-					if prettyText, ok := httpx.Pretty(resp.Body); ok && a.pretty {
-						text = prettyText
-					}
 					a.copyText(c, locales.ComposerResponseCopied(), text)
 				}
 			}

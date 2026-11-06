@@ -431,6 +431,8 @@ func (a *app) flowDetailBody(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow
 		contentType = headerValue(f.ReqHeaders, "Content-Type")
 	}
 	shape := shapeOf(body, contentType)
+	bodyKey := fmt.Sprintf("flow:%d:%d", f.ID, a.detailTab)
+	text, isJSON := a.shownBody(bodyKey, body)
 	column := ui.Column(c).Fill().MinHeight(0)
 	column.Children(func() {
 		sub := ui.Row(c).Height(34).Shrink(0).Padding(0, 12).Gap(8).
@@ -457,7 +459,7 @@ func (a *app) flowDetailBody(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow
 					})
 			}
 			if a.detailSub == 0 && shape == shapeText {
-				if _, isJSON := httpx.Pretty(body); isJSON {
+				if isJSON {
 					pretty := ui.ButtonBase(c.Key("flow-pretty")).Height(22).Padding(0, 7).Radius(6).
 						Label(locales.ComposerPrettyJSON())
 					if a.pretty {
@@ -475,7 +477,7 @@ func (a *app) flowDetailBody(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow
 					}
 				}
 				if b := iconButton(c, pal, iconCopy, locales.InspectorCopyBody(), 24); b.Clicked() {
-					a.copyText(c, locales.InspectorBodyCopied(), a.displayFlowBody(body))
+					a.copyText(c, locales.InspectorBodyCopied(), text)
 				}
 			} else if a.detailSub == 1 {
 				if b := iconButton(c, pal, iconCopy, locales.InspectorCopyHeaders(), 24); b.Clicked() {
@@ -497,9 +499,9 @@ func (a *app) flowDetailBody(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow
 				if truncated {
 					note = locales.InspectorTruncated()
 				}
-				key := fmt.Sprintf("flow:%d:%d", f.ID, a.detailTab)
+				key := fmt.Sprintf("%s:%v", bodyKey, a.pretty)
 				ui.Box(c).Grow(1).MinHeight(0).Children(func() {
-					a.bodyView(c, pal, key, f.URL, body, contentType, a.displayFlowBody(body), note)
+					a.bodyView(c, pal, key, f.URL, body, contentType, text, isJSON, note)
 				})
 				return
 			}
@@ -510,16 +512,6 @@ func (a *app) flowDetailBody(c *ui.Context, pal *uitokens.Palette, f *proxy.Flow
 			keyValueList(c, pal, rows, locales.InspectorNoHeaders())
 		})
 	})
-}
-
-func (a *app) displayFlowBody(body []byte) string {
-	text := string(body)
-	if a.pretty {
-		if pretty, ok := httpx.Pretty(body); ok {
-			return pretty
-		}
-	}
-	return text
 }
 
 func headersText(headers []proxy.HeaderPair) string {

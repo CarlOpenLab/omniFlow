@@ -79,6 +79,32 @@ func looksBinary(body []byte) bool {
 	return true
 }
 
+// bodyTexts keeps the body on show as the view reads it: its text raw and
+// formatted, made once per body rather than in every frame.
+type bodyTexts struct {
+	key    string
+	raw    string
+	pretty string
+	isJSON bool
+}
+
+// prettyJSON is httpx.Pretty, named so tests can count the formatting.
+var prettyJSON = httpx.Pretty
+
+// shownBody returns body as the window shows it, formatted when pretty is on
+// and the body is JSON, and whether it is JSON. key names the body; a new
+// body is read anew.
+func (a *app) shownBody(key string, body []byte) (string, bool) {
+	if a.bodyTexts.key != key {
+		pretty, ok := prettyJSON(body)
+		a.bodyTexts = bodyTexts{key: key, raw: string(body), pretty: pretty, isJSON: ok}
+	}
+	if a.pretty && a.bodyTexts.isJSON {
+		return a.bodyTexts.pretty, true
+	}
+	return a.bodyTexts.raw, a.bodyTexts.isJSON
+}
+
 // bodyPreview is a body decoded as a picture, kept while the same body is on
 // screen: it is decoded once, not in every frame, and the toolkit keeps its
 // texture only while it shows.
@@ -98,13 +124,9 @@ func (a *app) previewImage(key string, body []byte) (*ui.Bitmap, error) {
 
 // bodyView shows a body in the shape it has: highlighted text, a picture
 // with its size, or a note that it is bytes, with a way to save them. key
-// names the body for the picture's cache; name is the file it saves as.
-func (a *app) bodyView(c *ui.Context, pal *uitokens.Palette, key, name string, body []byte, contentType, text, note string) {
-	// The two panes keep their own place in a body.
-	scroll := &a.flowScroll
-	if a.mode == modeComposer {
-		scroll = &a.respScroll
-	}
+// names the body for the picture's cache and its editor; name is the file
+// it saves as. isJSON says whether text is a JSON document to highlight.
+func (a *app) bodyView(c *ui.Context, pal *uitokens.Palette, key, name string, body []byte, contentType, text string, isJSON bool, note string) {
 	switch shapeOf(body, contentType) {
 	case shapeImage:
 		if bmp, err := a.previewImage(key, body); err == nil {
@@ -115,7 +137,7 @@ func (a *app) bodyView(c *ui.Context, pal *uitokens.Palette, key, name string, b
 	case shapeBinary:
 		a.binaryView(c, pal, body, contentType, name, note)
 	default:
-		a.codeView(c, pal, text, note, scroll)
+		a.codeView(c, pal, key, text, isJSON, note)
 	}
 }
 

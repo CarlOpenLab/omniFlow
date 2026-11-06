@@ -15,13 +15,15 @@ func TestCommandFFindsInTheResponseBody(t *testing.T) {
 	tt := newTester(t, a)
 
 	tt.Key(ui.Cmd, ui.KeyF)
-	if !a.find.open {
-		t.Fatal("⌘F did not open the find bar")
-	}
+	tt.Frame()
 	tt.Type("hello")
 	tt.Frame()
-	if len(a.find.matches) != 2 {
-		t.Fatalf("the find bar found %d matches, want 2", len(a.find.matches))
+	if a.body.st == nil {
+		t.Fatal("⌘F opened no find on the response body")
+	}
+	count, current := a.body.st.FindMatches()
+	if count != 2 || current != 0 {
+		t.Fatalf("the find found %d matches, at %d, want 2 at 0", count, current)
 	}
 	if !tt.HasText("1 of 2") {
 		t.Errorf("the find bar does not say 1 of 2: %q", tt.Texts())
@@ -29,8 +31,8 @@ func TestCommandFFindsInTheResponseBody(t *testing.T) {
 
 	tt.Key(0, ui.KeyEnter)
 	tt.Frame()
-	if a.find.current != 1 {
-		t.Errorf("Enter chose match %d, want 1", a.find.current)
+	if _, current = a.body.st.FindMatches(); current != 1 {
+		t.Errorf("Enter chose match %d, want 1", current)
 	}
 	if !tt.HasText("2 of 2") {
 		t.Errorf("the find bar does not say 2 of 2: %q", tt.Texts())
@@ -38,7 +40,7 @@ func TestCommandFFindsInTheResponseBody(t *testing.T) {
 
 	tt.Key(0, ui.KeyEscape)
 	tt.Frame()
-	if a.find.open {
+	if tt.HasText("1 of 2") || tt.HasText("2 of 2") {
 		t.Error("Escape left the find bar open")
 	}
 }
@@ -53,13 +55,14 @@ func TestInspectorFindsInTheBodyAndFiltersWithShiftCommandF(t *testing.T) {
 	tt := newTester(t, a)
 
 	tt.Key(ui.Cmd, ui.KeyF)
-	if !a.find.open {
-		t.Fatal("⌘F did not open the find bar in the inspector")
-	}
+	tt.Frame()
 	tt.Type("mygo")
 	tt.Frame()
-	if len(a.find.matches) != 1 {
-		t.Fatalf("the find bar found %d matches, want 1", len(a.find.matches))
+	if a.body.st == nil {
+		t.Fatal("⌘F opened no find on the inspector's body")
+	}
+	if count, _ := a.body.st.FindMatches(); count != 1 {
+		t.Fatalf("the find found %d matches, want 1", count)
 	}
 	if !tt.HasText("1 of 1") {
 		t.Errorf("the find bar does not say 1 of 1: %q", tt.Texts())
@@ -81,20 +84,22 @@ func TestFindClosesWhenTheBodyIsNoLongerThere(t *testing.T) {
 	tt := newTester(t, a)
 
 	tt.Key(ui.Cmd, ui.KeyF)
-	if !a.find.open {
-		t.Fatal("⌘F did not open the find bar")
+	tt.Frame()
+	if a.body.st == nil {
+		t.Fatal("⌘F opened no find on the body")
 	}
 
 	a.respTab = 1 // Headers, where there is no body to search
 	tt.Frame()
-	if a.find.open {
-		t.Error("the find bar stayed open over the headers")
+	if a.body.st != nil {
+		t.Error("the body's editor stayed over the headers")
 	}
 
 	a.respTab = 0
 	tt.Key(ui.Cmd, ui.KeyF)
-	if !a.find.open {
-		t.Error("⌘F could not open the find bar again after the body returned")
+	tt.Frame()
+	if a.body.st == nil {
+		t.Error("⌘F could not open find again after the body returned")
 	}
 }
 
@@ -108,7 +113,8 @@ func TestCommandFDoesNothingWithoutATextBody(t *testing.T) {
 	tt := newTester(t, a)
 
 	tt.Key(ui.Cmd, ui.KeyF)
-	if a.find.open {
-		t.Error("⌘F opened the find bar over an image body")
+	tt.Frame()
+	if a.body.st != nil {
+		t.Error("⌘F opened a find over an image body")
 	}
 }
