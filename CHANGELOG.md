@@ -4,6 +4,11 @@ Notable changes per release. The release workflow lifts the section matching the
 pushed tag straight into the GitHub release notes, so keep the headings exactly
 `## <version>`.
 
+## 0.1.1
+
+**Bodies of any size scroll, stay colored and read whole.** Response and inspector bodies are drawn by a virtualized editor: the full body is shown rather than the first 1 MiB, scrolling reaches its last line, JSON keeps its colors at any size, and ⌘F finds in the editor's own bar — every match counted, typing no longer re-lays out the body. A **Wrap** switch in the body header folds long log lines at the panel width, so one screen shows the whole line.
+— 任意大小的正文都能完整滚动与着色：Composer 与 Inspector 的正文改用虚拟化编辑器，完整显示而不是只显示前 1 MiB，可滚动到最后一行，JSON 在任意大小下保持着色；⌘F 使用编辑器自带的查找栏，匹配数不再设上限，输入时不再重排整份正文。正文头部新增 **换行** 开关，长日志按面板宽度折行，一屏即可读完。
+
 ## 0.1.0
 
 **OmniFlow 0.1.0：一个窗口里的原生 HTTP 工作台 — A native HTTP workbench in one window**
