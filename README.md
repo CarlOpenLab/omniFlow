@@ -1,5 +1,7 @@
 # OmniFlow
 
+[English](README.md) · [简体中文](README.zh_CN.md)
+
 A native HTTP workbench for macOS, Windows and Linux: a Postman-style
 composer and a Proxyman-style capture proxy in one window. The interface is
 drawn by [Mygo](https://github.com/egoist/mygo) on the GPU — there is no
