@@ -417,6 +417,28 @@
 
   "settingsShowInFinder": "Show in Finder",
 
+  "settingsUpdates": "Updates",
+
+  "updateVersion": "Version",
+
+  "updateLastCheck": "Last checked",
+
+  "updateNever": "Never",
+
+  "updateAutoCheck": "Check for updates automatically",
+
+  "updateAutoDownload": "Install updates automatically",
+
+  "updateCheckNow": "Check for Updates…",
+
+  "updateUnavailable": "Not available for this build",
+
+  "updateDailyNote": "OmniFlow checks for updates once a day in the background.",
+
+  "updateUnavailableNote": "This build cannot update itself: development builds and apps installed by a package manager are updated another way.",
+
+  "updateFoundNote": "A new version is downloaded from GitHub and installed when you choose.",
+
   "settingsAbout": "About",
 
   "settingsAboutLine": "OmniFlow {version} · drawn natively on the GPU, with no web view",

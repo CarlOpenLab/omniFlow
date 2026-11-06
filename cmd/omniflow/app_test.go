@@ -56,6 +56,26 @@ func newTester(t *testing.T, a *app) *ui.Tester {
 	return tt
 }
 
+// clickSettingsPage clicks a page in Settings' list by its place. A page's
+// name can also be read behind the dialog — the sidebar's appearance chip is
+// labeled Appearance, and the Inspector's mode tab is 抓包 — and the tester
+// clicks the first text in paint order, so the list's own geometry is what a
+// click can be sure of while the window behind it still has words.
+func clickSettingsPage(t *testing.T, tt *ui.Tester, pane int) {
+	t.Helper()
+	const (
+		panelW, panelH = 760, 560
+		headerH        = 52
+		navPad         = 8
+		navWidth       = 184
+		rowH, rowGap   = 32, 2
+	)
+	x := float32((1280-panelW)/2 + navPad + navWidth/2)
+	y := float32((820-panelH)/2 + headerH + navPad + pane*(rowH+rowGap) + rowH/2)
+	tt.ClickAt(x, y)
+	tt.Frame()
+}
+
 func TestComposerSurfaces(t *testing.T) {
 	a := newTestApp(t)
 	tt := newTester(t, a)
@@ -140,16 +160,33 @@ func TestFlowClickAndReplay(t *testing.T) {
 	}
 }
 
+// Settings is a window of pages: the list down the left chooses one, and the
+// page beside it holds that page's settings rather than every setting at once.
 func TestSettingsDialog(t *testing.T) {
 	a := newTestApp(t)
 	a.settingsOpen = true
 	tt := newTester(t, a)
 	for _, want := range []string{
-		"Settings", "APPEARANCE", "Theme", "Acrylic background", "CAPTURE", "Proxy port",
-		"DATA", "Keep request history", "Show in Finder",
+		"Settings", "Appearance", "Capture", "Data", "Updates", "About",
+		"Theme", "Acrylic background",
 	} {
 		if !tt.HasText(want) {
 			t.Errorf("settings is missing %q", want)
+		}
+	}
+	clickSettingsPage(t, tt, settingsPaneCapture)
+	for _, want := range []string{"Proxy port", "Timeout", "Stop at redirects", "Root CA Certificate"} {
+		if !tt.HasText(want) {
+			t.Errorf("the capture page is missing %q", want)
+		}
+	}
+	if tt.HasText("Keep request history") {
+		t.Error("the capture page shows a setting that belongs to another page")
+	}
+	clickSettingsPage(t, tt, settingsPaneData)
+	for _, want := range []string{"Keep request history", "Show in Finder"} {
+		if !tt.HasText(want) {
+			t.Errorf("the data page is missing %q", want)
 		}
 	}
 	if err := tt.Click("Done"); err != nil {

@@ -143,11 +143,18 @@ func TestAppearanceSettings(t *testing.T) {
 	a := newTestApp(t)
 	a.settingsOpen = true
 	tt := newTester(t, a)
-	for _, want := range []string{"Card opacity", "Material", "Deep", "Timeout", "Stop at redirects"} {
+	for _, want := range []string{"Card opacity", "Material", "Deep"} {
 		if !tt.HasText(want) {
-			t.Errorf("settings is missing %q", want)
+			t.Errorf("the appearance page is missing %q", want)
 		}
 	}
+	clickSettingsPage(t, tt, settingsPaneCapture)
+	for _, want := range []string{"Timeout", "Stop at redirects"} {
+		if !tt.HasText(want) {
+			t.Errorf("the capture page is missing %q", want)
+		}
+	}
+	clickSettingsPage(t, tt, settingsPaneAppearance)
 	if err := tt.Click("Deep"); err != nil {
 		t.Fatalf("choose Deep: %v", err)
 	}

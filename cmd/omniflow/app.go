@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"slices"
 	"sort"
 	"strconv"
@@ -132,6 +133,7 @@ type app struct {
 
 	// dialogs
 	settingsOpen bool
+	settingsPane int
 	caOpen       bool
 	caWasOpen    bool
 	caTrust      trustState
@@ -1311,9 +1313,32 @@ func (a *app) copyPlain(label, text string) {
 
 // --- menu -----------------------------------------------------------------
 
+// appMenuItem is the application menu. On macOS it is written here rather
+// than left to the default role, because the default has no room for Check
+// for Updates…; the Settings item stays in the File menu, where it already
+// was. Everywhere else the default menu is kept, and the Updates page's
+// button is the way to check.
+func (a *app) appMenuItem() *mygo.MenuItem {
+	if runtime.GOOS != "darwin" {
+		return &mygo.MenuItem{Role: mygo.RoleAppMenu}
+	}
+	return &mygo.MenuItem{Label: "OmniFlow", Submenu: []*mygo.MenuItem{
+		{Role: mygo.RoleAbout},
+		updaterMenuItem(),
+		mygo.Separator(),
+		{Role: mygo.RoleServices},
+		mygo.Separator(),
+		{Role: mygo.RoleHide},
+		{Role: mygo.RoleHideOthers},
+		{Role: mygo.RoleUnhide},
+		mygo.Separator(),
+		{Role: mygo.RoleQuit},
+	}}
+}
+
 func (a *app) installMenu() {
 	mygo.App.SetMenu(mygo.NewMenu([]*mygo.MenuItem{
-		{Role: mygo.RoleAppMenu},
+		a.appMenuItem(),
 		{Label: locales.MenuFile(), Submenu: []*mygo.MenuItem{
 			{Label: locales.ComposerNewRequest(), Accelerator: "CmdOrCtrl+N", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.update(func() { a.newRequest() })

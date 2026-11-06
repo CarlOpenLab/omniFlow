@@ -2595,6 +2595,116 @@ func (msgs Messages) SettingsShowInFinder() string {
 	return Catalog.Format(msgs.locale, "settingsShowInFinder", nil)
 }
 
+// SettingsUpdates says "Updates"
+// in the language the app shows.
+func SettingsUpdates() string { return In(i18n.Locale()).SettingsUpdates() }
+
+// SettingsUpdates says "Updates"
+// in the language of msgs.
+func (msgs Messages) SettingsUpdates() string {
+	return Catalog.Format(msgs.locale, "settingsUpdates", nil)
+}
+
+// UpdateVersion says "Version"
+// in the language the app shows.
+func UpdateVersion() string { return In(i18n.Locale()).UpdateVersion() }
+
+// UpdateVersion says "Version"
+// in the language of msgs.
+func (msgs Messages) UpdateVersion() string {
+	return Catalog.Format(msgs.locale, "updateVersion", nil)
+}
+
+// UpdateLastCheck says "Last checked"
+// in the language the app shows.
+func UpdateLastCheck() string { return In(i18n.Locale()).UpdateLastCheck() }
+
+// UpdateLastCheck says "Last checked"
+// in the language of msgs.
+func (msgs Messages) UpdateLastCheck() string {
+	return Catalog.Format(msgs.locale, "updateLastCheck", nil)
+}
+
+// UpdateNever says "Never"
+// in the language the app shows.
+func UpdateNever() string { return In(i18n.Locale()).UpdateNever() }
+
+// UpdateNever says "Never"
+// in the language of msgs.
+func (msgs Messages) UpdateNever() string {
+	return Catalog.Format(msgs.locale, "updateNever", nil)
+}
+
+// UpdateAutoCheck says "Check for updates automatically"
+// in the language the app shows.
+func UpdateAutoCheck() string { return In(i18n.Locale()).UpdateAutoCheck() }
+
+// UpdateAutoCheck says "Check for updates automatically"
+// in the language of msgs.
+func (msgs Messages) UpdateAutoCheck() string {
+	return Catalog.Format(msgs.locale, "updateAutoCheck", nil)
+}
+
+// UpdateAutoDownload says "Install updates automatically"
+// in the language the app shows.
+func UpdateAutoDownload() string { return In(i18n.Locale()).UpdateAutoDownload() }
+
+// UpdateAutoDownload says "Install updates automatically"
+// in the language of msgs.
+func (msgs Messages) UpdateAutoDownload() string {
+	return Catalog.Format(msgs.locale, "updateAutoDownload", nil)
+}
+
+// UpdateCheckNow says "Check for Updates…"
+// in the language the app shows.
+func UpdateCheckNow() string { return In(i18n.Locale()).UpdateCheckNow() }
+
+// UpdateCheckNow says "Check for Updates…"
+// in the language of msgs.
+func (msgs Messages) UpdateCheckNow() string {
+	return Catalog.Format(msgs.locale, "updateCheckNow", nil)
+}
+
+// UpdateUnavailable says "Not available for this build"
+// in the language the app shows.
+func UpdateUnavailable() string { return In(i18n.Locale()).UpdateUnavailable() }
+
+// UpdateUnavailable says "Not available for this build"
+// in the language of msgs.
+func (msgs Messages) UpdateUnavailable() string {
+	return Catalog.Format(msgs.locale, "updateUnavailable", nil)
+}
+
+// UpdateDailyNote says "OmniFlow checks for updates once a day in the background."
+// in the language the app shows.
+func UpdateDailyNote() string { return In(i18n.Locale()).UpdateDailyNote() }
+
+// UpdateDailyNote says "OmniFlow checks for updates once a day in the background."
+// in the language of msgs.
+func (msgs Messages) UpdateDailyNote() string {
+	return Catalog.Format(msgs.locale, "updateDailyNote", nil)
+}
+
+// UpdateUnavailableNote says "This build cannot update itself: development builds and apps installed by a package manager are updated another way."
+// in the language the app shows.
+func UpdateUnavailableNote() string { return In(i18n.Locale()).UpdateUnavailableNote() }
+
+// UpdateUnavailableNote says "This build cannot update itself: development builds and apps installed by a package manager are updated another way."
+// in the language of msgs.
+func (msgs Messages) UpdateUnavailableNote() string {
+	return Catalog.Format(msgs.locale, "updateUnavailableNote", nil)
+}
+
+// UpdateFoundNote says "A new version is downloaded from GitHub and installed when you choose."
+// in the language the app shows.
+func UpdateFoundNote() string { return In(i18n.Locale()).UpdateFoundNote() }
+
+// UpdateFoundNote says "A new version is downloaded from GitHub and installed when you choose."
+// in the language of msgs.
+func (msgs Messages) UpdateFoundNote() string {
+	return Catalog.Format(msgs.locale, "updateFoundNote", nil)
+}
+
 // SettingsAbout says "About"
 // in the language the app shows.
 func SettingsAbout() string { return In(i18n.Locale()).SettingsAbout() }

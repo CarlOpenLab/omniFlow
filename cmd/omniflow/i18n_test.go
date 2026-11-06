@@ -135,11 +135,15 @@ func TestChineseSettingsAndDialogs(t *testing.T) {
 	a.settingsOpen = true
 	tt := newTester(t, a)
 	for _, want := range []string{
-		"设置", "外观", "语言", "主题", "代理端口", "数据", "关于",
+		"设置", "外观", "语言", "主题", "数据", "更新", "关于",
 	} {
 		if !tt.HasText(want) {
 			t.Errorf("the Chinese settings are missing %q", want)
 		}
+	}
+	clickSettingsPage(t, tt, settingsPaneCapture)
+	if !tt.HasText("代理端口") {
+		t.Errorf("the Chinese capture page is missing 代理端口: %q", tt.Texts())
 	}
 
 	a.settingsOpen = false

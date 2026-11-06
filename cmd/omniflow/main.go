@@ -9,6 +9,8 @@ import (
 	"log"
 
 	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/plugins/updater"
+	"github.com/egoist/mygo/plugins/updater/native"
 	"github.com/egoist/mygo/ui"
 )
 
@@ -16,6 +18,15 @@ func main() {
 	// The name decides the user-data directory, where the collection, the
 	// history and the capture certificate live.
 	mygo.App.SetName("OmniFlow")
+
+	// Auto-update: the app checks its own release feed and offers new
+	// versions with their release notes. The native plugin draws that window
+	// with mygo's own UI rather than a web page, as the rest of this app is
+	// drawn. Builds never signed for updates — a development build, or a .deb
+	// a package manager installed — say so instead of checking, and Settings
+	// shows that reason rather than switches that would do nothing.
+	mygo.Use(native.New(updater.Options{}))
+
 	a := newApp()
 	a.applyPreferences()
 

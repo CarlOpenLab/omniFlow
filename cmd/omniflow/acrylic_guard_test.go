@@ -39,17 +39,19 @@ var skinnedWidgets = map[string]string{
 // solid Popover, or a code canvas that must keep its contrast. The key is a
 // file, or a file and the one function in it.
 var acrylicOwners = map[string]string{
-	"body.go:imageView":              "an image body is read on the code canvas",
-	"body.go:binaryView":             "a binary body is read on the code canvas",
-	"body_editor.go:codeView":        "bodies are read on the code canvas",
-	"body_editor.go:bodyEditorTheme": "the body editor's paper is the code canvas",
-	"composer.go:methodMenu":         "the verb list is a popover, drawn solid by design",
-	"composer.go:bodyTab":            "the JSON and text editor is a code canvas, so code keeps its contrast",
-	"env.go:envDialog":               "the environment manager is a dialog on its solid Popover",
-	"settings.go:settingsDialog":     "settings is a dialog on its solid Popover",
-	"settings.go:caDialog":           "the certificate dialog is a dialog on its solid Popover",
-	"widgets.go:applyTheme":          "the faces the framework's own dialog controls read",
-	"widgets.go:keyValueList":        "headers are read on the code canvas",
+	"body.go:imageView":                  "an image body is read on the code canvas",
+	"body.go:binaryView":                 "a binary body is read on the code canvas",
+	"body_editor.go:codeView":            "bodies are read on the code canvas",
+	"body_editor.go:bodyEditorTheme":     "the body editor's paper is the code canvas",
+	"composer.go:methodMenu":             "the verb list is a popover, drawn solid by design",
+	"composer.go:bodyTab":                "the JSON and text editor is a code canvas, so code keeps its contrast",
+	"env.go:envDialog":                   "the environment manager is a dialog on its solid Popover",
+	"settings.go:settingsDialog":         "settings is a dialog on its solid Popover",
+	"settings.go:settingsAppearancePage": "a page of the settings dialog, whose card and preview sit on its solid Popover",
+	"settings.go:settingsCapturePage":    "a page of the settings dialog, whose fields are drawn on its solid Popover",
+	"settings.go:caDialog":               "the certificate dialog is a dialog on its solid Popover",
+	"widgets.go:applyTheme":              "the faces the framework's own dialog controls read",
+	"widgets.go:keyValueList":            "headers are read on the code canvas",
 }
 
 func TestAcrylicLayersUseWashes(t *testing.T) {
