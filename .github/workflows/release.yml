@@ -1,0 +1,196 @@
+name: release
+
+# Pushing a vX.Y.Z tag builds the macOS, Windows and Linux apps and attaches
+# them to the release the prepare job publishes. The assets are self-signed:
+# macOS builds are ad-hoc signed and not notarized. This version has no
+# updater, so no MYGO_UPDATER_PRIVATE_KEY is needed.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to build and publish, e.g. v0.1.0
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  # gh infers the repository from the local checkout, so a job without
+  # actions/checkout (like checksums) would otherwise fail with
+  # "not a git repository".
+  GH_REPO: ${{ github.repository }}
+
+jobs:
+  prepare:
+    name: prepare
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.meta.outputs.tag }}
+      version: ${{ steps.meta.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Check the tag against the project version
+        id: meta
+        run: |
+          set -euo pipefail
+          tag="${{ inputs.tag || github.ref_name }}"
+          version="${tag#v}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          v=$(jq -r .version mygo.json)
+          if [ "$v" != "$version" ]; then
+            echo "::error::$tag does not match the version in mygo.json ($v)"
+            exit 1
+          fi
+          echo "releasing $tag"
+
+      # Published, not draft: the build jobs then attach to an existing release,
+      # so one platform failing cannot take the rest of the download down with it.
+      - name: Publish the release with its notes
+        run: |
+          set -euo pipefail
+          tag="${{ steps.meta.outputs.tag }}"
+          version="${{ steps.meta.outputs.version }}"
+          awk -v v="$version" '
+            $0 ~ "^## " v "[[:space:]]*$" { found = 1; next }
+            found && $0 ~ "^## " { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          [ -s notes.md ] || printf 'OmniFlow %s\n' "$tag" > notes.md
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release edit "$tag" --title "$tag" --notes-file notes.md --latest
+          else
+            gh release create "$tag" --title "$tag" --notes-file notes.md --latest --verify-tag
+          fi
+
+  desktop-macos:
+    name: desktop macOS
+    needs: prepare
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      # universal only: the DMG is named "<name> <version>.dmg" without the arch,
+      # so building arm64 and amd64 side by side would produce colliding assets.
+      - name: Build the app bundle and disk image
+        run: go tool mygo build -platform darwin/universal
+
+      - name: Upload
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          set -euo pipefail
+          dmg=$(ls dist/darwin-universal/*.dmg | head -1)
+          asset="omniflow_${VERSION}_macos_universal.dmg"
+          cp "$dmg" "$asset"
+          gh release upload "${{ needs.prepare.outputs.tag }}" "$asset" --clobber
+
+  desktop-linux:
+    name: desktop Linux
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build the Debian packages and tarballs
+        run: go tool mygo build -platform linux/amd64,linux/arm64
+
+      - name: Upload
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          set -euo pipefail
+          for arch in amd64 arm64; do
+            d="dist/linux-$arch"
+            [ -d "$d" ] || { echo "::warning::no $d, skipping"; continue; }
+            assets=()
+            deb=$(ls "$d"/*.deb 2>/dev/null | head -1 || true)
+            tar=$(ls "$d"/*.tar.gz 2>/dev/null | head -1 || true)
+            if [ -n "$deb" ]; then
+              cp "$deb" "omniflow_${VERSION}_linux_${arch}.deb"
+              assets+=("omniflow_${VERSION}_linux_${arch}.deb")
+            fi
+            if [ -n "$tar" ]; then
+              cp "$tar" "omniflow_${VERSION}_linux_${arch}.tar.gz"
+              assets+=("omniflow_${VERSION}_linux_${arch}.tar.gz")
+            fi
+            [ ${#assets[@]} -gt 0 ] || { echo "::warning::nothing to upload for linux-$arch"; continue; }
+            gh release upload "${{ needs.prepare.outputs.tag }}" "${assets[@]}" --clobber
+          done
+
+  desktop-windows:
+    name: desktop Windows
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      # mygo build only downloads NSIS by itself on Windows; on this runner it has
+      # to be installed or the Setup .exe is silently skipped.
+      - name: Install NSIS
+        run: sudo apt-get update && sudo apt-get install -y nsis
+
+      - name: Build the installer and the portable executable
+        run: go tool mygo build -platform windows/amd64
+
+      - name: Upload
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          set -euo pipefail
+          d=dist/windows-amd64
+          assets=()
+          setup=$(ls "$d"/*Setup*.exe 2>/dev/null | head -1 || true)
+          if [ -n "$setup" ]; then
+            cp "$setup" "omniflow_${VERSION}_windows_amd64_setup.exe"
+            assets+=("omniflow_${VERSION}_windows_amd64_setup.exe")
+          else
+            echo "::warning::no Setup .exe was produced"
+          fi
+          zip="omniflow_${VERSION}_windows_amd64_portable.zip"
+          # The Setup .exe lives in the same directory but is uploaded on its
+          # own; keep it out of the portable archive so the two do not duplicate.
+          (cd "$d" && zip -q -r "$GITHUB_WORKSPACE/$zip" . -x "*Setup*.exe")
+          assets+=("$zip")
+          gh release upload "${{ needs.prepare.outputs.tag }}" "${assets[@]}" --clobber
+
+  checksums:
+    name: checksums
+    needs: [prepare, desktop-macos, desktop-linux, desktop-windows]
+    if: always() && needs.prepare.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download the published assets and hash them
+        run: |
+          set -euo pipefail
+          tag="${{ needs.prepare.outputs.tag }}"
+          mkdir -p assets
+          gh release download "$tag" --dir assets --pattern '*' --clobber
+          rm -f assets/checksums.txt
+          if [ -z "$(ls -A assets)" ]; then
+            echo "::warning::the release has no assets to hash"
+            exit 0
+          fi
+          (cd assets && sha256sum * > "$GITHUB_WORKSPACE/checksums.txt")
+          cat checksums.txt
+          gh release upload "$tag" checksums.txt --clobber

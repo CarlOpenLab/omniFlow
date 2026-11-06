@@ -1,9 +1,28 @@
 # OmniFlow
 
-A native HTTP workbench for macOS: a Postman-style composer and a
-Proxyman-style capture proxy in one window. The interface is drawn by
-[Mygo](https://github.com/egoist/mygo) on the GPU — there is no webview — and
-the window's acrylic is the system's own material showing through the view.
+A native HTTP workbench for macOS, Windows and Linux: a Postman-style
+composer and a Proxyman-style capture proxy in one window. The interface is
+drawn by [Mygo](https://github.com/egoist/mygo) on the GPU — there is no
+webview — and on macOS the window's acrylic is the system's own material
+showing through the view.
+
+Shortcuts are written the way macOS writes them (⌘); on Windows and Linux,
+use Ctrl in its place.
+
+## Download
+
+Installers for every release are on the
+[Releases page](https://github.com/CarlOpenLab/omniFlow/releases):
+
+| Platform | File | Notes |
+| --- | --- | --- |
+| macOS | `omniflow_<version>_macos_universal.dmg` | Universal, Apple silicon and Intel. Drag OmniFlow into Applications. |
+| Windows | `omniflow_<version>_windows_amd64_setup.exe` | Installer; `omniflow_<version>_windows_amd64_portable.zip` runs from any folder. |
+| Linux | `omniflow_<version>_linux_amd64.deb`, `omniflow_<version>_linux_arm64.deb` | Debian packages; the `.tar.gz` builds ship `install.sh` for `~/.local`. |
+
+Release assets are currently self-signed. On macOS, right-click OmniFlow and
+choose **Open** the first time. On Windows, click **More info → Run anyway**
+if SmartScreen appears. Each release also carries a `checksums.txt`.
 
 ## What it does
 
@@ -12,7 +31,7 @@ the window's acrylic is the system's own material showing through the view.
   and bearer or basic auth. Responses show status, headers, body with JSON
   highlighting, image previews (other binary bodies can be saved), and a
   waterfall of DNS, connect, TLS, waiting and download. ⌘. cancels a request
-  in flight.
+  in flight; ⌘F finds text in the body on screen.
 - **Environments** — named sets of `{{variables}}` (`{{host}}`, `{{token}}`),
   chosen in the sidebar (⌘E to manage). They are filled in across the URL,
   headers, body and auth as a request is sent, and highlighted where they are
@@ -31,9 +50,9 @@ the window's acrylic is the system's own material showing through the view.
   a captured request in the composer. ↑ and ↓ move through the capture;
   right-click a flow to replay it, copy it or show only its host. The whole
   capture exports as a HAR 1.2 file. It keeps the latest 3,000 flows and up
-  to 512 MB of bodies; past either, the oldest go first. HTTPS is decrypted through a root authority the app creates on
-  this machine; install it from Settings → Root CA Certificate (only on
-  devices you control).
+  to 512 MB of bodies; past either, the oldest go first. HTTPS is decrypted
+  through a root authority the app creates on this machine; install it from
+  Settings → Root CA Certificate (only on devices you control).
 - **Copy as cURL** — ⇧⌘C copies the composer's request, or the captured
   flow, as a curl command that sends the same request.
 - **Settings** — system/light/dark appearance (also in the sidebar's foot),
@@ -45,31 +64,37 @@ the window's acrylic is the system's own material showing through the view.
 
 ## Build and run
 
-Requires Go 1.27 and macOS.
+Requires Go 1.27. The app builds on macOS, Windows and Linux; signing and
+disk images need macOS.
 
 ```sh
-# Development window (signed, so macOS keeps permission grants)
-sh scripts/dev.sh
+# Run from source, on any platform
+go run ./cmd/omniflow
 
 # Tests and the native-UI checks
 go test ./...
 go tool mygo vet .
 
-# Packaged app bundle without a disk image, signed with the same identity
-sh scripts/build.sh
-open out/darwin-arm64/OmniFlow.app
+# A package for the machine you are on (macOS: .app and .dmg)
+go tool mygo build .
+
+# Installers for every platform
+go tool mygo build -platform darwin/universal,linux/amd64,linux/arm64,windows/amd64
 ```
 
-The scripts sign with the first `Apple Development` identity in your keychain
-(override with `MACOS_SIGNING_IDENTITY`), so macOS permission grants survive
-rebuilds. Elsewhere, `go run ./cmd/omniflow` and
-`go tool mygo build -skip-dmg -o out .` still work.
+On macOS, `scripts/dev.sh` and `scripts/build.sh` sign with the first
+`Apple Development` identity in your keychain (override with
+`MACOS_SIGNING_IDENTITY`), so permission grants survive rebuilds. Release
+builds are self-signed.
 
-The capture certificate and saved data live under
-`~/Library/Application Support/OmniFlow/`. The private key is written `0600`
-and never leaves that directory unless you export the public certificate.
+Saved data lives in the app's user-data directory:
+`~/Library/Application Support/OmniFlow` on macOS, `%AppData%\OmniFlow` on
+Windows, and `~/.config/OmniFlow` (or `$XDG_CONFIG_HOME/OmniFlow`) on Linux.
+The capture certificate's private key is written `0600` and never leaves that
+directory unless you export the public certificate.
 
-Point a client at the proxy with, for example:
+Point a client at the proxy with, for example (the certificate path shown for
+macOS; use the user-data directory above elsewhere):
 
 ```sh
 curl -x http://127.0.0.1:9090 http://example.com/
