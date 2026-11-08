@@ -889,5 +889,74 @@
         "example": "GitHub — Repository"
       }
     }
+  },
+
+  "windowMinimize": "Minimize",
+  "@windowMinimize": {
+    "description": "The app-drawn window controls (Windows and Linux)."
+  },
+  "windowMaximize": "Maximize",
+  "@windowMaximize": {
+    "description": "The app-drawn window controls (Windows and Linux)."
+  },
+  "windowRestore": "Restore window",
+  "@windowRestore": {
+    "description": "The app-drawn window controls (Windows and Linux)."
+  },
+  "windowClose": "Close window",
+  "@windowClose": {
+    "description": "The app-drawn window controls (Windows and Linux)."
+  },
+
+  "inspectorSaveAsRequest": "Save as Request",
+  "inspectorMockResponse": "Mock This Response",
+  "inspectorMocked": "MOCK",
+  "inspectorSearchBodies": "Bodies",
+  "inspectorSearchBodiesHint": "Include request and response bodies in the traffic filter (up to 512 KB each)",
+
+  "settingsMocks": "Mocks",
+  "settingsMocksEmpty": "No mocks yet",
+  "settingsMocksHint": "Right-click a captured response in the Inspector and choose Mock This Response.",
+  "settingsMockReveal": "Show the mock file",
+  "settingsMockDelete": "Delete this mock",
+  "settingsMocksFolder": "Show Mocks Folder",
+
+  "noticeFlowSaved": "Saved “{name}” to the collection",
+  "@noticeFlowSaved": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "noticeMockCreated": "Mocking “{name}” from a local file",
+  "@noticeMockCreated": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "noticeMockUpdated": "Updated the mock for “{name}”",
+  "@noticeMockUpdated": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "noticeMockDeleted": "Deleted the mock for “{name}”",
+  "@noticeMockDeleted": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "noticeMockWriteFailed": "The mock file could not be written: {error}",
+  "@noticeMockWriteFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "noticeMockNeedsResponse": "That flow has no response to mock",
+  "noticeMockTruncated": "The captured body was truncated; the mock keeps only its beginning",
+  "noticeMockRevealFailed": "Could not show the mock file: {error}",
+  "@noticeMockRevealFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
   }
 }

@@ -35,4 +35,7 @@ type Flow struct {
 
 	Duration time.Duration `json:"duration"`
 	Err      string        `json:"err"`
+	// Mocked says a Map Local rule answered this exchange instead of the
+	// network.
+	Mocked bool `json:"mocked,omitempty"`
 }

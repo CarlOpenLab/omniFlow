@@ -3758,3 +3758,253 @@ func ComposerCopyName(name string) string { return In(i18n.Locale()).ComposerCop
 func (msgs Messages) ComposerCopyName(name string) string {
 	return Catalog.Format(msgs.locale, "composerCopyName", map[string]any{"name": name})
 }
+
+// WindowMinimize says "Minimize"
+// in the language the app shows.
+//
+// The app-drawn window controls (Windows and Linux).
+func WindowMinimize() string { return In(i18n.Locale()).WindowMinimize() }
+
+// WindowMinimize says "Minimize"
+// in the language of msgs.
+//
+// The app-drawn window controls (Windows and Linux).
+func (msgs Messages) WindowMinimize() string {
+	return Catalog.Format(msgs.locale, "windowMinimize", nil)
+}
+
+// WindowMaximize says "Maximize"
+// in the language the app shows.
+//
+// The app-drawn window controls (Windows and Linux).
+func WindowMaximize() string { return In(i18n.Locale()).WindowMaximize() }
+
+// WindowMaximize says "Maximize"
+// in the language of msgs.
+//
+// The app-drawn window controls (Windows and Linux).
+func (msgs Messages) WindowMaximize() string {
+	return Catalog.Format(msgs.locale, "windowMaximize", nil)
+}
+
+// WindowRestore says "Restore window"
+// in the language the app shows.
+//
+// The app-drawn window controls (Windows and Linux).
+func WindowRestore() string { return In(i18n.Locale()).WindowRestore() }
+
+// WindowRestore says "Restore window"
+// in the language of msgs.
+//
+// The app-drawn window controls (Windows and Linux).
+func (msgs Messages) WindowRestore() string {
+	return Catalog.Format(msgs.locale, "windowRestore", nil)
+}
+
+// WindowClose says "Close window"
+// in the language the app shows.
+//
+// The app-drawn window controls (Windows and Linux).
+func WindowClose() string { return In(i18n.Locale()).WindowClose() }
+
+// WindowClose says "Close window"
+// in the language of msgs.
+//
+// The app-drawn window controls (Windows and Linux).
+func (msgs Messages) WindowClose() string {
+	return Catalog.Format(msgs.locale, "windowClose", nil)
+}
+
+// InspectorSaveAsRequest says "Save as Request"
+// in the language the app shows.
+func InspectorSaveAsRequest() string { return In(i18n.Locale()).InspectorSaveAsRequest() }
+
+// InspectorSaveAsRequest says "Save as Request"
+// in the language of msgs.
+func (msgs Messages) InspectorSaveAsRequest() string {
+	return Catalog.Format(msgs.locale, "inspectorSaveAsRequest", nil)
+}
+
+// InspectorMockResponse says "Mock This Response"
+// in the language the app shows.
+func InspectorMockResponse() string { return In(i18n.Locale()).InspectorMockResponse() }
+
+// InspectorMockResponse says "Mock This Response"
+// in the language of msgs.
+func (msgs Messages) InspectorMockResponse() string {
+	return Catalog.Format(msgs.locale, "inspectorMockResponse", nil)
+}
+
+// InspectorMocked says "MOCK"
+// in the language the app shows.
+func InspectorMocked() string { return In(i18n.Locale()).InspectorMocked() }
+
+// InspectorMocked says "MOCK"
+// in the language of msgs.
+func (msgs Messages) InspectorMocked() string {
+	return Catalog.Format(msgs.locale, "inspectorMocked", nil)
+}
+
+// InspectorSearchBodies says "Bodies"
+// in the language the app shows.
+func InspectorSearchBodies() string { return In(i18n.Locale()).InspectorSearchBodies() }
+
+// InspectorSearchBodies says "Bodies"
+// in the language of msgs.
+func (msgs Messages) InspectorSearchBodies() string {
+	return Catalog.Format(msgs.locale, "inspectorSearchBodies", nil)
+}
+
+// InspectorSearchBodiesHint says "Include request and response bodies in the traffic filter (up to 512 KB each)"
+// in the language the app shows.
+func InspectorSearchBodiesHint() string { return In(i18n.Locale()).InspectorSearchBodiesHint() }
+
+// InspectorSearchBodiesHint says "Include request and response bodies in the traffic filter (up to 512 KB each)"
+// in the language of msgs.
+func (msgs Messages) InspectorSearchBodiesHint() string {
+	return Catalog.Format(msgs.locale, "inspectorSearchBodiesHint", nil)
+}
+
+// SettingsMocks says "Mocks"
+// in the language the app shows.
+func SettingsMocks() string { return In(i18n.Locale()).SettingsMocks() }
+
+// SettingsMocks says "Mocks"
+// in the language of msgs.
+func (msgs Messages) SettingsMocks() string {
+	return Catalog.Format(msgs.locale, "settingsMocks", nil)
+}
+
+// SettingsMocksEmpty says "No mocks yet"
+// in the language the app shows.
+func SettingsMocksEmpty() string { return In(i18n.Locale()).SettingsMocksEmpty() }
+
+// SettingsMocksEmpty says "No mocks yet"
+// in the language of msgs.
+func (msgs Messages) SettingsMocksEmpty() string {
+	return Catalog.Format(msgs.locale, "settingsMocksEmpty", nil)
+}
+
+// SettingsMocksHint says "Right-click a captured response in the Inspector and choose Mock This Response."
+// in the language the app shows.
+func SettingsMocksHint() string { return In(i18n.Locale()).SettingsMocksHint() }
+
+// SettingsMocksHint says "Right-click a captured response in the Inspector and choose Mock This Response."
+// in the language of msgs.
+func (msgs Messages) SettingsMocksHint() string {
+	return Catalog.Format(msgs.locale, "settingsMocksHint", nil)
+}
+
+// SettingsMockReveal says "Show the mock file"
+// in the language the app shows.
+func SettingsMockReveal() string { return In(i18n.Locale()).SettingsMockReveal() }
+
+// SettingsMockReveal says "Show the mock file"
+// in the language of msgs.
+func (msgs Messages) SettingsMockReveal() string {
+	return Catalog.Format(msgs.locale, "settingsMockReveal", nil)
+}
+
+// SettingsMockDelete says "Delete this mock"
+// in the language the app shows.
+func SettingsMockDelete() string { return In(i18n.Locale()).SettingsMockDelete() }
+
+// SettingsMockDelete says "Delete this mock"
+// in the language of msgs.
+func (msgs Messages) SettingsMockDelete() string {
+	return Catalog.Format(msgs.locale, "settingsMockDelete", nil)
+}
+
+// SettingsMocksFolder says "Show Mocks Folder"
+// in the language the app shows.
+func SettingsMocksFolder() string { return In(i18n.Locale()).SettingsMocksFolder() }
+
+// SettingsMocksFolder says "Show Mocks Folder"
+// in the language of msgs.
+func (msgs Messages) SettingsMocksFolder() string {
+	return Catalog.Format(msgs.locale, "settingsMocksFolder", nil)
+}
+
+// NoticeFlowSaved says "Saved “{name}” to the collection"
+// in the language the app shows.
+func NoticeFlowSaved(name string) string { return In(i18n.Locale()).NoticeFlowSaved(name) }
+
+// NoticeFlowSaved says "Saved “{name}” to the collection"
+// in the language of msgs.
+func (msgs Messages) NoticeFlowSaved(name string) string {
+	return Catalog.Format(msgs.locale, "noticeFlowSaved", map[string]any{"name": name})
+}
+
+// NoticeMockCreated says "Mocking “{name}” from a local file"
+// in the language the app shows.
+func NoticeMockCreated(name string) string { return In(i18n.Locale()).NoticeMockCreated(name) }
+
+// NoticeMockCreated says "Mocking “{name}” from a local file"
+// in the language of msgs.
+func (msgs Messages) NoticeMockCreated(name string) string {
+	return Catalog.Format(msgs.locale, "noticeMockCreated", map[string]any{"name": name})
+}
+
+// NoticeMockUpdated says "Updated the mock for “{name}”"
+// in the language the app shows.
+func NoticeMockUpdated(name string) string { return In(i18n.Locale()).NoticeMockUpdated(name) }
+
+// NoticeMockUpdated says "Updated the mock for “{name}”"
+// in the language of msgs.
+func (msgs Messages) NoticeMockUpdated(name string) string {
+	return Catalog.Format(msgs.locale, "noticeMockUpdated", map[string]any{"name": name})
+}
+
+// NoticeMockDeleted says "Deleted the mock for “{name}”"
+// in the language the app shows.
+func NoticeMockDeleted(name string) string { return In(i18n.Locale()).NoticeMockDeleted(name) }
+
+// NoticeMockDeleted says "Deleted the mock for “{name}”"
+// in the language of msgs.
+func (msgs Messages) NoticeMockDeleted(name string) string {
+	return Catalog.Format(msgs.locale, "noticeMockDeleted", map[string]any{"name": name})
+}
+
+// NoticeMockWriteFailed says "The mock file could not be written: {error}"
+// in the language the app shows.
+func NoticeMockWriteFailed(error string) string {
+	return In(i18n.Locale()).NoticeMockWriteFailed(error)
+}
+
+// NoticeMockWriteFailed says "The mock file could not be written: {error}"
+// in the language of msgs.
+func (msgs Messages) NoticeMockWriteFailed(error string) string {
+	return Catalog.Format(msgs.locale, "noticeMockWriteFailed", map[string]any{"error": error})
+}
+
+// NoticeMockNeedsResponse says "That flow has no response to mock"
+// in the language the app shows.
+func NoticeMockNeedsResponse() string { return In(i18n.Locale()).NoticeMockNeedsResponse() }
+
+// NoticeMockNeedsResponse says "That flow has no response to mock"
+// in the language of msgs.
+func (msgs Messages) NoticeMockNeedsResponse() string {
+	return Catalog.Format(msgs.locale, "noticeMockNeedsResponse", nil)
+}
+
+// NoticeMockTruncated says "The captured body was truncated; the mock keeps only its beginning"
+// in the language the app shows.
+func NoticeMockTruncated() string { return In(i18n.Locale()).NoticeMockTruncated() }
+
+// NoticeMockTruncated says "The captured body was truncated; the mock keeps only its beginning"
+// in the language of msgs.
+func (msgs Messages) NoticeMockTruncated() string {
+	return Catalog.Format(msgs.locale, "noticeMockTruncated", nil)
+}
+
+// NoticeMockRevealFailed says "Could not show the mock file: {error}"
+// in the language the app shows.
+func NoticeMockRevealFailed(error string) string {
+	return In(i18n.Locale()).NoticeMockRevealFailed(error)
+}
+
+// NoticeMockRevealFailed says "Could not show the mock file: {error}"
+// in the language of msgs.
+func (msgs Messages) NoticeMockRevealFailed(error string) string {
+	return Catalog.Format(msgs.locale, "noticeMockRevealFailed", map[string]any{"error": error})
+}

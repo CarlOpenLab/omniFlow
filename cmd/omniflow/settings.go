@@ -16,6 +16,7 @@ import (
 const (
 	settingsPaneAppearance = iota
 	settingsPaneCapture
+	settingsPaneMocks
 	settingsPaneData
 	settingsPaneUpdates
 	settingsPaneAbout
@@ -30,6 +31,7 @@ type settingsPage struct {
 var settingsPages = []settingsPage{
 	{settingsPaneAppearance, locales.SettingsAppearance, iconSun},
 	{settingsPaneCapture, locales.SettingsCapture, iconGlobe},
+	{settingsPaneMocks, locales.SettingsMocks, iconServer},
 	{settingsPaneData, locales.SettingsData, iconFolder},
 	{settingsPaneUpdates, locales.SettingsUpdates, iconRefresh},
 	{settingsPaneAbout, locales.SettingsAbout, iconInfo},
@@ -83,6 +85,8 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 								switch a.settingsPane {
 								case settingsPaneCapture:
 									a.settingsCapturePage(c, pal)
+								case settingsPaneMocks:
+									a.settingsMocksPage(c, pal)
 								case settingsPaneData:
 									a.settingsDataPage(c, pal)
 								case settingsPaneUpdates:
@@ -334,6 +338,75 @@ func (a *app) settingsCapturePage(c *ui.Context, pal *uitokens.Palette) {
 		ui.Text(c, locales.CaTitle()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
 		if ui.Button(c.Key("settings-ca"), locales.SettingsManage()).Clicked() {
 			a.caOpen = true
+		}
+	})
+}
+
+// settingsMocksPage lists the Map Local rules a captured response made. Each
+// one can be switched off without deleting its file, revealed in the file
+// manager, or removed with the file.
+func (a *app) settingsMocksPage(c *ui.Context, pal *uitokens.Palette) {
+	if len(a.mocks) == 0 {
+		settingsGroup(c, pal, func() {
+			ui.Column(c).Gap(4).Children(func() {
+				ui.Text(c, locales.SettingsMocksEmpty()).FontSize(11.5).TextColor(pal.TextMuted)
+				ui.Text(c, locales.SettingsMocksHint()).FontSize(10.5).TextColor(pal.TextFaint)
+			})
+		})
+		return
+	}
+
+	var toggleID, revealID, deleteID string
+	var toggleOn bool
+	settingsGroup(c, pal, func() {
+		for i := range a.mocks {
+			rule := a.mocks[i]
+			if i > 0 {
+				ui.Box(c).Height(1).Background(pal.Divider)
+			}
+			row := ui.Row(c).Height(44).Gap(8).AlignItems(ui.Center)
+			row.Children(func() {
+				ui.Column(c).Grow(1).MinWidth(0).Gap(1).Justify(ui.Center).Children(func() {
+					ui.Text(c, rule.Name).FontSize(11.5).FontWeight(600).TextColor(pal.Text).
+						SingleLine().Ellipsis("…")
+					ui.Text(c, fmt.Sprintf("%d · %s", rule.Status, shortenPath(rule.File, 52))).
+						FontSize(9.5).Font("monospace").TextColor(pal.TextFaint).
+						SingleLine().Ellipsis("…")
+				})
+				enabled := rule.Enabled
+				ui.Switch(c.Key("mock:"+rule.ID), &enabled)
+				if enabled != rule.Enabled {
+					toggleID, toggleOn = rule.ID, enabled
+				}
+				if b := iconButton(c, pal, iconFolder, locales.SettingsMockReveal(), 24); b.Clicked() {
+					revealID = rule.ID
+				}
+				if b := iconButton(c, pal, iconTrash, locales.SettingsMockDelete(), 24); b.Clicked() {
+					deleteID = rule.ID
+				}
+			})
+		}
+	})
+
+	if toggleID != "" {
+		a.setMockEnabled(toggleID, toggleOn)
+	}
+	if revealID != "" {
+		for _, rule := range a.mocks {
+			if rule.ID == revealID {
+				a.revealMock(rule)
+				break
+			}
+		}
+	}
+	if deleteID != "" {
+		a.deleteMock(deleteID)
+	}
+
+	ui.Row(c).Gap(8).Children(func() {
+		ui.Text(c, locales.SettingsMocksHint()).FontSize(10.5).TextColor(pal.TextFaint).Grow(1)
+		if ui.Button(c.Key("mocks-dir"), locales.SettingsMocksFolder()).Clicked() {
+			a.revealMocksDir()
 		}
 	})
 }

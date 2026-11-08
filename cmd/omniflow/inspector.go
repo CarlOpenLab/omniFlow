@@ -87,6 +87,24 @@ func (a *app) captureToolbar(c *ui.Context, pal *uitokens.Palette) {
 		searchField(c, pal, &a.searchFocus, &a.flowFilter, locales.InspectorFilterTraffic()).
 			Width(230).Shrink(0)
 
+		bodies := ui.ButtonBase(c.Key("filter-bodies")).Height(28).Padding(0, 8).Radius(7).Gap(5).
+			Label(locales.InspectorSearchBodies()).Tooltip(locales.InspectorSearchBodiesHint())
+		bodyColor := pal.TextFaint
+		if a.searchBodies {
+			bodies.Background(pal.AccentSoft)
+			bodyColor = pal.Accent
+		} else if bodies.Hovered() {
+			bodies.Background(pal.RowHover)
+			bodyColor = pal.Text
+		}
+		bodies.Children(func() {
+			ui.Icon(c, iconFile).Size(11, 11).TextColor(bodyColor)
+			ui.Text(c, locales.InspectorSearchBodies()).FontSize(10).FontWeight(600).TextColor(bodyColor)
+		})
+		if bodies.Clicked() {
+			a.searchBodies = !a.searchBodies
+		}
+
 		follow := ui.ButtonBase(c.Key("follow")).Height(28).Width(28).Radius(7).Center().
 			Label(locales.InspectorFollow()).Tooltip(locales.InspectorFollowHint())
 		if a.follow {
@@ -303,6 +321,12 @@ func (a *app) flowMenu(c *ui.Context, m *ui.Menu, f *proxy.Flow) {
 	if m.Item(locales.InspectorSendToComposer()).Chosen() {
 		a.sendFlowToComposer(*f)
 	}
+	if m.Item(locales.InspectorSaveAsRequest()).Chosen() {
+		a.saveFlowAsRequest(*f)
+	}
+	if m.Item(locales.InspectorMockResponse()).Disabled(f.Status == 0).Chosen() {
+		a.mockFlow(*f)
+	}
 	m.Separator()
 	if m.Item(locales.CommonCopyURL()).Chosen() {
 		a.copyText(c, locales.CommonURLCopied(), f.URL)
@@ -370,6 +394,12 @@ func (a *app) flowDetailHeader(c *ui.Context, pal *uitokens.Palette, f *proxy.Fl
 		methodBadge(c, pal, f.Method)
 		if f.Status > 0 {
 			statusBadge(c, pal, f.Status)
+		}
+		if f.Mocked {
+			ui.Row(c).Center().Height(20).Padding(0, 6).Radius(5).
+				Background(pal.AccentSoft).Children(func() {
+				ui.Text(c, locales.InspectorMocked()).FontSize(9.5).FontWeight(650).TextColor(pal.Accent)
+			})
 		}
 		ui.Column(c).Gap(0).Justify(ui.Center).Grow(1).MinWidth(0).Children(func() {
 			ui.Text(c, f.Host+f.Path).Font("monospace").FontSize(11.5).TextColor(pal.Text).

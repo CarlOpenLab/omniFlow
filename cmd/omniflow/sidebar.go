@@ -182,6 +182,7 @@ func (a *app) historyRow(c *ui.Context, pal *uitokens.Palette, h model.HistoryEn
 	if row.Hovered() {
 		row.Background(pal.RowHover)
 	}
+	hovered := row.Hovered()
 	row.Children(func() {
 		ui.Text(c, h.Method).Width(40).Shrink(0).FontSize(9).FontWeight(750).
 			TextColor(uitokens.MethodColor(pal, h.Method))
@@ -192,6 +193,10 @@ func (a *app) historyRow(c *ui.Context, pal *uitokens.Palette, h model.HistoryEn
 				TextColor(uitokens.StatusColor(pal, h.Status))
 		} else {
 			ui.Text(c, locales.CommonErrorShort()).FontSize(9.5).FontWeight(600).TextColor(pal.Danger)
+		}
+		if hovered {
+			del := iconButton(c, pal, iconTrash, locales.CommonRemoveHistory(), 20)
+			del.OnClick(func() { a.removeHistory(h.ID) })
 		}
 	})
 	row.ContextMenu(func(m *ui.Menu) {

@@ -43,18 +43,23 @@ if SmartScreen appears. Each release also carries a `checksums.txt`.
 - **Collection** — double-click a request's name to rename it. Edits to a
   saved request stay as a draft, marked in the sidebar, until ⌘S saves them;
   right-click a request to duplicate, copy or delete it. History reopens the
-  whole request as it was sent. Deletions and a cleared history or session
+  whole request as it was sent. A captured exchange can be saved straight into
+  the collection from the Inspector. Deletions and a cleared history or session
   offer Undo in the footer for a few seconds.
 - **cURL import** — paste a `curl` command into the URL field and it opens as
   the request it describes, with a note of any flag that could not be kept.
 - **Inspector** — a local HTTP proxy that records every exchange, filters by
   host, text or status class (click the STATUS column's heading), and replays
   a captured request in the composer. ↑ and ↓ move through the capture;
-  right-click a flow to replay it, copy it or show only its host. The whole
-  capture exports as a HAR 1.2 file. It keeps the latest 3,000 flows and up
-  to 512 MB of bodies; past either, the oldest go first. HTTPS is decrypted
-  through a root authority the app creates on this machine; install it from
-  Settings → Root CA Certificate (only on devices you control).
+  right-click a flow to replay it, copy it or show only its host. The filter's
+  **Bodies** button searches request and response bodies too. Right-click a
+  captured response and choose **Mock This Response** to answer that method,
+  host and path from a file you can edit; Settings → Mocks switches the rules
+  off or removes them. The whole capture exports as a HAR 1.2 file. It keeps
+  the latest 3,000 flows and up to 512 MB of bodies; past either, the oldest go
+  first. HTTPS is decrypted through a root authority the app creates on this
+  machine; install it from Settings → Root CA Certificate (only on devices you
+  control).
 - **Copy as cURL** — ⇧⌘C copies the composer's request, or the captured
   flow, as a curl command that sends the same request.
 - **Settings** — system/light/dark appearance (also in the sidebar's foot),

@@ -762,5 +762,32 @@
         "example": "GitHub — Repository"
       }
     }
-  }
+  },
+
+  "windowMinimize": "最小化",
+  "windowMaximize": "最大化",
+  "windowRestore": "还原窗口",
+  "windowClose": "关闭窗口",
+
+  "inspectorSaveAsRequest": "保存为请求",
+  "inspectorMockResponse": "Mock 此响应",
+  "inspectorMocked": "MOCK",
+  "inspectorSearchBodies": "正文",
+  "inspectorSearchBodiesHint": "过滤时同时搜索请求与响应正文（每份最多 512 KB）",
+
+  "settingsMocks": "Mock 规则",
+  "settingsMocksEmpty": "还没有 Mock 规则",
+  "settingsMocksHint": "在 Inspector 里右键一个已抓取的响应，选择“Mock 此响应”。",
+  "settingsMockReveal": "显示 Mock 文件",
+  "settingsMockDelete": "删除此 Mock",
+  "settingsMocksFolder": "打开 Mock 文件夹",
+
+  "noticeFlowSaved": "已将“{name}”保存到集合",
+  "noticeMockCreated": "已用本地文件 Mock“{name}”",
+  "noticeMockUpdated": "已更新“{name}”的 Mock",
+  "noticeMockDeleted": "已删除“{name}”的 Mock",
+  "noticeMockWriteFailed": "无法写入 Mock 文件：{error}",
+  "noticeMockNeedsResponse": "该请求没有响应，无法生成 Mock",
+  "noticeMockTruncated": "抓到的正文已被截断，Mock 只保留了开头部分",
+  "noticeMockRevealFailed": "无法打开 Mock 文件：{error}"
 }

@@ -173,6 +173,22 @@ type HistoryEntry struct {
 	BodyDropped bool `json:"bodyDropped,omitempty"`
 }
 
+// MockRule answers a matching request from a file instead of the network.
+// Path is the URL's path only, so a mock keeps working while the query
+// changes. Status and ContentType are the captured response's.
+type MockRule struct {
+	ID          string    `json:"id"`
+	Enabled     bool      `json:"enabled"`
+	Name        string    `json:"name"`
+	Method      string    `json:"method"`
+	Host        string    `json:"host"`
+	Path        string    `json:"path"`
+	Status      int       `json:"status"`
+	ContentType string    `json:"contentType,omitempty"`
+	File        string    `json:"file"`
+	CreatedAt   time.Time `json:"createdAt"`
+}
+
 // Prefs are the settings the window stores. A field added later reads as
 // its zero value from an older file, so each is named for that zero to be
 // the default: StopAtRedirects rather than FollowRedirects.
@@ -237,6 +253,7 @@ type Data struct {
 	Requests     []Request      `json:"requests"`
 	History      []HistoryEntry `json:"history"`
 	Environments []Environment  `json:"environments"`
+	Mocks        []MockRule     `json:"mocks,omitempty"`
 }
 
 var idSeq atomic.Uint64

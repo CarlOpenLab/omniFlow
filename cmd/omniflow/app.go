@@ -1,10 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"slices"
@@ -56,13 +56,17 @@ const (
 // app is the window's state. It lives on the UI thread; the proxy publishes
 // to it through Window.Update, as everything off the main thread must.
 type app struct {
-	win   *mygo.Window
-	store *store.Store
+	win *mygo.Window
+	// frameStub stands in for the window when the view is drawn without one,
+	// as the headless tester does.
+	frameStub windowFrame
+	store     *store.Store
 
 	prefs    model.Prefs
 	requests []model.Request
 	history  []model.HistoryEntry
 	envs     []model.Environment
+	mocks    []model.MockRule
 
 	client *httpx.Client
 	ca     *proxy.CA
@@ -117,19 +121,25 @@ type app struct {
 	capturedBytes int64
 	flowSelID     uint64
 	flowFilter    string
+	searchBodies  bool
 	domainFilter  string
 	statusFilter  string
 	follow        bool
-	detailTab     int
-	detailSub     int
-	inspectSplit  float32
-	flowList      ui.ListState
-	searchFocus   ui.Handle
-	proxyPort     string
-	proxyErr      string
-	proxyProblem  proxyProblem
-	mitm          bool
-	lastFlowAt    time.Time
+	// flowRev changes whenever the capture does, so the filter's result can be
+	// reused within a frame and between frames that changed nothing.
+	flowRev      uint64
+	flowCache    string
+	flowCached   []int
+	detailTab    int
+	detailSub    int
+	inspectSplit float32
+	flowList     ui.ListState
+	searchFocus  ui.Handle
+	proxyPort    string
+	proxyErr     string
+	proxyProblem proxyProblem
+	mitm         bool
+	lastFlowAt   time.Time
 
 	// dialogs
 	settingsOpen bool
@@ -168,6 +178,7 @@ func newApp() *app {
 	a.requests = data.Requests
 	a.history = data.History
 	a.envs = data.Environments
+	a.mocks = data.Mocks
 	a.proxyPort = a.prefs.ProxyPort
 	a.mitm = a.prefs.DecryptHTTPS
 	a.follow = a.prefs.FollowFlows
@@ -192,6 +203,7 @@ func newApp() *app {
 	} else {
 		a.ca = ca
 		a.prx = proxy.New(ca)
+		a.applyMocks()
 		a.prx.SetOnFlow(func(f proxy.Flow) {
 			if a.win == nil {
 				return
@@ -811,8 +823,30 @@ func (a *app) curlOf(r model.Request) (string, error) {
 // sendFlowToComposer turns a captured exchange into a draft, so the thing
 // on screen can be replayed, edited and sent from the composer.
 func (a *app) sendFlowToComposer(f proxy.Flow) {
+	a.open(requestFromFlow(f), "")
+	a.mode = modeComposer
+	a.setNotice(locales.NoticeCapturedOpened())
+}
+
+// saveFlowAsRequest puts a captured exchange into the collection, already
+// saved, and opens it so it can be changed and sent again.
+func (a *app) saveFlowAsRequest(f proxy.Flow) {
+	r := requestFromFlow(f)
+	r.ID = model.NewID("req")
+	r.Name = flowRequestName(f)
+	r.Saved, r.UpdatedAt = true, time.Now()
+	a.requests = limitRequests(append([]model.Request{r.Clone()}, a.requests...))
+	a.persistRequests()
+	a.open(r.Clone(), r.ID)
+	a.mode = modeComposer
+	a.setNotice(locales.NoticeFlowSaved(r.Name))
+}
+
+// requestFromFlow turns a captured exchange into a request: its method, URL,
+// replayable headers, body and the body kind its content type describes.
+func requestFromFlow(f proxy.Flow) model.Request {
 	r := model.NewRequest()
-	r.Name = f.Method + " " + f.Host
+	r.Name = flowRequestName(f)
 	r.Method = f.Method
 	r.URL = f.URL
 	r.Headers = nil
@@ -840,9 +874,21 @@ func (a *app) sendFlowToComposer(f proxy.Flow) {
 			r.BodyKind = model.BodyText
 		}
 	}
-	a.open(r, "")
-	a.mode = modeComposer
-	a.setNotice(locales.NoticeCapturedOpened())
+	return r
+}
+
+// flowRequestName is the name a captured exchange takes in the collection:
+// its method, host and path, without the query or an overlong tail.
+func flowRequestName(f proxy.Flow) string {
+	path := f.Path
+	if i := strings.IndexByte(path, '?'); i >= 0 {
+		path = path[:i]
+	}
+	name := f.Method + " " + f.Host + path
+	if runes := []rune(name); len(runes) > 64 {
+		name = string(runes[:63]) + "…"
+	}
+	return name
 }
 
 // replayable reports whether a captured header belongs in a request sent
@@ -1011,6 +1057,7 @@ func flowBytes(f proxy.Flow) int64 { return int64(len(f.ReqBody) + len(f.RespBod
 
 func (a *app) addFlow(f proxy.Flow) {
 	a.flows = append(a.flows, f)
+	a.flowRev++
 	a.capturedBytes += flowBytes(f)
 	a.trimFlows()
 	a.lastFlowAt = time.Now()
@@ -1036,6 +1083,7 @@ func (a *app) trimFlows() {
 func (a *app) clearFlows() {
 	cleared, sel := a.flows, a.flowSelID
 	a.flows, a.capturedBytes = nil, 0
+	a.flowRev++
 	a.flowSelID = 0
 	a.domainFilter, a.flowFilter, a.statusFilter = "", "", ""
 	if len(cleared) == 0 {
@@ -1043,6 +1091,7 @@ func (a *app) clearFlows() {
 	}
 	a.setUndo(locales.NoticeSessionCleared(), func() {
 		a.flows = append(cleared, a.flows...)
+		a.flowRev++
 		a.capturedBytes = 0
 		for _, f := range a.flows {
 			a.capturedBytes += flowBytes(f)
@@ -1129,18 +1178,41 @@ func (a *app) matchesFilter(f proxy.Flow) bool {
 		return true
 	}
 	hay := strings.ToLower(f.Method + " " + f.Host + " " + f.Path + " " + f.ContentType)
-	return strings.Contains(hay, q)
+	if strings.Contains(hay, q) {
+		return true
+	}
+	return a.searchBodies && len(q) >= 2 && (bodyContains(f.ReqBody, q) || bodyContains(f.RespBody, q))
+}
+
+// bodyContains reports whether a body holds query, which is already lower
+// case. Only the beginning of a very large body is read, so filtering stays
+// responsive.
+func bodyContains(body []byte, query string) bool {
+	const maxSearchBody = 512 << 10
+	if len(body) == 0 || query == "" {
+		return false
+	}
+	if len(body) > maxSearchBody {
+		body = body[:maxSearchBody]
+	}
+	return bytes.Contains(bytes.ToLower(body), []byte(query))
 }
 
 // visibleFlows are the indices of the flows the filters let through,
 // oldest first, as the list shows them.
 func (a *app) visibleFlows() []int {
+	key := fmt.Sprintf("%d|%d|%t|%s|%s|%s",
+		a.flowRev, len(a.flows), a.searchBodies, a.domainFilter, a.statusFilter, a.flowFilter)
+	if key == a.flowCache {
+		return a.flowCached
+	}
 	out := make([]int, 0, len(a.flows))
 	for i := range a.flows {
 		if a.matchesFilter(a.flows[i]) {
 			out = append(out, i)
 		}
 	}
+	a.flowCache, a.flowCached = key, out
 	return out
 }
 
@@ -1262,7 +1334,7 @@ func (a *app) revealCA() {
 	if a.ca == nil {
 		return
 	}
-	if err := exec.Command("open", "-R", a.ca.CertPath()).Run(); err != nil {
+	if err := revealPath(a.ca.CertPath()); err != nil {
 		a.setNotice(locales.NoticeCARevealFailed(err.Error()))
 	}
 }
@@ -1279,7 +1351,7 @@ func (a *app) revealData() {
 	if a.store == nil {
 		return
 	}
-	if err := exec.Command("open", "-R", a.store.Path()).Run(); err != nil {
+	if err := revealPath(a.store.Path()); err != nil {
 		a.setNotice(locales.NoticeDataRevealFailed(err.Error()))
 	}
 }
@@ -1402,18 +1474,17 @@ func (a *app) installMenu() {
 // window is transparent so the system's material is the background, and the
 // ground is drawn as a veil over it.
 func (a *app) windowOptions(content mygo.Content) mygo.WindowOptions {
-	return mygo.WindowOptions{
+	return framedWindow(mygo.WindowOptions{
 		Title:           "OmniFlow",
 		Width:           1280,
 		Height:          820,
 		MinWidth:        1020,
 		MinHeight:       620,
-		TitleBarStyle:   mygo.TitleBarHiddenInset,
 		TitleBarHeight:  52,
 		Vibrancy:        a.blurInUse().vibrancy(),
 		Transparent:     true,
 		BackgroundColor: "light-dark(#e6ecf5, #141418)",
 		StateKey:        "main",
 		Content:         content,
-	}
+	})
 }

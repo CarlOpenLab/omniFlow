@@ -45,6 +45,12 @@ var (
 	iconPlay    = svg(`<path d="M5 3.2 12.5 8 5 12.8z"/>`)
 	iconStop    = svg(`<rect x="4" y="4" width="8" height="8" rx="1.2"/>`)
 	iconWarning = svg(`<path d="M8 2 14.5 13.5h-13z"/><path d="M8 6v3.5M8 11.7h.01"/>`)
+
+	// The window's controls on Windows and Linux.
+	iconMinimize = svg24(`<path d="M5 12h14"/>`)
+	iconMaximize = svg24(`<rect width="14" height="14" x="5" y="5" rx="2"/>`)
+	iconRestore  = svg24(`<rect width="10" height="10" x="9" y="9" rx="1.5"/>` +
+		`<path d="M6 15H5.5A1.5 1.5 0 0 1 4 13.5v-8A1.5 1.5 0 0 1 5.5 4h8A1.5 1.5 0 0 1 15 5.5V6"/>`)
 )
 
 func svg(body string) *ui.SVG {

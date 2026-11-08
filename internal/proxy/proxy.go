@@ -14,7 +14,9 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -24,6 +26,17 @@ import (
 // MaxBody is how much of a body is kept for the inspector. The full body
 // still reaches the client; only the copy on screen is cut.
 const MaxBody = 4 << 20
+
+// Mock replaces a matching request's response with a file from disk. Path is
+// the URL's path only, so a mock keeps working while the query changes.
+type Mock struct {
+	Method      string
+	Host        string
+	Path        string
+	Status      int
+	ContentType string
+	File        string
+}
 
 // Proxy is a capturing HTTP proxy listening on loopback.
 type Proxy struct {
@@ -38,6 +51,7 @@ type Proxy struct {
 	conns     map[net.Conn]struct{}
 	transport *http.Transport
 	nextID    atomic.Uint64
+	mocks     []Mock
 }
 
 // New returns a proxy that signs with ca. Call Start before using it, and
@@ -80,6 +94,14 @@ func (p *Proxy) MITM() bool {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	return p.mitm
+}
+
+// SetMocks replaces the rules that answer requests with a local file. A rule
+// whose file cannot be read falls through to the network.
+func (p *Proxy) SetMocks(mocks []Mock) {
+	p.mu.Lock()
+	p.mocks = append([]Mock(nil), mocks...)
+	p.mu.Unlock()
 }
 
 // Start listens on 127.0.0.1:port. It is safe to call when running.
@@ -378,6 +400,20 @@ func (p *Proxy) forward(in *http.Request, scheme, authority string, isTLS bool) 
 		flow.ReqSize = int64(len(reqBody))
 	}
 
+	if mock, ok := p.mockFor(in.Method, host, flow.Path); ok {
+		if resp, err := mock.response(out); err == nil {
+			flow.Mocked = true
+			flow.Status = resp.StatusCode
+			flow.StatusText = http.StatusText(resp.StatusCode)
+			flow.RespHeaders = headerPairs(resp.Header)
+			flow.ContentType = resp.Header.Get("Content-Type")
+			flow.RespSize = resp.ContentLength
+			flow.Duration = time.Since(start)
+			body := &captureReader{r: resp.Body, limit: MaxBody}
+			return resp, flow, body, nil
+		}
+	}
+
 	resp, err := p.transport.RoundTrip(out)
 	if err != nil {
 		return nil, flow, nil, err
@@ -391,6 +427,56 @@ func (p *Proxy) forward(in *http.Request, scheme, authority string, isTLS bool) 
 
 	body := &captureReader{r: resp.Body, limit: MaxBody}
 	return resp, flow, body, nil
+}
+
+// mockFor returns the first mock that matches the request's method, host and
+// path. The query is not part of the match.
+func (p *Proxy) mockFor(method, host, path string) (Mock, bool) {
+	pathname, _, _ := strings.Cut(path, "?")
+	p.mu.Lock()
+	mocks := append([]Mock(nil), p.mocks...)
+	p.mu.Unlock()
+	for _, m := range mocks {
+		if m.Method != "" && !strings.EqualFold(m.Method, method) {
+			continue
+		}
+		if !strings.EqualFold(m.Host, host) {
+			continue
+		}
+		if m.Path != "" && m.Path != pathname {
+			continue
+		}
+		return m, true
+	}
+	return Mock{}, false
+}
+
+// response builds the response a mock answers with: its file's bytes, the
+// captured status and content type.
+func (m Mock) response(req *http.Request) (*http.Response, error) {
+	body, err := os.ReadFile(m.File)
+	if err != nil {
+		return nil, err
+	}
+	status := m.Status
+	if status == 0 {
+		status = http.StatusOK
+	}
+	contentType := m.ContentType
+	if contentType == "" {
+		contentType = http.DetectContentType(body)
+	}
+	header := make(http.Header)
+	header.Set("Content-Type", contentType)
+	header.Set("Content-Length", strconv.Itoa(len(body)))
+	return &http.Response{
+		StatusCode:    status,
+		Status:        fmt.Sprintf("%d %s", status, http.StatusText(status)),
+		Header:        header,
+		Body:          io.NopCloser(bytes.NewReader(body)),
+		ContentLength: int64(len(body)),
+		Request:       req,
+	}, nil
 }
 
 // finishFlow completes a flow's body sizes and hands it to the window. It
