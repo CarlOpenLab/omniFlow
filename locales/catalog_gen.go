@@ -2545,6 +2545,26 @@ func (msgs Messages) SettingsDecrypt() string {
 	return Catalog.Format(msgs.locale, "settingsDecrypt", nil)
 }
 
+// SettingsSystemProxy says "Set the system proxy automatically"
+// in the language the app shows.
+func SettingsSystemProxy() string { return In(i18n.Locale()).SettingsSystemProxy() }
+
+// SettingsSystemProxy says "Set the system proxy automatically"
+// in the language of msgs.
+func (msgs Messages) SettingsSystemProxy() string {
+	return Catalog.Format(msgs.locale, "settingsSystemProxy", nil)
+}
+
+// SettingsSystemProxyHint says "Browsers and apps that follow the system proxy are captured. Firefox uses its own proxy settings."
+// in the language the app shows.
+func SettingsSystemProxyHint() string { return In(i18n.Locale()).SettingsSystemProxyHint() }
+
+// SettingsSystemProxyHint says "Browsers and apps that follow the system proxy are captured. Firefox uses its own proxy settings."
+// in the language of msgs.
+func (msgs Messages) SettingsSystemProxyHint() string {
+	return Catalog.Format(msgs.locale, "settingsSystemProxyHint", nil)
+}
+
 // SettingsManage says "Manage…"
 // in the language the app shows.
 func SettingsManage() string { return In(i18n.Locale()).SettingsManage() }

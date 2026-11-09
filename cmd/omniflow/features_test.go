@@ -8,6 +8,7 @@ import (
 	"github.com/egoist/mygo/ui"
 
 	"github.com/CarlOpenLab/omniflow/internal/model"
+	"github.com/CarlOpenLab/omniflow/locales"
 )
 
 // A curl command pasted into the URL field opens as the request it
@@ -170,6 +171,50 @@ func TestAppearanceSettings(t *testing.T) {
 	a.prefs.CardOpacity = 0.55
 	if got := a.cardOpacity(); got != 0.55 {
 		t.Errorf("the card opacity is %v, want 0.55", got)
+	}
+}
+
+// The capture page's system-proxy switch takes the machine's proxy while
+// capture runs, and gives it back when it is turned off.
+func TestSystemProxySwitch(t *testing.T) {
+	a := newTestApp(t)
+	a.proxyPort = freePort(t)
+	a.autoProxy = true
+	fake := &fakeSystemProxy{}
+	a.sysproxy = fake
+	withTrust(t, true, true)
+	t.Cleanup(func() { a.prx.Stop() })
+
+	a.startProxy()
+	if !a.proxyRunning() {
+		t.Fatal("the proxy did not start")
+	}
+	if len(fake.enables) != 1 {
+		t.Fatalf("enables after start = %d, want 1", len(fake.enables))
+	}
+
+	tt := openSettingsPage(t, a, settingsPaneCapture)
+	if !tt.HasText(locales.SettingsSystemProxy()) {
+		t.Fatal("the capture page is missing the system proxy switch")
+	}
+	if !tt.HasText(locales.SettingsSystemProxyHint()) {
+		t.Fatal("the capture page is missing the system proxy hint")
+	}
+
+	clickAndSettle(t, tt, locales.SettingsSystemProxy())
+	if !a.prefs.DisableAutoProxy || a.autoProxy {
+		t.Fatal("the switch did not turn automatic proxying off")
+	}
+	if fake.restoreCalls != 1 {
+		t.Fatalf("restore calls after turning it off = %d, want 1", fake.restoreCalls)
+	}
+
+	clickAndSettle(t, tt, locales.SettingsSystemProxy())
+	if a.prefs.DisableAutoProxy || !a.autoProxy {
+		t.Fatal("the switch did not turn automatic proxying back on")
+	}
+	if len(fake.enables) != 2 {
+		t.Fatalf("enables after turning it back on = %d, want 2", len(fake.enables))
 	}
 }
 

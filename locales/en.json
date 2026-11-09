@@ -407,6 +407,10 @@
 
   "settingsDecrypt": "Decrypt HTTPS with the Root CA",
 
+  "settingsSystemProxy": "Set the system proxy automatically",
+
+  "settingsSystemProxyHint": "Browsers and apps that follow the system proxy are captured. Firefox uses its own proxy settings.",
+
   "settingsManage": "Manage…",
 
   "settingsData": "Data",

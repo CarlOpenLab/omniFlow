@@ -280,6 +280,10 @@
 
   "settingsDecrypt": "使用根证书解密 HTTPS",
 
+  "settingsSystemProxy": "自动配置系统代理",
+
+  "settingsSystemProxyHint": "跟随系统代理的浏览器和应用会自动被抓取；Firefox 使用自己的代理设置。",
+
   "settingsManage": "管理…",
 
   "settingsData": "数据",

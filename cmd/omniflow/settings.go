@@ -262,6 +262,7 @@ func (a *app) settingsAppearancePage(c *ui.Context, pal *uitokens.Palette) {
 
 func (a *app) settingsCapturePage(c *ui.Context, pal *uitokens.Palette) {
 	before := a.prefs
+	autoProxyBefore := a.autoProxy
 	settingsGroup(c, pal, func() {
 		ui.Form(c, func() {
 			ui.Field(c, locales.SettingsProxyPort(), func() {
@@ -316,8 +317,19 @@ func (a *app) settingsCapturePage(c *ui.Context, pal *uitokens.Palette) {
 			a.settingsSwitchField(c, pal, locales.SettingsAutostart(),
 				&a.prefs.ProxyAutostart, "switch:autostart")
 			a.settingsSwitchField(c, pal, locales.SettingsDecrypt(), &a.mitm, "switch:decrypt")
+			ui.Field(c, locales.SettingsSystemProxy(), func() {
+				ui.Row(c).Gap(8).Children(func() {
+					ui.Spacer(c)
+					ui.Switch(c.Key("switch:system-proxy"), &a.autoProxy)
+				})
+				ui.Text(c, locales.SettingsSystemProxyHint()).FontSize(10).
+					TextColor(pal.TextFaint)
+			})
 		})
 	})
+	if a.autoProxy != autoProxyBefore {
+		a.setAutoProxy(a.autoProxy)
+	}
 	if a.mitm != a.prefs.DecryptHTTPS {
 		a.prefs.DecryptHTTPS = a.mitm
 		if a.prx != nil {
