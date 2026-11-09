@@ -4398,3 +4398,341 @@ func Throttle4G() string { return In(i18n.Locale()).Throttle4G() }
 func (msgs Messages) Throttle4G() string {
 	return Catalog.Format(msgs.locale, "throttle4G", nil)
 }
+
+// SidebarDeviceSetup says "Device Setup…"
+// in the language the app shows.
+func SidebarDeviceSetup() string { return In(i18n.Locale()).SidebarDeviceSetup() }
+
+// SidebarDeviceSetup says "Device Setup…"
+// in the language of msgs.
+func (msgs Messages) SidebarDeviceSetup() string {
+	return Catalog.Format(msgs.locale, "sidebarDeviceSetup", nil)
+}
+
+// SettingsLANAccess says "Let devices on this network use the proxy"
+// in the language the app shows.
+func SettingsLANAccess() string { return In(i18n.Locale()).SettingsLANAccess() }
+
+// SettingsLANAccess says "Let devices on this network use the proxy"
+// in the language of msgs.
+func (msgs Messages) SettingsLANAccess() string {
+	return Catalog.Format(msgs.locale, "settingsLANAccess", nil)
+}
+
+// SettingsLANAccessNote says "Only on a network you trust: while this is on, other devices on the network can reach the proxy. Open Device Setup in…"
+// in the language the app shows.
+func SettingsLANAccessNote() string { return In(i18n.Locale()).SettingsLANAccessNote() }
+
+// SettingsLANAccessNote says "Only on a network you trust: while this is on, other devices on the network can reach the proxy. Open Device Setup in…"
+// in the language of msgs.
+func (msgs Messages) SettingsLANAccessNote() string {
+	return Catalog.Format(msgs.locale, "settingsLANAccessNote", nil)
+}
+
+// NoticeLANEnabled says "LAN access on · {addr}"
+// in the language the app shows.
+func NoticeLANEnabled(addr string) string { return In(i18n.Locale()).NoticeLANEnabled(addr) }
+
+// NoticeLANEnabled says "LAN access on · {addr}"
+// in the language of msgs.
+func (msgs Messages) NoticeLANEnabled(addr string) string {
+	return Catalog.Format(msgs.locale, "noticeLANEnabled", map[string]any{"addr": addr})
+}
+
+// NoticeLANDisabled says "LAN access off"
+// in the language the app shows.
+func NoticeLANDisabled() string { return In(i18n.Locale()).NoticeLANDisabled() }
+
+// NoticeLANDisabled says "LAN access off"
+// in the language of msgs.
+func (msgs Messages) NoticeLANDisabled() string {
+	return Catalog.Format(msgs.locale, "noticeLANDisabled", nil)
+}
+
+// NoticeLANNoAddress says "No local network address found"
+// in the language the app shows.
+func NoticeLANNoAddress() string { return In(i18n.Locale()).NoticeLANNoAddress() }
+
+// NoticeLANNoAddress says "No local network address found"
+// in the language of msgs.
+func (msgs Messages) NoticeLANNoAddress() string {
+	return Catalog.Format(msgs.locale, "noticeLANNoAddress", nil)
+}
+
+// NoticeLANSetupFailed says "The device setup page could not start: {error}"
+// in the language the app shows.
+func NoticeLANSetupFailed(error string) string { return In(i18n.Locale()).NoticeLANSetupFailed(error) }
+
+// NoticeLANSetupFailed says "The device setup page could not start: {error}"
+// in the language of msgs.
+func (msgs Messages) NoticeLANSetupFailed(error string) string {
+	return Catalog.Format(msgs.locale, "noticeLANSetupFailed", map[string]any{"error": error})
+}
+
+// DeviceSetupTitle says "Device Setup"
+// in the language the app shows.
+func DeviceSetupTitle() string { return In(i18n.Locale()).DeviceSetupTitle() }
+
+// DeviceSetupTitle says "Device Setup"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupTitle() string {
+	return Catalog.Format(msgs.locale, "deviceSetupTitle", nil)
+}
+
+// DeviceSetupSubtitle says "Connect a phone or another computer on this network"
+// in the language the app shows.
+func DeviceSetupSubtitle() string { return In(i18n.Locale()).DeviceSetupSubtitle() }
+
+// DeviceSetupSubtitle says "Connect a phone or another computer on this network"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupSubtitle() string {
+	return Catalog.Format(msgs.locale, "deviceSetupSubtitle", nil)
+}
+
+// DeviceSetupLANHint says "Turn on LAN access above to see the proxy address and the steps for this device."
+// in the language the app shows.
+func DeviceSetupLANHint() string { return In(i18n.Locale()).DeviceSetupLANHint() }
+
+// DeviceSetupLANHint says "Turn on LAN access above to see the proxy address and the steps for this device."
+// in the language of msgs.
+func (msgs Messages) DeviceSetupLANHint() string {
+	return Catalog.Format(msgs.locale, "deviceSetupLANHint", nil)
+}
+
+// DeviceSetupProxy says "Proxy"
+// in the language the app shows.
+func DeviceSetupProxy() string { return In(i18n.Locale()).DeviceSetupProxy() }
+
+// DeviceSetupProxy says "Proxy"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupProxy() string {
+	return Catalog.Format(msgs.locale, "deviceSetupProxy", nil)
+}
+
+// DeviceSetupCopyAddr says "Copy proxy address"
+// in the language the app shows.
+func DeviceSetupCopyAddr() string { return In(i18n.Locale()).DeviceSetupCopyAddr() }
+
+// DeviceSetupCopyAddr says "Copy proxy address"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupCopyAddr() string {
+	return Catalog.Format(msgs.locale, "deviceSetupCopyAddr", nil)
+}
+
+// DeviceSetupAddrCopied says "Proxy address copied"
+// in the language the app shows.
+func DeviceSetupAddrCopied() string { return In(i18n.Locale()).DeviceSetupAddrCopied() }
+
+// DeviceSetupAddrCopied says "Proxy address copied"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupAddrCopied() string {
+	return Catalog.Format(msgs.locale, "deviceSetupAddrCopied", nil)
+}
+
+// DeviceSetupPage says "Setup page"
+// in the language the app shows.
+func DeviceSetupPage() string { return In(i18n.Locale()).DeviceSetupPage() }
+
+// DeviceSetupPage says "Setup page"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupPage() string {
+	return Catalog.Format(msgs.locale, "deviceSetupPage", nil)
+}
+
+// DeviceSetupCopyPage says "Copy setup page link"
+// in the language the app shows.
+func DeviceSetupCopyPage() string { return In(i18n.Locale()).DeviceSetupCopyPage() }
+
+// DeviceSetupCopyPage says "Copy setup page link"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupCopyPage() string {
+	return Catalog.Format(msgs.locale, "deviceSetupCopyPage", nil)
+}
+
+// DeviceSetupPageCopied says "Setup page link copied"
+// in the language the app shows.
+func DeviceSetupPageCopied() string { return In(i18n.Locale()).DeviceSetupPageCopied() }
+
+// DeviceSetupPageCopied says "Setup page link copied"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupPageCopied() string {
+	return Catalog.Format(msgs.locale, "deviceSetupPageCopied", nil)
+}
+
+// DeviceSetupStep1 says "Open {url} on the device and install the OmniFlow Root CA."
+// in the language the app shows.
+func DeviceSetupStep1(url string) string { return In(i18n.Locale()).DeviceSetupStep1(url) }
+
+// DeviceSetupStep1 says "Open {url} on the device and install the OmniFlow Root CA."
+// in the language of msgs.
+func (msgs Messages) DeviceSetupStep1(url string) string {
+	return Catalog.Format(msgs.locale, "deviceSetupStep1", map[string]any{"url": url})
+}
+
+// DeviceSetupStep2 says "iPhone: trust it in Settings → General → About → Certificate Trust Settings. Android: install it as a CA certif…"
+// in the language the app shows.
+func DeviceSetupStep2() string { return In(i18n.Locale()).DeviceSetupStep2() }
+
+// DeviceSetupStep2 says "iPhone: trust it in Settings → General → About → Certificate Trust Settings. Android: install it as a CA certif…"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupStep2() string {
+	return Catalog.Format(msgs.locale, "deviceSetupStep2", nil)
+}
+
+// DeviceSetupStep3 says "Set the Wi-Fi HTTP proxy to {addr}."
+// in the language the app shows.
+func DeviceSetupStep3(addr string) string { return In(i18n.Locale()).DeviceSetupStep3(addr) }
+
+// DeviceSetupStep3 says "Set the Wi-Fi HTTP proxy to {addr}."
+// in the language of msgs.
+func (msgs Messages) DeviceSetupStep3(addr string) string {
+	return Catalog.Format(msgs.locale, "deviceSetupStep3", map[string]any{"addr": addr})
+}
+
+// DeviceSetupWarning says "Only use this on a network you trust. While LAN access is on, other devices on this network can reach the proxy."
+// in the language the app shows.
+func DeviceSetupWarning() string { return In(i18n.Locale()).DeviceSetupWarning() }
+
+// DeviceSetupWarning says "Only use this on a network you trust. While LAN access is on, other devices on this network can reach the proxy."
+// in the language of msgs.
+func (msgs Messages) DeviceSetupWarning() string {
+	return Catalog.Format(msgs.locale, "deviceSetupWarning", nil)
+}
+
+// CaTrust says "Trust Certificate"
+// in the language the app shows.
+func CaTrust() string { return In(i18n.Locale()).CaTrust() }
+
+// CaTrust says "Trust Certificate"
+// in the language of msgs.
+func (msgs Messages) CaTrust() string {
+	return Catalog.Format(msgs.locale, "caTrust", nil)
+}
+
+// CaUntrust says "Remove Trust"
+// in the language the app shows.
+func CaUntrust() string { return In(i18n.Locale()).CaUntrust() }
+
+// CaUntrust says "Remove Trust"
+// in the language of msgs.
+func (msgs Messages) CaUntrust() string {
+	return Catalog.Format(msgs.locale, "caUntrust", nil)
+}
+
+// CaTrustUnavailable says "Install the certificate in the system's trust store manually"
+// in the language the app shows.
+func CaTrustUnavailable() string { return In(i18n.Locale()).CaTrustUnavailable() }
+
+// CaTrustUnavailable says "Install the certificate in the system's trust store manually"
+// in the language of msgs.
+func (msgs Messages) CaTrustUnavailable() string {
+	return Catalog.Format(msgs.locale, "caTrustUnavailable", nil)
+}
+
+// NoticeCATrusted says "The Root CA is now trusted"
+// in the language the app shows.
+func NoticeCATrusted() string { return In(i18n.Locale()).NoticeCATrusted() }
+
+// NoticeCATrusted says "The Root CA is now trusted"
+// in the language of msgs.
+func (msgs Messages) NoticeCATrusted() string {
+	return Catalog.Format(msgs.locale, "noticeCATrusted", nil)
+}
+
+// NoticeCAUntrusted says "The Root CA's trust was removed"
+// in the language the app shows.
+func NoticeCAUntrusted() string { return In(i18n.Locale()).NoticeCAUntrusted() }
+
+// NoticeCAUntrusted says "The Root CA's trust was removed"
+// in the language of msgs.
+func (msgs Messages) NoticeCAUntrusted() string {
+	return Catalog.Format(msgs.locale, "noticeCAUntrusted", nil)
+}
+
+// NoticeCATrustFailed says "The certificate could not be trusted: {error}"
+// in the language the app shows.
+func NoticeCATrustFailed(error string) string { return In(i18n.Locale()).NoticeCATrustFailed(error) }
+
+// NoticeCATrustFailed says "The certificate could not be trusted: {error}"
+// in the language of msgs.
+func (msgs Messages) NoticeCATrustFailed(error string) string {
+	return Catalog.Format(msgs.locale, "noticeCATrustFailed", map[string]any{"error": error})
+}
+
+// NoticeCAUntrustFailed says "The certificate's trust could not be removed: {error}"
+// in the language the app shows.
+func NoticeCAUntrustFailed(error string) string {
+	return In(i18n.Locale()).NoticeCAUntrustFailed(error)
+}
+
+// NoticeCAUntrustFailed says "The certificate's trust could not be removed: {error}"
+// in the language of msgs.
+func (msgs Messages) NoticeCAUntrustFailed(error string) string {
+	return Catalog.Format(msgs.locale, "noticeCAUntrustFailed", map[string]any{"error": error})
+}
+
+// SettingsSystemProxy says "System proxy"
+// in the language the app shows.
+func SettingsSystemProxy() string { return In(i18n.Locale()).SettingsSystemProxy() }
+
+// SettingsSystemProxy says "System proxy"
+// in the language of msgs.
+func (msgs Messages) SettingsSystemProxy() string {
+	return Catalog.Format(msgs.locale, "settingsSystemProxy", nil)
+}
+
+// SettingsSystemProxyHint says "Points this system's HTTP proxy at 127.0.0.1:{port}. OmniFlow restores it when the switch is turned off or the app qu…"
+// in the language the app shows.
+func SettingsSystemProxyHint(port string) string {
+	return In(i18n.Locale()).SettingsSystemProxyHint(port)
+}
+
+// SettingsSystemProxyHint says "Points this system's HTTP proxy at 127.0.0.1:{port}. OmniFlow restores it when the switch is turned off or the app qu…"
+// in the language of msgs.
+func (msgs Messages) SettingsSystemProxyHint(port string) string {
+	return Catalog.Format(msgs.locale, "settingsSystemProxyHint", map[string]any{"port": port})
+}
+
+// SettingsSystemProxyUnsupported says "The system proxy switch is available on Windows. Set the proxy in the system's network settings here."
+// in the language the app shows.
+func SettingsSystemProxyUnsupported() string {
+	return In(i18n.Locale()).SettingsSystemProxyUnsupported()
+}
+
+// SettingsSystemProxyUnsupported says "The system proxy switch is available on Windows. Set the proxy in the system's network settings here."
+// in the language of msgs.
+func (msgs Messages) SettingsSystemProxyUnsupported() string {
+	return Catalog.Format(msgs.locale, "settingsSystemProxyUnsupported", nil)
+}
+
+// NoticeSystemProxyOn says "System proxy on · 127.0.0.1:{port}"
+// in the language the app shows.
+func NoticeSystemProxyOn(port string) string { return In(i18n.Locale()).NoticeSystemProxyOn(port) }
+
+// NoticeSystemProxyOn says "System proxy on · 127.0.0.1:{port}"
+// in the language of msgs.
+func (msgs Messages) NoticeSystemProxyOn(port string) string {
+	return Catalog.Format(msgs.locale, "noticeSystemProxyOn", map[string]any{"port": port})
+}
+
+// NoticeSystemProxyOff says "System proxy restored"
+// in the language the app shows.
+func NoticeSystemProxyOff() string { return In(i18n.Locale()).NoticeSystemProxyOff() }
+
+// NoticeSystemProxyOff says "System proxy restored"
+// in the language of msgs.
+func (msgs Messages) NoticeSystemProxyOff() string {
+	return Catalog.Format(msgs.locale, "noticeSystemProxyOff", nil)
+}
+
+// NoticeSystemProxyFailed says "The system proxy could not be changed: {error}"
+// in the language the app shows.
+func NoticeSystemProxyFailed(error string) string {
+	return In(i18n.Locale()).NoticeSystemProxyFailed(error)
+}
+
+// NoticeSystemProxyFailed says "The system proxy could not be changed: {error}"
+// in the language of msgs.
+func (msgs Messages) NoticeSystemProxyFailed(error string) string {
+	return Catalog.Format(msgs.locale, "noticeSystemProxyFailed", map[string]any{"error": error})
+}

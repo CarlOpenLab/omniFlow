@@ -65,6 +65,13 @@ if SmartScreen appears. Each release also carries a `checksums.txt`.
   response header; Settings → Rules lists, edits and switches the rules. The
   Inspector's **Throttle** menu simulates Slow 3G, Fast 3G or 4G, with latency
   and a bandwidth cap.
+- **Device setup and trust** — Settings → Capture can expose the proxy to
+  devices on the local network; **Device Setup** in the Inspector's sidebar
+  then shows the proxy address and a small page that installs the Root CA on
+  an iPhone, iPad or Android device. The certificate dialog can trust or remove
+  the Root CA for the current user on Windows and macOS. On Windows, Settings →
+  Capture can also point the system's HTTP proxy at OmniFlow, and restores it
+  when the switch is turned off or the app quits.
 - **Copy as cURL** — ⇧⌘C copies the composer's request, or the captured
   flow, as a curl command that sends the same request.
 - **Settings** — system/light/dark appearance (also in the sidebar's foot),

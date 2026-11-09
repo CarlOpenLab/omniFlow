@@ -152,6 +152,12 @@ func (p *Proxy) SetThrottle(t Throttle) {
 
 // Start listens on 127.0.0.1:port. It is safe to call when running.
 func (p *Proxy) Start(port string) (string, error) {
+	return p.StartOn("127.0.0.1", port)
+}
+
+// StartOn listens on host:port, so a device on the local network can use the
+// proxy. It is safe to call when running.
+func (p *Proxy) StartOn(host, port string) (string, error) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	if p.srv != nil {
@@ -160,9 +166,12 @@ func (p *Proxy) Start(port string) (string, error) {
 	if strings.TrimSpace(port) == "" {
 		port = "9090"
 	}
-	ln, err := net.Listen("tcp", net.JoinHostPort("127.0.0.1", port))
+	if strings.TrimSpace(host) == "" {
+		host = "127.0.0.1"
+	}
+	ln, err := net.Listen("tcp", net.JoinHostPort(host, port))
 	if err != nil {
-		return "", fmt.Errorf("the proxy could not listen on 127.0.0.1:%s: %w", port, err)
+		return "", fmt.Errorf("the proxy could not listen on %s:%s: %w", host, port, err)
 	}
 	srv := &http.Server{
 		Handler:           p,

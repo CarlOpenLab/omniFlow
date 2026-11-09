@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -21,6 +22,7 @@ import (
 	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/internal/proxy"
 	"github.com/CarlOpenLab/omniflow/internal/store"
+	"github.com/CarlOpenLab/omniflow/internal/systemproxy"
 	"github.com/CarlOpenLab/omniflow/locales"
 )
 
@@ -142,6 +144,17 @@ type app struct {
 	mitm         bool
 	lastFlowAt   time.Time
 	throttle     string
+	lanAccess    bool
+	// system proxy: whether the switch is available, on, and set by us.
+	sysProxySupported bool
+	sysProxyOn        bool
+	sysProxyOurs      bool
+	sysProxyErr       string
+	// device setup: the page a phone opens, and the server behind it.
+	deviceSetupOpen bool
+	setupSrv        *http.Server
+	setupURL        string
+	setupErr        string
 
 	// dialogs
 	settingsOpen bool
@@ -200,6 +213,8 @@ func newApp() *app {
 	a.proxyPort = a.prefs.ProxyPort
 	a.mitm = a.prefs.DecryptHTTPS
 	a.follow = a.prefs.FollowFlows
+	a.lanAccess = a.prefs.LANAccess
+	a.refreshSystemProxy()
 	a.timeoutText = strconv.Itoa(int(a.prefs.Timeout() / time.Second))
 	if a.prefs.ComposerSplit > 0 {
 		a.composerSplit = a.prefs.ComposerSplit
@@ -992,7 +1007,7 @@ func (a *app) startProxy() {
 		return
 	}
 	a.prx.SetMITM(a.mitm)
-	addr, err := a.prx.Start(strings.TrimSpace(a.proxyPort))
+	addr, err := a.prx.StartOn(a.proxyListenHost(), strings.TrimSpace(a.proxyPort))
 	if err != nil {
 		a.proxyErr = err.Error()
 		a.proxyProblem = proxyOK
@@ -1038,6 +1053,15 @@ func (a *app) proxyRunning() bool {
 	return a.prx != nil && a.prx.Running()
 }
 
+// proxyListenHost is where the proxy listens: loopback alone, or every
+// interface when a device on the local network is being captured.
+func (a *app) proxyListenHost() string {
+	if a.lanAccess {
+		return "0.0.0.0"
+	}
+	return "127.0.0.1"
+}
+
 func validPort(s string) bool {
 	n, err := strconv.Atoi(strings.TrimSpace(s))
 	return err == nil && n >= 1 && n <= 65535
@@ -1053,6 +1077,10 @@ func (a *app) setProxyPort(submitted bool) {
 	a.savePrefs()
 	if submitted && a.proxyRunning() {
 		a.restartProxy()
+	}
+	if a.sysProxyOn {
+		_ = systemproxy.Enable(a.dataDir(), "127.0.0.1:"+a.proxyPort)
+		a.refreshSystemProxy()
 	}
 }
 

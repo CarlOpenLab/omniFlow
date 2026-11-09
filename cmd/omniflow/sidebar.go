@@ -392,8 +392,21 @@ func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 	note.Children(func() {
 		ui.Text(c, locales.SidebarPointDevice()).FontSize(10.5).FontWeight(650).
 			TextColor(pal.Text)
-		ui.Text(c, locales.SidebarProxyHint("127.0.0.1:"+a.proxyPort)).
+		addr := "127.0.0.1:" + a.proxyPort
+		if a.lanAccess {
+			addr = a.lanProxyAddr()
+		}
+		ui.Text(c, locales.SidebarProxyHint(addr)).
 			FontSize(10).TextColor(pal.TextMuted).LineHeight(1.4)
+		ui.Row(c).Height(24).Children(func() {
+			ui.Spacer(c)
+			if ui.Button(c.Key("device-setup"), locales.SidebarDeviceSetup()).Height(24).Clicked() {
+				a.deviceSetupOpen = true
+				if a.lanAccess && a.setupSrv == nil {
+					_ = a.ensureSetupServer()
+				}
+			}
+		})
 	})
 }
 

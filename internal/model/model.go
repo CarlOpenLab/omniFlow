@@ -227,6 +227,9 @@ type Prefs struct {
 	DecryptHTTPS   bool   `json:"decryptHTTPS"`
 	FollowFlows    bool   `json:"followFlows"`
 	KeepHistory    bool   `json:"keepHistory"`
+	// LANAccess lets a device on the local network use the proxy, and starts
+	// the setup page that installs its certificate.
+	LANAccess bool `json:"lanAccess,omitempty"`
 
 	// Environment is the id of the environment the composer resolves
 	// {{variables}} from; "" for none.

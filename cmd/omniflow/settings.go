@@ -324,8 +324,28 @@ func (a *app) settingsCapturePage(c *ui.Context, pal *uitokens.Palette) {
 			a.settingsSwitchField(c, pal, locales.SettingsAutostart(),
 				&a.prefs.ProxyAutostart, "switch:autostart")
 			a.settingsSwitchField(c, pal, locales.SettingsDecrypt(), &a.mitm, "switch:decrypt")
+			lan := a.lanAccess
+			a.settingsSwitchField(c, pal, locales.SettingsLANAccess(), &lan,
+				fmt.Sprintf("switch:lan:%t", a.lanAccess))
+			if lan != a.lanAccess {
+				a.setLANAccess(lan)
+			}
+			if a.sysProxySupported {
+				sp := a.sysProxyOn
+				a.settingsSwitchField(c, pal, locales.SettingsSystemProxy(), &sp,
+					fmt.Sprintf("switch:sysproxy:%t", a.sysProxyOn))
+				if sp != a.sysProxyOn {
+					a.setSystemProxy(sp)
+				}
+			}
 		})
 	})
+	settingsNote(c, pal, locales.SettingsLANAccessNote())
+	if a.sysProxySupported {
+		settingsNote(c, pal, locales.SettingsSystemProxyHint(a.proxyPort))
+	} else {
+		settingsNote(c, pal, locales.SettingsSystemProxyUnsupported())
+	}
 	if a.mitm != a.prefs.DecryptHTTPS {
 		a.prefs.DecryptHTTPS = a.mitm
 		if a.prx != nil {
@@ -599,17 +619,30 @@ func (a *app) caDialog(c *ui.Context, pal *uitokens.Palette) {
 		trustRow := ui.Row(c).Height(24).Gap(8)
 		trustRow.Children(func() {
 			col, text := pal.TextFaint, locales.CaTrustUnknown()
-			switch a.caTrust {
-			case trustChecking:
-				col, text = pal.TextMuted, locales.CaTrustChecking()
-			case trustYes:
-				col, text = pal.Success, locales.CaTrustYes()
-			case trustNo:
-				col, text = pal.Warning, locales.CaTrustNo()
+			if !trustSupported() {
+				col, text = pal.TextFaint, locales.CaTrustUnavailable()
+			} else {
+				switch a.caTrust {
+				case trustChecking:
+					col, text = pal.TextMuted, locales.CaTrustChecking()
+				case trustYes:
+					col, text = pal.Success, locales.CaTrustYes()
+				case trustNo:
+					col, text = pal.Warning, locales.CaTrustNo()
+				}
 			}
 			statusDot(c, col, 6)
 			ui.Text(c, text).FontSize(10.5).TextColor(col).Grow(1).SingleLine().Ellipsis("…")
-			if a.caTrust != trustChecking {
+			if trustSupported() && a.caTrust != trustChecking {
+				if a.caTrust == trustYes {
+					if ui.Button(c.Key("ca-untrust"), locales.CaUntrust()).Clicked() {
+						a.untrustCA()
+					}
+				} else if ui.PrimaryButton(c.Key("ca-trust"), locales.CaTrust()).Clicked() {
+					a.trustCA()
+				}
+			}
+			if trustSupported() && a.caTrust != trustChecking {
 				if ui.Button(c.Key("ca-recheck"), locales.CaCheckAgain()).Clicked() {
 					a.checkTrust()
 				}
@@ -623,7 +656,7 @@ func (a *app) caDialog(c *ui.Context, pal *uitokens.Palette) {
 			if ui.Button(c.Key("ca-cancel"), locales.CommonDone()).Clicked() {
 				a.caOpen = false
 			}
-			if ui.PrimaryButton(c.Key("ca-save"), locales.CaSave()).Clicked() {
+			if ui.Button(c.Key("ca-save"), locales.CaSave()).Clicked() {
 				a.exportCA()
 			}
 		})

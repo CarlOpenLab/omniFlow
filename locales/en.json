@@ -1020,5 +1020,86 @@
   "throttleOff": "Off",
   "throttleSlow3G": "Slow 3G",
   "throttleFast3G": "Fast 3G",
-  "throttle4G": "4G"
+  "throttle4G": "4G",
+
+  "sidebarDeviceSetup": "Device Setup…",
+  "settingsLANAccess": "Let devices on this network use the proxy",
+  "settingsLANAccessNote": "Only on a network you trust: while this is on, other devices on the network can reach the proxy. Open Device Setup in the Inspector's sidebar for the address, certificate and steps.",
+  "noticeLANEnabled": "LAN access on · {addr}",
+  "@noticeLANEnabled": {
+    "placeholders": {
+      "addr": { "type": "String" }
+    }
+  },
+  "noticeLANDisabled": "LAN access off",
+  "noticeLANNoAddress": "No local network address found",
+  "noticeLANSetupFailed": "The device setup page could not start: {error}",
+  "@noticeLANSetupFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "deviceSetupTitle": "Device Setup",
+  "deviceSetupSubtitle": "Connect a phone or another computer on this network",
+  "deviceSetupLANHint": "Turn on LAN access above to see the proxy address and the steps for this device.",
+  "deviceSetupProxy": "Proxy",
+  "deviceSetupCopyAddr": "Copy proxy address",
+  "deviceSetupAddrCopied": "Proxy address copied",
+  "deviceSetupPage": "Setup page",
+  "deviceSetupCopyPage": "Copy setup page link",
+  "deviceSetupPageCopied": "Setup page link copied",
+  "deviceSetupStep1": "Open {url} on the device and install the OmniFlow Root CA.",
+  "@deviceSetupStep1": {
+    "placeholders": {
+      "url": { "type": "String" }
+    }
+  },
+  "deviceSetupStep2": "iPhone: trust it in Settings → General → About → Certificate Trust Settings. Android: install it as a CA certificate in the Security settings.",
+  "deviceSetupStep3": "Set the Wi-Fi HTTP proxy to {addr}.",
+  "@deviceSetupStep3": {
+    "placeholders": {
+      "addr": { "type": "String" }
+    }
+  },
+  "deviceSetupWarning": "Only use this on a network you trust. While LAN access is on, other devices on this network can reach the proxy.",
+
+  "caTrust": "Trust Certificate",
+  "caUntrust": "Remove Trust",
+  "caTrustUnavailable": "Install the certificate in the system's trust store manually",
+  "noticeCATrusted": "The Root CA is now trusted",
+  "noticeCAUntrusted": "The Root CA's trust was removed",
+  "noticeCATrustFailed": "The certificate could not be trusted: {error}",
+  "@noticeCATrustFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "noticeCAUntrustFailed": "The certificate's trust could not be removed: {error}",
+  "@noticeCAUntrustFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "settingsSystemProxy": "System proxy",
+  "settingsSystemProxyHint": "Points this system's HTTP proxy at 127.0.0.1:{port}. OmniFlow restores it when the switch is turned off or the app quits.",
+  "@settingsSystemProxyHint": {
+    "placeholders": {
+      "port": { "type": "String" }
+    }
+  },
+  "settingsSystemProxyUnsupported": "The system proxy switch is available on Windows. Set the proxy in the system's network settings here.",
+  "noticeSystemProxyOn": "System proxy on · 127.0.0.1:{port}",
+  "@noticeSystemProxyOn": {
+    "placeholders": {
+      "port": { "type": "String" }
+    }
+  },
+  "noticeSystemProxyOff": "System proxy restored",
+  "noticeSystemProxyFailed": "The system proxy could not be changed: {error}",
+  "@noticeSystemProxyFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  }
 }
