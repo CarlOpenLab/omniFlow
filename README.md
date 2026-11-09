@@ -54,15 +54,19 @@ if SmartScreen appears. Each release also carries a `checksums.txt`.
   capture exports as a HAR 1.2 file. It keeps the latest 3,000 flows and up
   to 512 MB of bodies; past either, the oldest go first. HTTPS is decrypted
   through a root authority the app creates on this machine; install it from
-  Settings → Root CA Certificate (only on devices you control).
+  Settings → Root CA Certificate (only on devices you control). While the
+  proxy runs, OmniFlow also takes the machine's system proxy, so browsers and
+  apps that follow it are captured without any setup. Settings → Capture
+  turns that off; Firefox keeps its own proxy settings and is not captured
+  until they are pointed at the proxy.
 - **Copy as cURL** — ⇧⌘C copies the composer's request, or the captured
   flow, as a curl command that sends the same request.
 - **Settings** — system/light/dark appearance (also in the sidebar's foot),
   the interface language (follow the system, English or 简体中文), the card's
   opacity (30–100%) and the material's strength (none, subtle, medium, deep),
   the request timeout, whether redirects are followed and whether TLS
-  certificates are verified, proxy port, autostart, HTTPS decryption, history
-  and the data folder.
+  certificates are verified, proxy port, autostart, automatic system proxy,
+  HTTPS decryption, history and the data folder.
 
 ## Build and run
 
@@ -95,8 +99,13 @@ Windows, and `~/.config/OmniFlow` (or `$XDG_CONFIG_HOME/OmniFlow`) on Linux.
 The capture certificate's private key is written `0600` and never leaves that
 directory unless you export the public certificate.
 
-Point a client at the proxy with, for example (the certificate path shown for
-macOS; use the user-data directory above elsewhere):
+While OmniFlow's proxy is running, the machine's system proxy already points
+at it: open a browser and its traffic appears in the Inspector. The previous
+proxy settings are put back when capture stops or OmniFlow quits, including
+after a crash. If capturing a browser or app running on another device, point
+it at the proxy by hand, for example (the certificate path shown for macOS;
+use the user-data directory above elsewhere). Firefox uses its own proxy
+settings, so browser traffic is not captured until they are set the same way.
 
 ```sh
 curl -x http://127.0.0.1:9090 http://example.com/

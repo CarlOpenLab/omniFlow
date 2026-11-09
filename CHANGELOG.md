@@ -4,6 +4,11 @@ Notable changes per release. The release workflow lifts the section matching the
 pushed tag straight into the GitHub release notes, so keep the headings exactly
 `## <version>`.
 
+## 0.2.0
+
+**Capture takes the machine's system proxy by itself.** Starting the proxy now points the system's HTTP and HTTPS proxies at OmniFlow on macOS, Windows and GNOME, so browsers and apps that follow the system proxy are captured without configuring anything. The settings in force before capture are saved to a backup file and restored when capture stops, when the app quits, and after a crash on the next launch; a second launch hands over to the running instance rather than touching the proxy. HTTPS is only routed through the proxy once the Root CA is known to be trusted — otherwise capture stays on HTTP, and the app checks again when you install it. Settings → Capture has a switch to turn this off, and says that Firefox keeps its own proxy settings.
+— 抓包会自动接管系统代理：启动代理时，macOS、Windows 与 GNOME 的系统 HTTP/HTTPS 代理会指向 OmniFlow，跟随系统代理的浏览器和应用无需任何配置就会被抓取。抓包前的代理设置会存入备份文件，在停止抓包、退出应用以及崩溃后下次启动时还原；再次启动应用会交给已在运行的实例，不会改动代理。只有在确认根证书已被信任后才代理 HTTPS，否则只抓 HTTP；安装证书后应用会重新检查。设置 → 抓包页新增开关可关闭自动接管，并提示 Firefox 使用自己的代理设置。
+
 ## 0.1.2
 
 **Settings is a window of pages, and OmniFlow can update itself.** Settings is now a 760×560 dialog with Appearance, Capture, Data, Updates and About down the left and the chosen page on a card of its own at the right, each page scrolling separately instead of every section stacked in one column. The new Updates page shows the version and the last check, switches automatic checks and automatic downloads, and offers **Check for Updates…**; a development build or a package-managed install says why it cannot update itself. Releases now carry signed update archives, so an installed app can move to this version and later ones in place.
