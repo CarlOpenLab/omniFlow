@@ -34,6 +34,7 @@ func (a *app) view(c *ui.Context) {
 		a.settingsDialog(c, pal)
 		a.caDialog(c, pal)
 		a.envDialog(c, pal)
+		a.ruleDialog(c, pal)
 	})
 	a.windowControls(c)
 }

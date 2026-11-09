@@ -16,6 +16,7 @@ import (
 const (
 	settingsPaneAppearance = iota
 	settingsPaneCapture
+	settingsPaneRules
 	settingsPaneMocks
 	settingsPaneData
 	settingsPaneUpdates
@@ -31,6 +32,7 @@ type settingsPage struct {
 var settingsPages = []settingsPage{
 	{settingsPaneAppearance, locales.SettingsAppearance, iconSun},
 	{settingsPaneCapture, locales.SettingsCapture, iconGlobe},
+	{settingsPaneRules, locales.SettingsRules, iconShield},
 	{settingsPaneMocks, locales.SettingsMocks, iconServer},
 	{settingsPaneData, locales.SettingsData, iconFolder},
 	{settingsPaneUpdates, locales.SettingsUpdates, iconRefresh},
@@ -85,6 +87,8 @@ func (a *app) settingsDialog(c *ui.Context, pal *uitokens.Palette) {
 								switch a.settingsPane {
 								case settingsPaneCapture:
 									a.settingsCapturePage(c, pal)
+								case settingsPaneRules:
+									a.settingsRulesPage(c, pal)
 								case settingsPaneMocks:
 									a.settingsMocksPage(c, pal)
 								case settingsPaneData:

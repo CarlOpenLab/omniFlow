@@ -4008,3 +4008,393 @@ func NoticeMockRevealFailed(error string) string {
 func (msgs Messages) NoticeMockRevealFailed(error string) string {
 	return Catalog.Format(msgs.locale, "noticeMockRevealFailed", map[string]any{"error": error})
 }
+
+// InspectorRules says "Rules"
+// in the language the app shows.
+func InspectorRules() string { return In(i18n.Locale()).InspectorRules() }
+
+// InspectorRules says "Rules"
+// in the language of msgs.
+func (msgs Messages) InspectorRules() string {
+	return Catalog.Format(msgs.locale, "inspectorRules", nil)
+}
+
+// InspectorMapped says "MAPPED"
+// in the language the app shows.
+func InspectorMapped() string { return In(i18n.Locale()).InspectorMapped() }
+
+// InspectorMapped says "MAPPED"
+// in the language of msgs.
+func (msgs Messages) InspectorMapped() string {
+	return Catalog.Format(msgs.locale, "inspectorMapped", nil)
+}
+
+// InspectorMappedHint says "Mapped to {url}"
+// in the language the app shows.
+func InspectorMappedHint(url string) string { return In(i18n.Locale()).InspectorMappedHint(url) }
+
+// InspectorMappedHint says "Mapped to {url}"
+// in the language of msgs.
+func (msgs Messages) InspectorMappedHint(url string) string {
+	return Catalog.Format(msgs.locale, "inspectorMappedHint", map[string]any{"url": url})
+}
+
+// SettingsRules says "Rules"
+// in the language the app shows.
+func SettingsRules() string { return In(i18n.Locale()).SettingsRules() }
+
+// SettingsRules says "Rules"
+// in the language of msgs.
+func (msgs Messages) SettingsRules() string {
+	return Catalog.Format(msgs.locale, "settingsRules", nil)
+}
+
+// SettingsRulesHint says "Map Remote moves matching traffic to another origin; a header rule adds or removes one request or response header."
+// in the language the app shows.
+func SettingsRulesHint() string { return In(i18n.Locale()).SettingsRulesHint() }
+
+// SettingsRulesHint says "Map Remote moves matching traffic to another origin; a header rule adds or removes one request or response header."
+// in the language of msgs.
+func (msgs Messages) SettingsRulesHint() string {
+	return Catalog.Format(msgs.locale, "settingsRulesHint", nil)
+}
+
+// SettingsRulesEmpty says "No rules yet"
+// in the language the app shows.
+func SettingsRulesEmpty() string { return In(i18n.Locale()).SettingsRulesEmpty() }
+
+// SettingsRulesEmpty says "No rules yet"
+// in the language of msgs.
+func (msgs Messages) SettingsRulesEmpty() string {
+	return Catalog.Format(msgs.locale, "settingsRulesEmpty", nil)
+}
+
+// RuleNew says "New Rule"
+// in the language the app shows.
+func RuleNew() string { return In(i18n.Locale()).RuleNew() }
+
+// RuleNew says "New Rule"
+// in the language of msgs.
+func (msgs Messages) RuleNew() string {
+	return Catalog.Format(msgs.locale, "ruleNew", nil)
+}
+
+// RuleMapRemote says "Map Remote"
+// in the language the app shows.
+func RuleMapRemote() string { return In(i18n.Locale()).RuleMapRemote() }
+
+// RuleMapRemote says "Map Remote"
+// in the language of msgs.
+func (msgs Messages) RuleMapRemote() string {
+	return Catalog.Format(msgs.locale, "ruleMapRemote", nil)
+}
+
+// RuleRequestHeader says "Request Header"
+// in the language the app shows.
+func RuleRequestHeader() string { return In(i18n.Locale()).RuleRequestHeader() }
+
+// RuleRequestHeader says "Request Header"
+// in the language of msgs.
+func (msgs Messages) RuleRequestHeader() string {
+	return Catalog.Format(msgs.locale, "ruleRequestHeader", nil)
+}
+
+// RuleResponseHeader says "Response Header"
+// in the language the app shows.
+func RuleResponseHeader() string { return In(i18n.Locale()).RuleResponseHeader() }
+
+// RuleResponseHeader says "Response Header"
+// in the language of msgs.
+func (msgs Messages) RuleResponseHeader() string {
+	return Catalog.Format(msgs.locale, "ruleResponseHeader", nil)
+}
+
+// RuleAnyMethod says "Any method"
+// in the language the app shows.
+func RuleAnyMethod() string { return In(i18n.Locale()).RuleAnyMethod() }
+
+// RuleAnyMethod says "Any method"
+// in the language of msgs.
+func (msgs Messages) RuleAnyMethod() string {
+	return Catalog.Format(msgs.locale, "ruleAnyMethod", nil)
+}
+
+// RuleKind says "Action"
+// in the language the app shows.
+func RuleKind() string { return In(i18n.Locale()).RuleKind() }
+
+// RuleKind says "Action"
+// in the language of msgs.
+func (msgs Messages) RuleKind() string {
+	return Catalog.Format(msgs.locale, "ruleKind", nil)
+}
+
+// RuleMethod says "Method"
+// in the language the app shows.
+func RuleMethod() string { return In(i18n.Locale()).RuleMethod() }
+
+// RuleMethod says "Method"
+// in the language of msgs.
+func (msgs Messages) RuleMethod() string {
+	return Catalog.Format(msgs.locale, "ruleMethod", nil)
+}
+
+// RuleName says "Name"
+// in the language the app shows.
+func RuleName() string { return In(i18n.Locale()).RuleName() }
+
+// RuleName says "Name"
+// in the language of msgs.
+func (msgs Messages) RuleName() string {
+	return Catalog.Format(msgs.locale, "ruleName", nil)
+}
+
+// RuleNameHint says "Optional; made from the rule when empty"
+// in the language the app shows.
+func RuleNameHint() string { return In(i18n.Locale()).RuleNameHint() }
+
+// RuleNameHint says "Optional; made from the rule when empty"
+// in the language of msgs.
+func (msgs Messages) RuleNameHint() string {
+	return Catalog.Format(msgs.locale, "ruleNameHint", nil)
+}
+
+// RuleHost says "Host"
+// in the language the app shows.
+func RuleHost() string { return In(i18n.Locale()).RuleHost() }
+
+// RuleHost says "Host"
+// in the language of msgs.
+func (msgs Messages) RuleHost() string {
+	return Catalog.Format(msgs.locale, "ruleHost", nil)
+}
+
+// RuleHostHint says "api.example.com or *.example.com"
+// in the language the app shows.
+func RuleHostHint() string { return In(i18n.Locale()).RuleHostHint() }
+
+// RuleHostHint says "api.example.com or *.example.com"
+// in the language of msgs.
+func (msgs Messages) RuleHostHint() string {
+	return Catalog.Format(msgs.locale, "ruleHostHint", nil)
+}
+
+// RulePathPrefix says "Path prefix"
+// in the language the app shows.
+func RulePathPrefix() string { return In(i18n.Locale()).RulePathPrefix() }
+
+// RulePathPrefix says "Path prefix"
+// in the language of msgs.
+func (msgs Messages) RulePathPrefix() string {
+	return Catalog.Format(msgs.locale, "rulePathPrefix", nil)
+}
+
+// RuleTarget says "Target URL"
+// in the language the app shows.
+func RuleTarget() string { return In(i18n.Locale()).RuleTarget() }
+
+// RuleTarget says "Target URL"
+// in the language of msgs.
+func (msgs Messages) RuleTarget() string {
+	return Catalog.Format(msgs.locale, "ruleTarget", nil)
+}
+
+// RuleTargetHint says "http://localhost:3000 or https://staging.example.com/base"
+// in the language the app shows.
+func RuleTargetHint() string { return In(i18n.Locale()).RuleTargetHint() }
+
+// RuleTargetHint says "http://localhost:3000 or https://staging.example.com/base"
+// in the language of msgs.
+func (msgs Messages) RuleTargetHint() string {
+	return Catalog.Format(msgs.locale, "ruleTargetHint", nil)
+}
+
+// RuleHeader says "Header"
+// in the language the app shows.
+func RuleHeader() string { return In(i18n.Locale()).RuleHeader() }
+
+// RuleHeader says "Header"
+// in the language of msgs.
+func (msgs Messages) RuleHeader() string {
+	return Catalog.Format(msgs.locale, "ruleHeader", nil)
+}
+
+// RuleHeaderHint says "Access-Control-Allow-Origin"
+// in the language the app shows.
+func RuleHeaderHint() string { return In(i18n.Locale()).RuleHeaderHint() }
+
+// RuleHeaderHint says "Access-Control-Allow-Origin"
+// in the language of msgs.
+func (msgs Messages) RuleHeaderHint() string {
+	return Catalog.Format(msgs.locale, "ruleHeaderHint", nil)
+}
+
+// RuleValue says "Value"
+// in the language the app shows.
+func RuleValue() string { return In(i18n.Locale()).RuleValue() }
+
+// RuleValue says "Value"
+// in the language of msgs.
+func (msgs Messages) RuleValue() string {
+	return Catalog.Format(msgs.locale, "ruleValue", nil)
+}
+
+// RuleValueHint says "The header's value"
+// in the language the app shows.
+func RuleValueHint() string { return In(i18n.Locale()).RuleValueHint() }
+
+// RuleValueHint says "The header's value"
+// in the language of msgs.
+func (msgs Messages) RuleValueHint() string {
+	return Catalog.Format(msgs.locale, "ruleValueHint", nil)
+}
+
+// RuleRemove says "Remove this header"
+// in the language the app shows.
+func RuleRemove() string { return In(i18n.Locale()).RuleRemove() }
+
+// RuleRemove says "Remove this header"
+// in the language of msgs.
+func (msgs Messages) RuleRemove() string {
+	return Catalog.Format(msgs.locale, "ruleRemove", nil)
+}
+
+// RuleRemoveHeader says "Remove {name}"
+// in the language the app shows.
+func RuleRemoveHeader(name string) string { return In(i18n.Locale()).RuleRemoveHeader(name) }
+
+// RuleRemoveHeader says "Remove {name}"
+// in the language of msgs.
+func (msgs Messages) RuleRemoveHeader(name string) string {
+	return Catalog.Format(msgs.locale, "ruleRemoveHeader", map[string]any{"name": name})
+}
+
+// RuleNeedsHost says "A rule needs a host"
+// in the language the app shows.
+func RuleNeedsHost() string { return In(i18n.Locale()).RuleNeedsHost() }
+
+// RuleNeedsHost says "A rule needs a host"
+// in the language of msgs.
+func (msgs Messages) RuleNeedsHost() string {
+	return Catalog.Format(msgs.locale, "ruleNeedsHost", nil)
+}
+
+// RuleNeedsTarget says "The target must be an http:// or https:// URL with a host"
+// in the language the app shows.
+func RuleNeedsTarget() string { return In(i18n.Locale()).RuleNeedsTarget() }
+
+// RuleNeedsTarget says "The target must be an http:// or https:// URL with a host"
+// in the language of msgs.
+func (msgs Messages) RuleNeedsTarget() string {
+	return Catalog.Format(msgs.locale, "ruleNeedsTarget", nil)
+}
+
+// RuleNeedsHeader says "A header rule needs a header name"
+// in the language the app shows.
+func RuleNeedsHeader() string { return In(i18n.Locale()).RuleNeedsHeader() }
+
+// RuleNeedsHeader says "A header rule needs a header name"
+// in the language of msgs.
+func (msgs Messages) RuleNeedsHeader() string {
+	return Catalog.Format(msgs.locale, "ruleNeedsHeader", nil)
+}
+
+// RuleProtectedHeader says "Content-Length, Transfer-Encoding and connection framing headers are managed by the proxy"
+// in the language the app shows.
+func RuleProtectedHeader() string { return In(i18n.Locale()).RuleProtectedHeader() }
+
+// RuleProtectedHeader says "Content-Length, Transfer-Encoding and connection framing headers are managed by the proxy"
+// in the language of msgs.
+func (msgs Messages) RuleProtectedHeader() string {
+	return Catalog.Format(msgs.locale, "ruleProtectedHeader", nil)
+}
+
+// RuleDelete says "Delete this rule"
+// in the language the app shows.
+func RuleDelete() string { return In(i18n.Locale()).RuleDelete() }
+
+// RuleDelete says "Delete this rule"
+// in the language of msgs.
+func (msgs Messages) RuleDelete() string {
+	return Catalog.Format(msgs.locale, "ruleDelete", nil)
+}
+
+// NoticeRuleSaved says "Saved rule “{name}”"
+// in the language the app shows.
+func NoticeRuleSaved(name string) string { return In(i18n.Locale()).NoticeRuleSaved(name) }
+
+// NoticeRuleSaved says "Saved rule “{name}”"
+// in the language of msgs.
+func (msgs Messages) NoticeRuleSaved(name string) string {
+	return Catalog.Format(msgs.locale, "noticeRuleSaved", map[string]any{"name": name})
+}
+
+// NoticeRuleDeleted says "Deleted rule “{name}”"
+// in the language the app shows.
+func NoticeRuleDeleted(name string) string { return In(i18n.Locale()).NoticeRuleDeleted(name) }
+
+// NoticeRuleDeleted says "Deleted rule “{name}”"
+// in the language of msgs.
+func (msgs Messages) NoticeRuleDeleted(name string) string {
+	return Catalog.Format(msgs.locale, "noticeRuleDeleted", map[string]any{"name": name})
+}
+
+// SidebarThrottle says "Throttle"
+// in the language the app shows.
+func SidebarThrottle() string { return In(i18n.Locale()).SidebarThrottle() }
+
+// SidebarThrottle says "Throttle"
+// in the language of msgs.
+func (msgs Messages) SidebarThrottle() string {
+	return Catalog.Format(msgs.locale, "sidebarThrottle", nil)
+}
+
+// SidebarThrottleHint says "Simulate a slower network for the capture"
+// in the language the app shows.
+func SidebarThrottleHint() string { return In(i18n.Locale()).SidebarThrottleHint() }
+
+// SidebarThrottleHint says "Simulate a slower network for the capture"
+// in the language of msgs.
+func (msgs Messages) SidebarThrottleHint() string {
+	return Catalog.Format(msgs.locale, "sidebarThrottleHint", nil)
+}
+
+// ThrottleOff says "Off"
+// in the language the app shows.
+func ThrottleOff() string { return In(i18n.Locale()).ThrottleOff() }
+
+// ThrottleOff says "Off"
+// in the language of msgs.
+func (msgs Messages) ThrottleOff() string {
+	return Catalog.Format(msgs.locale, "throttleOff", nil)
+}
+
+// ThrottleSlow3G says "Slow 3G"
+// in the language the app shows.
+func ThrottleSlow3G() string { return In(i18n.Locale()).ThrottleSlow3G() }
+
+// ThrottleSlow3G says "Slow 3G"
+// in the language of msgs.
+func (msgs Messages) ThrottleSlow3G() string {
+	return Catalog.Format(msgs.locale, "throttleSlow3G", nil)
+}
+
+// ThrottleFast3G says "Fast 3G"
+// in the language the app shows.
+func ThrottleFast3G() string { return In(i18n.Locale()).ThrottleFast3G() }
+
+// ThrottleFast3G says "Fast 3G"
+// in the language of msgs.
+func (msgs Messages) ThrottleFast3G() string {
+	return Catalog.Format(msgs.locale, "throttleFast3G", nil)
+}
+
+// Throttle4G says "4G"
+// in the language the app shows.
+func Throttle4G() string { return In(i18n.Locale()).Throttle4G() }
+
+// Throttle4G says "4G"
+// in the language of msgs.
+func (msgs Messages) Throttle4G() string {
+	return Catalog.Format(msgs.locale, "throttle4G", nil)
+}

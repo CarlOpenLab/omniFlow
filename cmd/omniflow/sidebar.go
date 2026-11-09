@@ -300,6 +300,16 @@ func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 				a.prx.SetMITM(a.mitm)
 			}
 		}
+		throttle := ui.Row(c).Height(26).Gap(8)
+		throttle.Children(func() {
+			ui.Text(c, locales.SidebarThrottle()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
+			label := throttleLabel(a.throttle)
+			sel := ui.Select(c, &label, throttleLabels()).Width(122).Height(24).
+				Label(locales.SidebarThrottle()).Tooltip(locales.SidebarThrottleHint())
+			if sel.Changed() {
+				a.setThrottle(throttleFromLabel(label))
+			}
+		})
 		caRow := ui.Row(c).Height(24).Gap(6).Padding(0, 4).Margin(0, -4).Radius(6).
 			Cursor(ui.CursorPointer).Label(locales.CaTitle())
 		if caRow.Hovered() {

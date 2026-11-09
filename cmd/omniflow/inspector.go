@@ -327,6 +327,9 @@ func (a *app) flowMenu(c *ui.Context, m *ui.Menu, f *proxy.Flow) {
 	if m.Item(locales.InspectorMockResponse()).Disabled(f.Status == 0).Chosen() {
 		a.mockFlow(*f)
 	}
+	m.Submenu(locales.InspectorRules(), func(m *ui.Menu) {
+		a.ruleMenu(m, *f)
+	})
 	m.Separator()
 	if m.Item(locales.CommonCopyURL()).Chosen() {
 		a.copyText(c, locales.CommonURLCopied(), f.URL)
@@ -399,6 +402,13 @@ func (a *app) flowDetailHeader(c *ui.Context, pal *uitokens.Palette, f *proxy.Fl
 			ui.Row(c).Center().Height(20).Padding(0, 6).Radius(5).
 				Background(pal.AccentSoft).Children(func() {
 				ui.Text(c, locales.InspectorMocked()).FontSize(9.5).FontWeight(650).TextColor(pal.Accent)
+			})
+		}
+		if f.Mapped {
+			chip := ui.Row(c).Center().Height(20).Padding(0, 6).Radius(5).
+				Background(pal.AccentSoft).Label(locales.InspectorMappedHint(f.MappedTo))
+			chip.Children(func() {
+				ui.Text(c, locales.InspectorMapped()).FontSize(9.5).FontWeight(650).TextColor(pal.Accent)
 			})
 		}
 		ui.Column(c).Gap(0).Justify(ui.Center).Grow(1).MinWidth(0).Children(func() {

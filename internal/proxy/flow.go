@@ -38,4 +38,7 @@ type Flow struct {
 	// Mocked says a Map Local rule answered this exchange instead of the
 	// network.
 	Mocked bool `json:"mocked,omitempty"`
+	// Mapped says a Map Remote rule sent the exchange to another origin.
+	Mapped   bool   `json:"mapped,omitempty"`
+	MappedTo string `json:"mappedTo,omitempty"`
 }

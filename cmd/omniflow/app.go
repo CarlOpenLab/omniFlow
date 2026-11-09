@@ -67,6 +67,7 @@ type app struct {
 	history  []model.HistoryEntry
 	envs     []model.Environment
 	mocks    []model.MockRule
+	rules    []model.ProxyRule
 
 	client *httpx.Client
 	ca     *proxy.CA
@@ -140,13 +141,28 @@ type app struct {
 	proxyProblem proxyProblem
 	mitm         bool
 	lastFlowAt   time.Time
+	throttle     string
 
 	// dialogs
 	settingsOpen bool
 	settingsPane int
-	caOpen       bool
-	caWasOpen    bool
-	caTrust      trustState
+	// rule dialog: ruleID is empty for a new rule, and ruleErr is the reason
+	// Save did not go through.
+	ruleOpen   bool
+	ruleID     string
+	ruleKind   string
+	ruleName   string
+	ruleMethod string
+	ruleHost   string
+	rulePath   string
+	ruleTarget string
+	ruleHeader string
+	ruleValue  string
+	ruleRemove bool
+	ruleErr    string
+	caOpen     bool
+	caWasOpen  bool
+	caTrust    trustState
 
 	notice   string
 	noticeAt time.Time
@@ -179,6 +195,8 @@ func newApp() *app {
 	a.history = data.History
 	a.envs = data.Environments
 	a.mocks = data.Mocks
+	a.rules = data.Rules
+	a.throttle = normalizeThrottle(a.prefs.Throttle)
 	a.proxyPort = a.prefs.ProxyPort
 	a.mitm = a.prefs.DecryptHTTPS
 	a.follow = a.prefs.FollowFlows
@@ -204,6 +222,8 @@ func newApp() *app {
 		a.ca = ca
 		a.prx = proxy.New(ca)
 		a.applyMocks()
+		a.applyRules()
+		a.applyThrottle()
 		a.prx.SetOnFlow(func(f proxy.Flow) {
 			if a.win == nil {
 				return
