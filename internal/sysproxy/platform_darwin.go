@@ -2,5 +2,6 @@
 
 package sysproxy
 
-// defaultOps returns the macOS implementation, filled in by darwin.go.
-func defaultOps() platformOps { return unsupportedOps{name: "darwin"} }
+// defaultOps uses networksetup, which any administrator on this Mac can run
+// without a helper or an authentication prompt.
+func defaultOps() platformOps { return newDarwinOps(execRunner{}) }
