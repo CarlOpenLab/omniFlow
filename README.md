@@ -43,22 +43,36 @@ if SmartScreen appears. Each release also carries a `checksums.txt`.
 - **Collection** — double-click a request's name to rename it. Edits to a
   saved request stay as a draft, marked in the sidebar, until ⌘S saves them;
   right-click a request to duplicate, copy or delete it. History reopens the
-  whole request as it was sent. Deletions and a cleared history or session
+  whole request as it was sent. A captured exchange can be saved straight into
+  the collection from the Inspector. Deletions and a cleared history or session
   offer Undo in the footer for a few seconds.
 - **cURL import** — paste a `curl` command into the URL field and it opens as
   the request it describes, with a note of any flag that could not be kept.
 - **Inspector** — a local HTTP proxy that records every exchange, filters by
   host, text or status class (click the STATUS column's heading), and replays
   a captured request in the composer. ↑ and ↓ move through the capture;
-  right-click a flow to replay it, copy it or show only its host. The whole
-  capture exports as a HAR 1.2 file. It keeps the latest 3,000 flows and up
-  to 512 MB of bodies; past either, the oldest go first. HTTPS is decrypted
-  through a root authority the app creates on this machine; install it from
-  Settings → Root CA Certificate (only on devices you control). While the
-  proxy runs, OmniFlow also takes the machine's system proxy, so browsers and
-  apps that follow it are captured without any setup. Settings → Capture
-  turns that off; Firefox keeps its own proxy settings and is not captured
-  until they are pointed at the proxy.
+  right-click a flow to replay it, copy it or show only its host. The filter's
+  **Bodies** button searches request and response bodies too. Right-click a
+  captured response and choose **Mock This Response** to answer that method,
+  host and path from a file you can edit; Settings → Mocks switches the rules
+  off or removes them. The whole capture exports as a HAR 1.2 file. It keeps
+  the latest 3,000 flows and up to 512 MB of bodies; past either, the oldest go
+  first. HTTPS is decrypted through a root authority the app creates on this
+  machine; install it from Settings → Root CA Certificate (only on devices you
+  control). While the proxy runs, OmniFlow also takes the machine's system
+  proxy, so browsers and apps that follow it are captured without any setup.
+  Settings → Capture turns that off; Firefox keeps its own proxy settings and
+  is not captured until they are pointed at the proxy.
+- **Rules and throttling** — right-click a captured request and open **Rules**
+  to map it to another origin, or to add, set or remove one request or
+  response header; Settings → Rules lists, edits and switches the rules. The
+  Inspector's **Throttle** menu simulates Slow 3G, Fast 3G or 4G, with latency
+  and a bandwidth cap.
+- **Device setup and trust** — Settings → Capture can expose the proxy to
+  devices on the local network; **Device Setup** in the Inspector's sidebar
+  then shows the proxy address and a small page that installs the Root CA on
+  an iPhone, iPad or Android device. The certificate dialog can trust or remove
+  the Root CA for the current user on Windows and macOS.
 - **Copy as cURL** — ⇧⌘C copies the composer's request, or the captured
   flow, as a curl command that sends the same request.
 - **Settings** — system/light/dark appearance (also in the sidebar's foot),
@@ -66,7 +80,7 @@ if SmartScreen appears. Each release also carries a `checksums.txt`.
   opacity (30–100%) and the material's strength (none, subtle, medium, deep),
   the request timeout, whether redirects are followed and whether TLS
   certificates are verified, proxy port, autostart, automatic system proxy,
-  HTTPS decryption, history and the data folder.
+  HTTPS decryption, the rules, history and the data folder.
 
 ## Build and run
 

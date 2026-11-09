@@ -2,7 +2,23 @@
 
 package main
 
-import "os"
+import (
+	"errors"
+	"os"
+)
+
+// trustSupported is false: reading the bundle is enough for capture to
+// decide whether to proxy HTTPS, but adding to it needs a package manager
+// or administrator tools this app does not drive.
+func trustSupported() bool { return false }
+
+func installCA(string) error {
+	return errors.New("install the certificate in the system's trust store manually")
+}
+
+func uninstallCA(string) error {
+	return errors.New("remove the certificate from the system's trust store manually")
+}
 
 // linuxTrustBundles are the usual system CA files on Debian and RHEL
 // families. A certificate installed only in a browser's private store does

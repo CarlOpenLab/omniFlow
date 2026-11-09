@@ -51,6 +51,12 @@ func Open(path string) (*Store, error) {
 	if s.data.Environments == nil {
 		s.data.Environments = []model.Environment{}
 	}
+	if s.data.Mocks == nil {
+		s.data.Mocks = []model.MockRule{}
+	}
+	if s.data.Rules == nil {
+		s.data.Rules = []model.ProxyRule{}
+	}
 	return s, nil
 }
 
@@ -75,6 +81,8 @@ func (s *Store) Data() model.Data {
 		Requests:     append([]model.Request(nil), s.data.Requests...),
 		History:      append([]model.HistoryEntry(nil), s.data.History...),
 		Environments: append([]model.Environment(nil), s.data.Environments...),
+		Mocks:        append([]model.MockRule(nil), s.data.Mocks...),
+		Rules:        append([]model.ProxyRule(nil), s.data.Rules...),
 	}
 }
 
@@ -116,6 +124,22 @@ func (s *Store) SetEnvironments(envs []model.Environment) error {
 	for i, e := range envs {
 		s.data.Environments[i] = e.Clone()
 	}
+	s.mu.Unlock()
+	return s.write()
+}
+
+// SetMocks replaces the mock rules and writes the file.
+func (s *Store) SetMocks(mocks []model.MockRule) error {
+	s.mu.Lock()
+	s.data.Mocks = append([]model.MockRule(nil), mocks...)
+	s.mu.Unlock()
+	return s.write()
+}
+
+// SetRules replaces the proxy rules and writes the file.
+func (s *Store) SetRules(rules []model.ProxyRule) error {
+	s.mu.Lock()
+	s.data.Rules = append([]model.ProxyRule(nil), rules...)
 	s.mu.Unlock()
 	return s.write()
 }

@@ -3800,3 +3800,915 @@ func ComposerCopyName(name string) string { return In(i18n.Locale()).ComposerCop
 func (msgs Messages) ComposerCopyName(name string) string {
 	return Catalog.Format(msgs.locale, "composerCopyName", map[string]any{"name": name})
 }
+
+// WindowMinimize says "Minimize"
+// in the language the app shows.
+//
+// The app-drawn window controls (Windows and Linux).
+func WindowMinimize() string { return In(i18n.Locale()).WindowMinimize() }
+
+// WindowMinimize says "Minimize"
+// in the language of msgs.
+//
+// The app-drawn window controls (Windows and Linux).
+func (msgs Messages) WindowMinimize() string {
+	return Catalog.Format(msgs.locale, "windowMinimize", nil)
+}
+
+// WindowMaximize says "Maximize"
+// in the language the app shows.
+//
+// The app-drawn window controls (Windows and Linux).
+func WindowMaximize() string { return In(i18n.Locale()).WindowMaximize() }
+
+// WindowMaximize says "Maximize"
+// in the language of msgs.
+//
+// The app-drawn window controls (Windows and Linux).
+func (msgs Messages) WindowMaximize() string {
+	return Catalog.Format(msgs.locale, "windowMaximize", nil)
+}
+
+// WindowRestore says "Restore window"
+// in the language the app shows.
+//
+// The app-drawn window controls (Windows and Linux).
+func WindowRestore() string { return In(i18n.Locale()).WindowRestore() }
+
+// WindowRestore says "Restore window"
+// in the language of msgs.
+//
+// The app-drawn window controls (Windows and Linux).
+func (msgs Messages) WindowRestore() string {
+	return Catalog.Format(msgs.locale, "windowRestore", nil)
+}
+
+// WindowClose says "Close window"
+// in the language the app shows.
+//
+// The app-drawn window controls (Windows and Linux).
+func WindowClose() string { return In(i18n.Locale()).WindowClose() }
+
+// WindowClose says "Close window"
+// in the language of msgs.
+//
+// The app-drawn window controls (Windows and Linux).
+func (msgs Messages) WindowClose() string {
+	return Catalog.Format(msgs.locale, "windowClose", nil)
+}
+
+// InspectorSaveAsRequest says "Save as Request"
+// in the language the app shows.
+func InspectorSaveAsRequest() string { return In(i18n.Locale()).InspectorSaveAsRequest() }
+
+// InspectorSaveAsRequest says "Save as Request"
+// in the language of msgs.
+func (msgs Messages) InspectorSaveAsRequest() string {
+	return Catalog.Format(msgs.locale, "inspectorSaveAsRequest", nil)
+}
+
+// InspectorMockResponse says "Mock This Response"
+// in the language the app shows.
+func InspectorMockResponse() string { return In(i18n.Locale()).InspectorMockResponse() }
+
+// InspectorMockResponse says "Mock This Response"
+// in the language of msgs.
+func (msgs Messages) InspectorMockResponse() string {
+	return Catalog.Format(msgs.locale, "inspectorMockResponse", nil)
+}
+
+// InspectorMocked says "MOCK"
+// in the language the app shows.
+func InspectorMocked() string { return In(i18n.Locale()).InspectorMocked() }
+
+// InspectorMocked says "MOCK"
+// in the language of msgs.
+func (msgs Messages) InspectorMocked() string {
+	return Catalog.Format(msgs.locale, "inspectorMocked", nil)
+}
+
+// InspectorSearchBodies says "Bodies"
+// in the language the app shows.
+func InspectorSearchBodies() string { return In(i18n.Locale()).InspectorSearchBodies() }
+
+// InspectorSearchBodies says "Bodies"
+// in the language of msgs.
+func (msgs Messages) InspectorSearchBodies() string {
+	return Catalog.Format(msgs.locale, "inspectorSearchBodies", nil)
+}
+
+// InspectorSearchBodiesHint says "Include request and response bodies in the traffic filter (up to 512 KB each)"
+// in the language the app shows.
+func InspectorSearchBodiesHint() string { return In(i18n.Locale()).InspectorSearchBodiesHint() }
+
+// InspectorSearchBodiesHint says "Include request and response bodies in the traffic filter (up to 512 KB each)"
+// in the language of msgs.
+func (msgs Messages) InspectorSearchBodiesHint() string {
+	return Catalog.Format(msgs.locale, "inspectorSearchBodiesHint", nil)
+}
+
+// SettingsMocks says "Mocks"
+// in the language the app shows.
+func SettingsMocks() string { return In(i18n.Locale()).SettingsMocks() }
+
+// SettingsMocks says "Mocks"
+// in the language of msgs.
+func (msgs Messages) SettingsMocks() string {
+	return Catalog.Format(msgs.locale, "settingsMocks", nil)
+}
+
+// SettingsMocksEmpty says "No mocks yet"
+// in the language the app shows.
+func SettingsMocksEmpty() string { return In(i18n.Locale()).SettingsMocksEmpty() }
+
+// SettingsMocksEmpty says "No mocks yet"
+// in the language of msgs.
+func (msgs Messages) SettingsMocksEmpty() string {
+	return Catalog.Format(msgs.locale, "settingsMocksEmpty", nil)
+}
+
+// SettingsMocksHint says "Right-click a captured response in the Inspector and choose Mock This Response."
+// in the language the app shows.
+func SettingsMocksHint() string { return In(i18n.Locale()).SettingsMocksHint() }
+
+// SettingsMocksHint says "Right-click a captured response in the Inspector and choose Mock This Response."
+// in the language of msgs.
+func (msgs Messages) SettingsMocksHint() string {
+	return Catalog.Format(msgs.locale, "settingsMocksHint", nil)
+}
+
+// SettingsMockReveal says "Show the mock file"
+// in the language the app shows.
+func SettingsMockReveal() string { return In(i18n.Locale()).SettingsMockReveal() }
+
+// SettingsMockReveal says "Show the mock file"
+// in the language of msgs.
+func (msgs Messages) SettingsMockReveal() string {
+	return Catalog.Format(msgs.locale, "settingsMockReveal", nil)
+}
+
+// SettingsMockDelete says "Delete this mock"
+// in the language the app shows.
+func SettingsMockDelete() string { return In(i18n.Locale()).SettingsMockDelete() }
+
+// SettingsMockDelete says "Delete this mock"
+// in the language of msgs.
+func (msgs Messages) SettingsMockDelete() string {
+	return Catalog.Format(msgs.locale, "settingsMockDelete", nil)
+}
+
+// SettingsMocksFolder says "Show Mocks Folder"
+// in the language the app shows.
+func SettingsMocksFolder() string { return In(i18n.Locale()).SettingsMocksFolder() }
+
+// SettingsMocksFolder says "Show Mocks Folder"
+// in the language of msgs.
+func (msgs Messages) SettingsMocksFolder() string {
+	return Catalog.Format(msgs.locale, "settingsMocksFolder", nil)
+}
+
+// NoticeFlowSaved says "Saved “{name}” to the collection"
+// in the language the app shows.
+func NoticeFlowSaved(name string) string { return In(i18n.Locale()).NoticeFlowSaved(name) }
+
+// NoticeFlowSaved says "Saved “{name}” to the collection"
+// in the language of msgs.
+func (msgs Messages) NoticeFlowSaved(name string) string {
+	return Catalog.Format(msgs.locale, "noticeFlowSaved", map[string]any{"name": name})
+}
+
+// NoticeMockCreated says "Mocking “{name}” from a local file"
+// in the language the app shows.
+func NoticeMockCreated(name string) string { return In(i18n.Locale()).NoticeMockCreated(name) }
+
+// NoticeMockCreated says "Mocking “{name}” from a local file"
+// in the language of msgs.
+func (msgs Messages) NoticeMockCreated(name string) string {
+	return Catalog.Format(msgs.locale, "noticeMockCreated", map[string]any{"name": name})
+}
+
+// NoticeMockUpdated says "Updated the mock for “{name}”"
+// in the language the app shows.
+func NoticeMockUpdated(name string) string { return In(i18n.Locale()).NoticeMockUpdated(name) }
+
+// NoticeMockUpdated says "Updated the mock for “{name}”"
+// in the language of msgs.
+func (msgs Messages) NoticeMockUpdated(name string) string {
+	return Catalog.Format(msgs.locale, "noticeMockUpdated", map[string]any{"name": name})
+}
+
+// NoticeMockDeleted says "Deleted the mock for “{name}”"
+// in the language the app shows.
+func NoticeMockDeleted(name string) string { return In(i18n.Locale()).NoticeMockDeleted(name) }
+
+// NoticeMockDeleted says "Deleted the mock for “{name}”"
+// in the language of msgs.
+func (msgs Messages) NoticeMockDeleted(name string) string {
+	return Catalog.Format(msgs.locale, "noticeMockDeleted", map[string]any{"name": name})
+}
+
+// NoticeMockWriteFailed says "The mock file could not be written: {error}"
+// in the language the app shows.
+func NoticeMockWriteFailed(error string) string {
+	return In(i18n.Locale()).NoticeMockWriteFailed(error)
+}
+
+// NoticeMockWriteFailed says "The mock file could not be written: {error}"
+// in the language of msgs.
+func (msgs Messages) NoticeMockWriteFailed(error string) string {
+	return Catalog.Format(msgs.locale, "noticeMockWriteFailed", map[string]any{"error": error})
+}
+
+// NoticeMockNeedsResponse says "That flow has no response to mock"
+// in the language the app shows.
+func NoticeMockNeedsResponse() string { return In(i18n.Locale()).NoticeMockNeedsResponse() }
+
+// NoticeMockNeedsResponse says "That flow has no response to mock"
+// in the language of msgs.
+func (msgs Messages) NoticeMockNeedsResponse() string {
+	return Catalog.Format(msgs.locale, "noticeMockNeedsResponse", nil)
+}
+
+// NoticeMockTruncated says "The captured body was truncated; the mock keeps only its beginning"
+// in the language the app shows.
+func NoticeMockTruncated() string { return In(i18n.Locale()).NoticeMockTruncated() }
+
+// NoticeMockTruncated says "The captured body was truncated; the mock keeps only its beginning"
+// in the language of msgs.
+func (msgs Messages) NoticeMockTruncated() string {
+	return Catalog.Format(msgs.locale, "noticeMockTruncated", nil)
+}
+
+// NoticeMockRevealFailed says "Could not show the mock file: {error}"
+// in the language the app shows.
+func NoticeMockRevealFailed(error string) string {
+	return In(i18n.Locale()).NoticeMockRevealFailed(error)
+}
+
+// NoticeMockRevealFailed says "Could not show the mock file: {error}"
+// in the language of msgs.
+func (msgs Messages) NoticeMockRevealFailed(error string) string {
+	return Catalog.Format(msgs.locale, "noticeMockRevealFailed", map[string]any{"error": error})
+}
+
+// InspectorRules says "Rules"
+// in the language the app shows.
+func InspectorRules() string { return In(i18n.Locale()).InspectorRules() }
+
+// InspectorRules says "Rules"
+// in the language of msgs.
+func (msgs Messages) InspectorRules() string {
+	return Catalog.Format(msgs.locale, "inspectorRules", nil)
+}
+
+// InspectorMapped says "MAPPED"
+// in the language the app shows.
+func InspectorMapped() string { return In(i18n.Locale()).InspectorMapped() }
+
+// InspectorMapped says "MAPPED"
+// in the language of msgs.
+func (msgs Messages) InspectorMapped() string {
+	return Catalog.Format(msgs.locale, "inspectorMapped", nil)
+}
+
+// InspectorMappedHint says "Mapped to {url}"
+// in the language the app shows.
+func InspectorMappedHint(url string) string { return In(i18n.Locale()).InspectorMappedHint(url) }
+
+// InspectorMappedHint says "Mapped to {url}"
+// in the language of msgs.
+func (msgs Messages) InspectorMappedHint(url string) string {
+	return Catalog.Format(msgs.locale, "inspectorMappedHint", map[string]any{"url": url})
+}
+
+// SettingsRules says "Rules"
+// in the language the app shows.
+func SettingsRules() string { return In(i18n.Locale()).SettingsRules() }
+
+// SettingsRules says "Rules"
+// in the language of msgs.
+func (msgs Messages) SettingsRules() string {
+	return Catalog.Format(msgs.locale, "settingsRules", nil)
+}
+
+// SettingsRulesHint says "Map Remote moves matching traffic to another origin; a header rule adds or removes one request or response header."
+// in the language the app shows.
+func SettingsRulesHint() string { return In(i18n.Locale()).SettingsRulesHint() }
+
+// SettingsRulesHint says "Map Remote moves matching traffic to another origin; a header rule adds or removes one request or response header."
+// in the language of msgs.
+func (msgs Messages) SettingsRulesHint() string {
+	return Catalog.Format(msgs.locale, "settingsRulesHint", nil)
+}
+
+// SettingsRulesEmpty says "No rules yet"
+// in the language the app shows.
+func SettingsRulesEmpty() string { return In(i18n.Locale()).SettingsRulesEmpty() }
+
+// SettingsRulesEmpty says "No rules yet"
+// in the language of msgs.
+func (msgs Messages) SettingsRulesEmpty() string {
+	return Catalog.Format(msgs.locale, "settingsRulesEmpty", nil)
+}
+
+// RuleNew says "New Rule"
+// in the language the app shows.
+func RuleNew() string { return In(i18n.Locale()).RuleNew() }
+
+// RuleNew says "New Rule"
+// in the language of msgs.
+func (msgs Messages) RuleNew() string {
+	return Catalog.Format(msgs.locale, "ruleNew", nil)
+}
+
+// RuleMapRemote says "Map Remote"
+// in the language the app shows.
+func RuleMapRemote() string { return In(i18n.Locale()).RuleMapRemote() }
+
+// RuleMapRemote says "Map Remote"
+// in the language of msgs.
+func (msgs Messages) RuleMapRemote() string {
+	return Catalog.Format(msgs.locale, "ruleMapRemote", nil)
+}
+
+// RuleRequestHeader says "Request Header"
+// in the language the app shows.
+func RuleRequestHeader() string { return In(i18n.Locale()).RuleRequestHeader() }
+
+// RuleRequestHeader says "Request Header"
+// in the language of msgs.
+func (msgs Messages) RuleRequestHeader() string {
+	return Catalog.Format(msgs.locale, "ruleRequestHeader", nil)
+}
+
+// RuleResponseHeader says "Response Header"
+// in the language the app shows.
+func RuleResponseHeader() string { return In(i18n.Locale()).RuleResponseHeader() }
+
+// RuleResponseHeader says "Response Header"
+// in the language of msgs.
+func (msgs Messages) RuleResponseHeader() string {
+	return Catalog.Format(msgs.locale, "ruleResponseHeader", nil)
+}
+
+// RuleAnyMethod says "Any method"
+// in the language the app shows.
+func RuleAnyMethod() string { return In(i18n.Locale()).RuleAnyMethod() }
+
+// RuleAnyMethod says "Any method"
+// in the language of msgs.
+func (msgs Messages) RuleAnyMethod() string {
+	return Catalog.Format(msgs.locale, "ruleAnyMethod", nil)
+}
+
+// RuleKind says "Action"
+// in the language the app shows.
+func RuleKind() string { return In(i18n.Locale()).RuleKind() }
+
+// RuleKind says "Action"
+// in the language of msgs.
+func (msgs Messages) RuleKind() string {
+	return Catalog.Format(msgs.locale, "ruleKind", nil)
+}
+
+// RuleMethod says "Method"
+// in the language the app shows.
+func RuleMethod() string { return In(i18n.Locale()).RuleMethod() }
+
+// RuleMethod says "Method"
+// in the language of msgs.
+func (msgs Messages) RuleMethod() string {
+	return Catalog.Format(msgs.locale, "ruleMethod", nil)
+}
+
+// RuleName says "Name"
+// in the language the app shows.
+func RuleName() string { return In(i18n.Locale()).RuleName() }
+
+// RuleName says "Name"
+// in the language of msgs.
+func (msgs Messages) RuleName() string {
+	return Catalog.Format(msgs.locale, "ruleName", nil)
+}
+
+// RuleNameHint says "Optional; made from the rule when empty"
+// in the language the app shows.
+func RuleNameHint() string { return In(i18n.Locale()).RuleNameHint() }
+
+// RuleNameHint says "Optional; made from the rule when empty"
+// in the language of msgs.
+func (msgs Messages) RuleNameHint() string {
+	return Catalog.Format(msgs.locale, "ruleNameHint", nil)
+}
+
+// RuleHost says "Host"
+// in the language the app shows.
+func RuleHost() string { return In(i18n.Locale()).RuleHost() }
+
+// RuleHost says "Host"
+// in the language of msgs.
+func (msgs Messages) RuleHost() string {
+	return Catalog.Format(msgs.locale, "ruleHost", nil)
+}
+
+// RuleHostHint says "api.example.com or *.example.com"
+// in the language the app shows.
+func RuleHostHint() string { return In(i18n.Locale()).RuleHostHint() }
+
+// RuleHostHint says "api.example.com or *.example.com"
+// in the language of msgs.
+func (msgs Messages) RuleHostHint() string {
+	return Catalog.Format(msgs.locale, "ruleHostHint", nil)
+}
+
+// RulePathPrefix says "Path prefix"
+// in the language the app shows.
+func RulePathPrefix() string { return In(i18n.Locale()).RulePathPrefix() }
+
+// RulePathPrefix says "Path prefix"
+// in the language of msgs.
+func (msgs Messages) RulePathPrefix() string {
+	return Catalog.Format(msgs.locale, "rulePathPrefix", nil)
+}
+
+// RuleTarget says "Target URL"
+// in the language the app shows.
+func RuleTarget() string { return In(i18n.Locale()).RuleTarget() }
+
+// RuleTarget says "Target URL"
+// in the language of msgs.
+func (msgs Messages) RuleTarget() string {
+	return Catalog.Format(msgs.locale, "ruleTarget", nil)
+}
+
+// RuleTargetHint says "http://localhost:3000 or https://staging.example.com/base"
+// in the language the app shows.
+func RuleTargetHint() string { return In(i18n.Locale()).RuleTargetHint() }
+
+// RuleTargetHint says "http://localhost:3000 or https://staging.example.com/base"
+// in the language of msgs.
+func (msgs Messages) RuleTargetHint() string {
+	return Catalog.Format(msgs.locale, "ruleTargetHint", nil)
+}
+
+// RuleHeader says "Header"
+// in the language the app shows.
+func RuleHeader() string { return In(i18n.Locale()).RuleHeader() }
+
+// RuleHeader says "Header"
+// in the language of msgs.
+func (msgs Messages) RuleHeader() string {
+	return Catalog.Format(msgs.locale, "ruleHeader", nil)
+}
+
+// RuleHeaderHint says "Access-Control-Allow-Origin"
+// in the language the app shows.
+func RuleHeaderHint() string { return In(i18n.Locale()).RuleHeaderHint() }
+
+// RuleHeaderHint says "Access-Control-Allow-Origin"
+// in the language of msgs.
+func (msgs Messages) RuleHeaderHint() string {
+	return Catalog.Format(msgs.locale, "ruleHeaderHint", nil)
+}
+
+// RuleValue says "Value"
+// in the language the app shows.
+func RuleValue() string { return In(i18n.Locale()).RuleValue() }
+
+// RuleValue says "Value"
+// in the language of msgs.
+func (msgs Messages) RuleValue() string {
+	return Catalog.Format(msgs.locale, "ruleValue", nil)
+}
+
+// RuleValueHint says "The header's value"
+// in the language the app shows.
+func RuleValueHint() string { return In(i18n.Locale()).RuleValueHint() }
+
+// RuleValueHint says "The header's value"
+// in the language of msgs.
+func (msgs Messages) RuleValueHint() string {
+	return Catalog.Format(msgs.locale, "ruleValueHint", nil)
+}
+
+// RuleRemove says "Remove this header"
+// in the language the app shows.
+func RuleRemove() string { return In(i18n.Locale()).RuleRemove() }
+
+// RuleRemove says "Remove this header"
+// in the language of msgs.
+func (msgs Messages) RuleRemove() string {
+	return Catalog.Format(msgs.locale, "ruleRemove", nil)
+}
+
+// RuleRemoveHeader says "Remove {name}"
+// in the language the app shows.
+func RuleRemoveHeader(name string) string { return In(i18n.Locale()).RuleRemoveHeader(name) }
+
+// RuleRemoveHeader says "Remove {name}"
+// in the language of msgs.
+func (msgs Messages) RuleRemoveHeader(name string) string {
+	return Catalog.Format(msgs.locale, "ruleRemoveHeader", map[string]any{"name": name})
+}
+
+// RuleNeedsHost says "A rule needs a host"
+// in the language the app shows.
+func RuleNeedsHost() string { return In(i18n.Locale()).RuleNeedsHost() }
+
+// RuleNeedsHost says "A rule needs a host"
+// in the language of msgs.
+func (msgs Messages) RuleNeedsHost() string {
+	return Catalog.Format(msgs.locale, "ruleNeedsHost", nil)
+}
+
+// RuleNeedsTarget says "The target must be an http:// or https:// URL with a host"
+// in the language the app shows.
+func RuleNeedsTarget() string { return In(i18n.Locale()).RuleNeedsTarget() }
+
+// RuleNeedsTarget says "The target must be an http:// or https:// URL with a host"
+// in the language of msgs.
+func (msgs Messages) RuleNeedsTarget() string {
+	return Catalog.Format(msgs.locale, "ruleNeedsTarget", nil)
+}
+
+// RuleNeedsHeader says "A header rule needs a header name"
+// in the language the app shows.
+func RuleNeedsHeader() string { return In(i18n.Locale()).RuleNeedsHeader() }
+
+// RuleNeedsHeader says "A header rule needs a header name"
+// in the language of msgs.
+func (msgs Messages) RuleNeedsHeader() string {
+	return Catalog.Format(msgs.locale, "ruleNeedsHeader", nil)
+}
+
+// RuleProtectedHeader says "Content-Length, Transfer-Encoding and connection framing headers are managed by the proxy"
+// in the language the app shows.
+func RuleProtectedHeader() string { return In(i18n.Locale()).RuleProtectedHeader() }
+
+// RuleProtectedHeader says "Content-Length, Transfer-Encoding and connection framing headers are managed by the proxy"
+// in the language of msgs.
+func (msgs Messages) RuleProtectedHeader() string {
+	return Catalog.Format(msgs.locale, "ruleProtectedHeader", nil)
+}
+
+// RuleDelete says "Delete this rule"
+// in the language the app shows.
+func RuleDelete() string { return In(i18n.Locale()).RuleDelete() }
+
+// RuleDelete says "Delete this rule"
+// in the language of msgs.
+func (msgs Messages) RuleDelete() string {
+	return Catalog.Format(msgs.locale, "ruleDelete", nil)
+}
+
+// NoticeRuleSaved says "Saved rule “{name}”"
+// in the language the app shows.
+func NoticeRuleSaved(name string) string { return In(i18n.Locale()).NoticeRuleSaved(name) }
+
+// NoticeRuleSaved says "Saved rule “{name}”"
+// in the language of msgs.
+func (msgs Messages) NoticeRuleSaved(name string) string {
+	return Catalog.Format(msgs.locale, "noticeRuleSaved", map[string]any{"name": name})
+}
+
+// NoticeRuleDeleted says "Deleted rule “{name}”"
+// in the language the app shows.
+func NoticeRuleDeleted(name string) string { return In(i18n.Locale()).NoticeRuleDeleted(name) }
+
+// NoticeRuleDeleted says "Deleted rule “{name}”"
+// in the language of msgs.
+func (msgs Messages) NoticeRuleDeleted(name string) string {
+	return Catalog.Format(msgs.locale, "noticeRuleDeleted", map[string]any{"name": name})
+}
+
+// SidebarThrottle says "Throttle"
+// in the language the app shows.
+func SidebarThrottle() string { return In(i18n.Locale()).SidebarThrottle() }
+
+// SidebarThrottle says "Throttle"
+// in the language of msgs.
+func (msgs Messages) SidebarThrottle() string {
+	return Catalog.Format(msgs.locale, "sidebarThrottle", nil)
+}
+
+// SidebarThrottleHint says "Simulate a slower network for the capture"
+// in the language the app shows.
+func SidebarThrottleHint() string { return In(i18n.Locale()).SidebarThrottleHint() }
+
+// SidebarThrottleHint says "Simulate a slower network for the capture"
+// in the language of msgs.
+func (msgs Messages) SidebarThrottleHint() string {
+	return Catalog.Format(msgs.locale, "sidebarThrottleHint", nil)
+}
+
+// ThrottleOff says "Off"
+// in the language the app shows.
+func ThrottleOff() string { return In(i18n.Locale()).ThrottleOff() }
+
+// ThrottleOff says "Off"
+// in the language of msgs.
+func (msgs Messages) ThrottleOff() string {
+	return Catalog.Format(msgs.locale, "throttleOff", nil)
+}
+
+// ThrottleSlow3G says "Slow 3G"
+// in the language the app shows.
+func ThrottleSlow3G() string { return In(i18n.Locale()).ThrottleSlow3G() }
+
+// ThrottleSlow3G says "Slow 3G"
+// in the language of msgs.
+func (msgs Messages) ThrottleSlow3G() string {
+	return Catalog.Format(msgs.locale, "throttleSlow3G", nil)
+}
+
+// ThrottleFast3G says "Fast 3G"
+// in the language the app shows.
+func ThrottleFast3G() string { return In(i18n.Locale()).ThrottleFast3G() }
+
+// ThrottleFast3G says "Fast 3G"
+// in the language of msgs.
+func (msgs Messages) ThrottleFast3G() string {
+	return Catalog.Format(msgs.locale, "throttleFast3G", nil)
+}
+
+// Throttle4G says "4G"
+// in the language the app shows.
+func Throttle4G() string { return In(i18n.Locale()).Throttle4G() }
+
+// Throttle4G says "4G"
+// in the language of msgs.
+func (msgs Messages) Throttle4G() string {
+	return Catalog.Format(msgs.locale, "throttle4G", nil)
+}
+
+// SidebarDeviceSetup says "Device Setup…"
+// in the language the app shows.
+func SidebarDeviceSetup() string { return In(i18n.Locale()).SidebarDeviceSetup() }
+
+// SidebarDeviceSetup says "Device Setup…"
+// in the language of msgs.
+func (msgs Messages) SidebarDeviceSetup() string {
+	return Catalog.Format(msgs.locale, "sidebarDeviceSetup", nil)
+}
+
+// SettingsLANAccess says "Let devices on this network use the proxy"
+// in the language the app shows.
+func SettingsLANAccess() string { return In(i18n.Locale()).SettingsLANAccess() }
+
+// SettingsLANAccess says "Let devices on this network use the proxy"
+// in the language of msgs.
+func (msgs Messages) SettingsLANAccess() string {
+	return Catalog.Format(msgs.locale, "settingsLANAccess", nil)
+}
+
+// SettingsLANAccessNote says "Only on a network you trust: while this is on, other devices on the network can reach the proxy. Open Device Setup in…"
+// in the language the app shows.
+func SettingsLANAccessNote() string { return In(i18n.Locale()).SettingsLANAccessNote() }
+
+// SettingsLANAccessNote says "Only on a network you trust: while this is on, other devices on the network can reach the proxy. Open Device Setup in…"
+// in the language of msgs.
+func (msgs Messages) SettingsLANAccessNote() string {
+	return Catalog.Format(msgs.locale, "settingsLANAccessNote", nil)
+}
+
+// NoticeLANEnabled says "LAN access on · {addr}"
+// in the language the app shows.
+func NoticeLANEnabled(addr string) string { return In(i18n.Locale()).NoticeLANEnabled(addr) }
+
+// NoticeLANEnabled says "LAN access on · {addr}"
+// in the language of msgs.
+func (msgs Messages) NoticeLANEnabled(addr string) string {
+	return Catalog.Format(msgs.locale, "noticeLANEnabled", map[string]any{"addr": addr})
+}
+
+// NoticeLANDisabled says "LAN access off"
+// in the language the app shows.
+func NoticeLANDisabled() string { return In(i18n.Locale()).NoticeLANDisabled() }
+
+// NoticeLANDisabled says "LAN access off"
+// in the language of msgs.
+func (msgs Messages) NoticeLANDisabled() string {
+	return Catalog.Format(msgs.locale, "noticeLANDisabled", nil)
+}
+
+// NoticeLANNoAddress says "No local network address found"
+// in the language the app shows.
+func NoticeLANNoAddress() string { return In(i18n.Locale()).NoticeLANNoAddress() }
+
+// NoticeLANNoAddress says "No local network address found"
+// in the language of msgs.
+func (msgs Messages) NoticeLANNoAddress() string {
+	return Catalog.Format(msgs.locale, "noticeLANNoAddress", nil)
+}
+
+// NoticeLANSetupFailed says "The device setup page could not start: {error}"
+// in the language the app shows.
+func NoticeLANSetupFailed(error string) string { return In(i18n.Locale()).NoticeLANSetupFailed(error) }
+
+// NoticeLANSetupFailed says "The device setup page could not start: {error}"
+// in the language of msgs.
+func (msgs Messages) NoticeLANSetupFailed(error string) string {
+	return Catalog.Format(msgs.locale, "noticeLANSetupFailed", map[string]any{"error": error})
+}
+
+// DeviceSetupTitle says "Device Setup"
+// in the language the app shows.
+func DeviceSetupTitle() string { return In(i18n.Locale()).DeviceSetupTitle() }
+
+// DeviceSetupTitle says "Device Setup"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupTitle() string {
+	return Catalog.Format(msgs.locale, "deviceSetupTitle", nil)
+}
+
+// DeviceSetupSubtitle says "Connect a phone or another computer on this network"
+// in the language the app shows.
+func DeviceSetupSubtitle() string { return In(i18n.Locale()).DeviceSetupSubtitle() }
+
+// DeviceSetupSubtitle says "Connect a phone or another computer on this network"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupSubtitle() string {
+	return Catalog.Format(msgs.locale, "deviceSetupSubtitle", nil)
+}
+
+// DeviceSetupLANHint says "Turn on LAN access above to see the proxy address and the steps for this device."
+// in the language the app shows.
+func DeviceSetupLANHint() string { return In(i18n.Locale()).DeviceSetupLANHint() }
+
+// DeviceSetupLANHint says "Turn on LAN access above to see the proxy address and the steps for this device."
+// in the language of msgs.
+func (msgs Messages) DeviceSetupLANHint() string {
+	return Catalog.Format(msgs.locale, "deviceSetupLANHint", nil)
+}
+
+// DeviceSetupProxy says "Proxy"
+// in the language the app shows.
+func DeviceSetupProxy() string { return In(i18n.Locale()).DeviceSetupProxy() }
+
+// DeviceSetupProxy says "Proxy"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupProxy() string {
+	return Catalog.Format(msgs.locale, "deviceSetupProxy", nil)
+}
+
+// DeviceSetupCopyAddr says "Copy proxy address"
+// in the language the app shows.
+func DeviceSetupCopyAddr() string { return In(i18n.Locale()).DeviceSetupCopyAddr() }
+
+// DeviceSetupCopyAddr says "Copy proxy address"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupCopyAddr() string {
+	return Catalog.Format(msgs.locale, "deviceSetupCopyAddr", nil)
+}
+
+// DeviceSetupAddrCopied says "Proxy address copied"
+// in the language the app shows.
+func DeviceSetupAddrCopied() string { return In(i18n.Locale()).DeviceSetupAddrCopied() }
+
+// DeviceSetupAddrCopied says "Proxy address copied"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupAddrCopied() string {
+	return Catalog.Format(msgs.locale, "deviceSetupAddrCopied", nil)
+}
+
+// DeviceSetupPage says "Setup page"
+// in the language the app shows.
+func DeviceSetupPage() string { return In(i18n.Locale()).DeviceSetupPage() }
+
+// DeviceSetupPage says "Setup page"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupPage() string {
+	return Catalog.Format(msgs.locale, "deviceSetupPage", nil)
+}
+
+// DeviceSetupCopyPage says "Copy setup page link"
+// in the language the app shows.
+func DeviceSetupCopyPage() string { return In(i18n.Locale()).DeviceSetupCopyPage() }
+
+// DeviceSetupCopyPage says "Copy setup page link"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupCopyPage() string {
+	return Catalog.Format(msgs.locale, "deviceSetupCopyPage", nil)
+}
+
+// DeviceSetupPageCopied says "Setup page link copied"
+// in the language the app shows.
+func DeviceSetupPageCopied() string { return In(i18n.Locale()).DeviceSetupPageCopied() }
+
+// DeviceSetupPageCopied says "Setup page link copied"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupPageCopied() string {
+	return Catalog.Format(msgs.locale, "deviceSetupPageCopied", nil)
+}
+
+// DeviceSetupStep1 says "Open {url} on the device and install the OmniFlow Root CA."
+// in the language the app shows.
+func DeviceSetupStep1(url string) string { return In(i18n.Locale()).DeviceSetupStep1(url) }
+
+// DeviceSetupStep1 says "Open {url} on the device and install the OmniFlow Root CA."
+// in the language of msgs.
+func (msgs Messages) DeviceSetupStep1(url string) string {
+	return Catalog.Format(msgs.locale, "deviceSetupStep1", map[string]any{"url": url})
+}
+
+// DeviceSetupStep2 says "iPhone: trust it in Settings → General → About → Certificate Trust Settings. Android: install it as a CA certif…"
+// in the language the app shows.
+func DeviceSetupStep2() string { return In(i18n.Locale()).DeviceSetupStep2() }
+
+// DeviceSetupStep2 says "iPhone: trust it in Settings → General → About → Certificate Trust Settings. Android: install it as a CA certif…"
+// in the language of msgs.
+func (msgs Messages) DeviceSetupStep2() string {
+	return Catalog.Format(msgs.locale, "deviceSetupStep2", nil)
+}
+
+// DeviceSetupStep3 says "Set the Wi-Fi HTTP proxy to {addr}."
+// in the language the app shows.
+func DeviceSetupStep3(addr string) string { return In(i18n.Locale()).DeviceSetupStep3(addr) }
+
+// DeviceSetupStep3 says "Set the Wi-Fi HTTP proxy to {addr}."
+// in the language of msgs.
+func (msgs Messages) DeviceSetupStep3(addr string) string {
+	return Catalog.Format(msgs.locale, "deviceSetupStep3", map[string]any{"addr": addr})
+}
+
+// DeviceSetupWarning says "Only use this on a network you trust. While LAN access is on, other devices on this network can reach the proxy."
+// in the language the app shows.
+func DeviceSetupWarning() string { return In(i18n.Locale()).DeviceSetupWarning() }
+
+// DeviceSetupWarning says "Only use this on a network you trust. While LAN access is on, other devices on this network can reach the proxy."
+// in the language of msgs.
+func (msgs Messages) DeviceSetupWarning() string {
+	return Catalog.Format(msgs.locale, "deviceSetupWarning", nil)
+}
+
+// CaTrust says "Trust Certificate"
+// in the language the app shows.
+func CaTrust() string { return In(i18n.Locale()).CaTrust() }
+
+// CaTrust says "Trust Certificate"
+// in the language of msgs.
+func (msgs Messages) CaTrust() string {
+	return Catalog.Format(msgs.locale, "caTrust", nil)
+}
+
+// CaUntrust says "Remove Trust"
+// in the language the app shows.
+func CaUntrust() string { return In(i18n.Locale()).CaUntrust() }
+
+// CaUntrust says "Remove Trust"
+// in the language of msgs.
+func (msgs Messages) CaUntrust() string {
+	return Catalog.Format(msgs.locale, "caUntrust", nil)
+}
+
+// CaTrustUnavailable says "Install the certificate in the system's trust store manually"
+// in the language the app shows.
+func CaTrustUnavailable() string { return In(i18n.Locale()).CaTrustUnavailable() }
+
+// CaTrustUnavailable says "Install the certificate in the system's trust store manually"
+// in the language of msgs.
+func (msgs Messages) CaTrustUnavailable() string {
+	return Catalog.Format(msgs.locale, "caTrustUnavailable", nil)
+}
+
+// NoticeCATrusted says "The Root CA is now trusted"
+// in the language the app shows.
+func NoticeCATrusted() string { return In(i18n.Locale()).NoticeCATrusted() }
+
+// NoticeCATrusted says "The Root CA is now trusted"
+// in the language of msgs.
+func (msgs Messages) NoticeCATrusted() string {
+	return Catalog.Format(msgs.locale, "noticeCATrusted", nil)
+}
+
+// NoticeCAUntrusted says "The Root CA's trust was removed"
+// in the language the app shows.
+func NoticeCAUntrusted() string { return In(i18n.Locale()).NoticeCAUntrusted() }
+
+// NoticeCAUntrusted says "The Root CA's trust was removed"
+// in the language of msgs.
+func (msgs Messages) NoticeCAUntrusted() string {
+	return Catalog.Format(msgs.locale, "noticeCAUntrusted", nil)
+}
+
+// NoticeCATrustFailed says "The certificate could not be trusted: {error}"
+// in the language the app shows.
+func NoticeCATrustFailed(error string) string { return In(i18n.Locale()).NoticeCATrustFailed(error) }
+
+// NoticeCATrustFailed says "The certificate could not be trusted: {error}"
+// in the language of msgs.
+func (msgs Messages) NoticeCATrustFailed(error string) string {
+	return Catalog.Format(msgs.locale, "noticeCATrustFailed", map[string]any{"error": error})
+}
+
+// NoticeCAUntrustFailed says "The certificate's trust could not be removed: {error}"
+// in the language the app shows.
+func NoticeCAUntrustFailed(error string) string {
+	return In(i18n.Locale()).NoticeCAUntrustFailed(error)
+}
+
+// NoticeCAUntrustFailed says "The certificate's trust could not be removed: {error}"
+// in the language of msgs.
+func (msgs Messages) NoticeCAUntrustFailed(error string) string {
+	return Catalog.Format(msgs.locale, "noticeCAUntrustFailed", map[string]any{"error": error})
+}

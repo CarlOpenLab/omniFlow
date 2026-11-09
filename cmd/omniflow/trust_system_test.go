@@ -39,17 +39,17 @@ func testCertPEM(t *testing.T, commonName string) ([]byte, []byte) {
 
 func TestCertSHA1(t *testing.T) {
 	pemBytes, der := testCertPEM(t, "OmniFlow Test CA")
-	got, err := certSHA1(pemBytes)
+	got, err := certSHA1Bytes(pemBytes)
 	if err != nil {
-		t.Fatalf("certSHA1: %v", err)
+		t.Fatalf("certSHA1Bytes: %v", err)
 	}
 	want := sha1.Sum(der)
 	if string(got) != string(want[:]) {
-		t.Fatalf("certSHA1 = %x, want %x", got, want)
+		t.Fatalf("certSHA1Bytes = %x, want %x", got, want)
 	}
 
-	if _, err := certSHA1([]byte("not a certificate")); err == nil {
-		t.Fatal("certSHA1 accepted non-PEM input")
+	if _, err := certSHA1Bytes([]byte("not a certificate")); err == nil {
+		t.Fatal("certSHA1Bytes accepted non-PEM input")
 	}
 }
 

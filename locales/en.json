@@ -905,5 +905,195 @@
         "example": "GitHub — Repository"
       }
     }
+  },
+
+  "windowMinimize": "Minimize",
+  "@windowMinimize": {
+    "description": "The app-drawn window controls (Windows and Linux)."
+  },
+  "windowMaximize": "Maximize",
+  "@windowMaximize": {
+    "description": "The app-drawn window controls (Windows and Linux)."
+  },
+  "windowRestore": "Restore window",
+  "@windowRestore": {
+    "description": "The app-drawn window controls (Windows and Linux)."
+  },
+  "windowClose": "Close window",
+  "@windowClose": {
+    "description": "The app-drawn window controls (Windows and Linux)."
+  },
+
+  "inspectorSaveAsRequest": "Save as Request",
+  "inspectorMockResponse": "Mock This Response",
+  "inspectorMocked": "MOCK",
+  "inspectorSearchBodies": "Bodies",
+  "inspectorSearchBodiesHint": "Include request and response bodies in the traffic filter (up to 512 KB each)",
+
+  "settingsMocks": "Mocks",
+  "settingsMocksEmpty": "No mocks yet",
+  "settingsMocksHint": "Right-click a captured response in the Inspector and choose Mock This Response.",
+  "settingsMockReveal": "Show the mock file",
+  "settingsMockDelete": "Delete this mock",
+  "settingsMocksFolder": "Show Mocks Folder",
+
+  "noticeFlowSaved": "Saved “{name}” to the collection",
+  "@noticeFlowSaved": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "noticeMockCreated": "Mocking “{name}” from a local file",
+  "@noticeMockCreated": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "noticeMockUpdated": "Updated the mock for “{name}”",
+  "@noticeMockUpdated": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "noticeMockDeleted": "Deleted the mock for “{name}”",
+  "@noticeMockDeleted": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "noticeMockWriteFailed": "The mock file could not be written: {error}",
+  "@noticeMockWriteFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "noticeMockNeedsResponse": "That flow has no response to mock",
+  "noticeMockTruncated": "The captured body was truncated; the mock keeps only its beginning",
+  "noticeMockRevealFailed": "Could not show the mock file: {error}",
+  "@noticeMockRevealFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "inspectorRules": "Rules",
+  "inspectorMapped": "MAPPED",
+  "inspectorMappedHint": "Mapped to {url}",
+  "@inspectorMappedHint": {
+    "placeholders": {
+      "url": { "type": "String" }
+    }
+  },
+
+  "settingsRules": "Rules",
+  "settingsRulesHint": "Map Remote moves matching traffic to another origin; a header rule adds or removes one request or response header.",
+  "settingsRulesEmpty": "No rules yet",
+  "ruleNew": "New Rule",
+  "ruleMapRemote": "Map Remote",
+  "ruleRequestHeader": "Request Header",
+  "ruleResponseHeader": "Response Header",
+  "ruleAnyMethod": "Any method",
+  "ruleKind": "Action",
+  "ruleMethod": "Method",
+  "ruleName": "Name",
+  "ruleNameHint": "Optional; made from the rule when empty",
+  "ruleHost": "Host",
+  "ruleHostHint": "api.example.com or *.example.com",
+  "rulePathPrefix": "Path prefix",
+  "ruleTarget": "Target URL",
+  "ruleTargetHint": "http://localhost:3000 or https://staging.example.com/base",
+  "ruleHeader": "Header",
+  "ruleHeaderHint": "Access-Control-Allow-Origin",
+  "ruleValue": "Value",
+  "ruleValueHint": "The header's value",
+  "ruleRemove": "Remove this header",
+  "ruleRemoveHeader": "Remove {name}",
+  "@ruleRemoveHeader": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "ruleNeedsHost": "A rule needs a host",
+  "ruleNeedsTarget": "The target must be an http:// or https:// URL with a host",
+  "ruleNeedsHeader": "A header rule needs a header name",
+  "ruleProtectedHeader": "Content-Length, Transfer-Encoding and connection framing headers are managed by the proxy",
+  "ruleDelete": "Delete this rule",
+  "noticeRuleSaved": "Saved rule “{name}”",
+  "@noticeRuleSaved": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "noticeRuleDeleted": "Deleted rule “{name}”",
+  "@noticeRuleDeleted": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "sidebarThrottle": "Throttle",
+  "sidebarThrottleHint": "Simulate a slower network for the capture",
+  "throttleOff": "Off",
+  "throttleSlow3G": "Slow 3G",
+  "throttleFast3G": "Fast 3G",
+  "throttle4G": "4G",
+
+  "sidebarDeviceSetup": "Device Setup…",
+  "settingsLANAccess": "Let devices on this network use the proxy",
+  "settingsLANAccessNote": "Only on a network you trust: while this is on, other devices on the network can reach the proxy. Open Device Setup in the Inspector's sidebar for the address, certificate and steps.",
+  "noticeLANEnabled": "LAN access on · {addr}",
+  "@noticeLANEnabled": {
+    "placeholders": {
+      "addr": { "type": "String" }
+    }
+  },
+  "noticeLANDisabled": "LAN access off",
+  "noticeLANNoAddress": "No local network address found",
+  "noticeLANSetupFailed": "The device setup page could not start: {error}",
+  "@noticeLANSetupFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "deviceSetupTitle": "Device Setup",
+  "deviceSetupSubtitle": "Connect a phone or another computer on this network",
+  "deviceSetupLANHint": "Turn on LAN access above to see the proxy address and the steps for this device.",
+  "deviceSetupProxy": "Proxy",
+  "deviceSetupCopyAddr": "Copy proxy address",
+  "deviceSetupAddrCopied": "Proxy address copied",
+  "deviceSetupPage": "Setup page",
+  "deviceSetupCopyPage": "Copy setup page link",
+  "deviceSetupPageCopied": "Setup page link copied",
+  "deviceSetupStep1": "Open {url} on the device and install the OmniFlow Root CA.",
+  "@deviceSetupStep1": {
+    "placeholders": {
+      "url": { "type": "String" }
+    }
+  },
+  "deviceSetupStep2": "iPhone: trust it in Settings → General → About → Certificate Trust Settings. Android: install it as a CA certificate in the Security settings.",
+  "deviceSetupStep3": "Set the Wi-Fi HTTP proxy to {addr}.",
+  "@deviceSetupStep3": {
+    "placeholders": {
+      "addr": { "type": "String" }
+    }
+  },
+  "deviceSetupWarning": "Only use this on a network you trust. While LAN access is on, other devices on this network can reach the proxy.",
+
+  "caTrust": "Trust Certificate",
+  "caUntrust": "Remove Trust",
+  "caTrustUnavailable": "Install the certificate in the system's trust store manually",
+  "noticeCATrusted": "The Root CA is now trusted",
+  "noticeCAUntrusted": "The Root CA's trust was removed",
+  "noticeCATrustFailed": "The certificate could not be trusted: {error}",
+  "@noticeCATrustFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "noticeCAUntrustFailed": "The certificate's trust could not be removed: {error}",
+  "@noticeCAUntrustFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
   }
 }

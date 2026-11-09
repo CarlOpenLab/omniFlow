@@ -9,9 +9,9 @@ import (
 	"os"
 )
 
-// certSHA1 is the certificate's DER SHA-1 fingerprint, the form Windows
+// certSHA1Bytes is the certificate's DER SHA-1 fingerprint, the form Windows
 // certificate stores search by.
-func certSHA1(pemBytes []byte) ([]byte, error) {
+func certSHA1Bytes(pemBytes []byte) ([]byte, error) {
 	block, _ := pem.Decode(pemBytes)
 	if block == nil || block.Type != "CERTIFICATE" {
 		return nil, errors.New("not a certificate")

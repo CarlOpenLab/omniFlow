@@ -173,6 +173,47 @@ type HistoryEntry struct {
 	BodyDropped bool `json:"bodyDropped,omitempty"`
 }
 
+// MockRule answers a matching request from a file instead of the network.
+// Path is the URL's path only, so a mock keeps working while the query
+// changes. Status and ContentType are the captured response's.
+type MockRule struct {
+	ID          string    `json:"id"`
+	Enabled     bool      `json:"enabled"`
+	Name        string    `json:"name"`
+	Method      string    `json:"method"`
+	Host        string    `json:"host"`
+	Path        string    `json:"path"`
+	Status      int       `json:"status"`
+	ContentType string    `json:"contentType,omitempty"`
+	File        string    `json:"file"`
+	CreatedAt   time.Time `json:"createdAt"`
+}
+
+// Kinds of proxy rule. A Map Remote sends a matching request to another
+// origin; the header kinds add, set or remove one header.
+const (
+	RuleMapRemote      = "mapRemote"
+	RuleRequestHeader  = "requestHeader"
+	RuleResponseHeader = "responseHeader"
+)
+
+// ProxyRule changes matching traffic as it passes through the proxy. Method,
+// Host and PathPrefix narrow the match; an empty one matches everything.
+// Host accepts a leading "*." for a subdomain wildcard.
+type ProxyRule struct {
+	ID         string    `json:"id"`
+	Enabled    bool      `json:"enabled"`
+	Name       string    `json:"name"`
+	Kind       string    `json:"kind"`
+	Method     string    `json:"method,omitempty"`
+	Host       string    `json:"host,omitempty"`
+	PathPrefix string    `json:"pathPrefix,omitempty"`
+	Target     string    `json:"target,omitempty"`
+	Header     string    `json:"header,omitempty"`
+	Remove     bool      `json:"remove,omitempty"`
+	CreatedAt  time.Time `json:"createdAt"`
+}
+
 // Prefs are the settings the window stores. A field added later reads as
 // its zero value from an older file, so each is named for that zero to be
 // the default: StopAtRedirects rather than FollowRedirects.
@@ -190,6 +231,9 @@ type Prefs struct {
 	DecryptHTTPS     bool `json:"decryptHTTPS"`
 	FollowFlows      bool `json:"followFlows"`
 	KeepHistory      bool `json:"keepHistory"`
+	// LANAccess lets a device on the local network use the proxy, and starts
+	// the setup page that installs its certificate.
+	LANAccess bool `json:"lanAccess,omitempty"`
 
 	// Environment is the id of the environment the composer resolves
 	// {{variables}} from; "" for none.
@@ -208,6 +252,9 @@ type Prefs struct {
 	// strength: none, subtle, medium or deep; "" for subtle.
 	CardOpacity float64 `json:"cardOpacity,omitempty"`
 	Blur        string  `json:"blur,omitempty"`
+
+	// Throttle is the capture's simulated network: "", slow3g, fast3g or 4g.
+	Throttle string `json:"throttle,omitempty"`
 }
 
 // DefaultTimeout is how long the composer waits for an answer unless the
@@ -241,6 +288,8 @@ type Data struct {
 	Requests     []Request      `json:"requests"`
 	History      []HistoryEntry `json:"history"`
 	Environments []Environment  `json:"environments"`
+	Mocks        []MockRule     `json:"mocks,omitempty"`
+	Rules        []ProxyRule    `json:"rules,omitempty"`
 }
 
 var idSeq atomic.Uint64

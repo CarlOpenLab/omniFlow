@@ -34,7 +34,10 @@ func (a *app) view(c *ui.Context) {
 		a.settingsDialog(c, pal)
 		a.caDialog(c, pal)
 		a.envDialog(c, pal)
+		a.ruleDialog(c, pal)
+		a.deviceSetupDialog(c, pal)
 	})
+	a.windowControls(c)
 }
 
 // backdrop paints the window's ground: a veil of the palette's ground over
@@ -112,7 +115,13 @@ func (a *app) modeSwitcher(c *ui.Context, pal *uitokens.Palette) {
 }
 
 func (a *app) cardHeader(c *ui.Context, pal *uitokens.Palette) {
-	row := ui.Row(c).Height(uitokens.HeaderH).Shrink(0).Padding(0, 12, 0, 16).Gap(10).
+	right := float32(12)
+	if controlsAtRight {
+		// The window's controls are drawn over this header's right end on
+		// Windows and Linux: keep the header's own buttons clear of them.
+		right += windowButtonsRoom
+	}
+	row := ui.Row(c).Height(uitokens.HeaderH).Shrink(0).Padding(0, right, 0, 16).Gap(10).
 		BorderWidth(0, 0, 1, 0).BorderColor(pal.Divider).DragWindow()
 	row.Children(func() {
 		if a.mode == modeInspector {

@@ -4,10 +4,13 @@ package main
 
 import (
 	"os"
+	"os/exec"
 	"unsafe"
 
 	"golang.org/x/sys/windows"
 )
+
+func trustSupported() bool { return true }
 
 // systemTrusts asks Windows' own Root stores whether this certificate is
 // trusted. Both the current user's store and the machine's are checked: a
@@ -17,7 +20,7 @@ func systemTrusts(path string) (trusted, known bool) {
 	if err != nil {
 		return false, false
 	}
-	hash, err := certSHA1(raw)
+	hash, err := certSHA1Bytes(raw)
 	if err != nil {
 		return false, false
 	}
@@ -58,4 +61,18 @@ func systemTrusts(path string) (trusted, known bool) {
 		_ = windows.CertCloseStore(store, 0)
 	}
 	return false, opened
+}
+
+// installCA adds the certificate to the current user's Root store, which
+// browsers that use the Windows store trust. It needs no administrator.
+func installCA(path string) error {
+	return exec.Command("certutil", "-user", "-addstore", "Root", path).Run()
+}
+
+func uninstallCA(path string) error {
+	hash, err := certSHA1(path)
+	if err != nil {
+		return err
+	}
+	return exec.Command("certutil", "-user", "-delstore", "Root", hash).Run()
 }

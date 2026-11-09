@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
@@ -244,5 +246,48 @@ func TestARefusedCertificateBecomesAFlow(t *testing.T) {
 	}
 	if !strings.Contains(f.Err, "Root CA") {
 		t.Errorf("the flow does not say what to do: %q", f.Err)
+	}
+}
+
+func TestAMockAnswersFromItsFile(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "users.json")
+	if err := os.WriteFile(file, []byte(`{"mocked":true}`), 0o644); err != nil {
+		t.Fatalf("write mock: %v", err)
+	}
+
+	p, addr := newTestProxy(t)
+	p.SetMocks([]Mock{{
+		Method: "GET", Host: "mock.example", Path: "/users",
+		Status: http.StatusCreated, ContentType: "application/json", File: file,
+	}})
+	flows := make(chan Flow, 2)
+	p.SetOnFlow(func(f Flow) { flows <- f })
+
+	proxyURL, _ := url.Parse("http://" + addr)
+	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyURL)}}
+	// The host does not resolve: only the mock can answer it. The query is
+	// not part of the rule's match.
+	resp, err := client.Get("http://mock.example/users?page=2")
+	if err != nil {
+		t.Fatalf("request through proxy: %v", err)
+	}
+	body, _ := io.ReadAll(resp.Body)
+	resp.Body.Close()
+	if resp.StatusCode != http.StatusCreated || string(body) != `{"mocked":true}` {
+		t.Fatalf("client got %d %q", resp.StatusCode, body)
+	}
+	if got := resp.Header.Get("Content-Type"); got != "application/json" {
+		t.Errorf("content type %q", got)
+	}
+
+	f := waitFlow(t, flows)
+	if f.Status != http.StatusCreated || string(f.RespBody) != `{"mocked":true}` {
+		t.Errorf("flow is %d %q", f.Status, f.RespBody)
+	}
+	if !f.Mocked {
+		t.Error("the flow does not say a mock answered it")
+	}
+	if f.Host != "mock.example" || f.Path != "/users?page=2" {
+		t.Errorf("flow is %s%s", f.Host, f.Path)
 	}
 }

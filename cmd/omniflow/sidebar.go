@@ -182,6 +182,7 @@ func (a *app) historyRow(c *ui.Context, pal *uitokens.Palette, h model.HistoryEn
 	if row.Hovered() {
 		row.Background(pal.RowHover)
 	}
+	hovered := row.Hovered()
 	row.Children(func() {
 		ui.Text(c, h.Method).Width(40).Shrink(0).FontSize(9).FontWeight(750).
 			TextColor(uitokens.MethodColor(pal, h.Method))
@@ -192,6 +193,10 @@ func (a *app) historyRow(c *ui.Context, pal *uitokens.Palette, h model.HistoryEn
 				TextColor(uitokens.StatusColor(pal, h.Status))
 		} else {
 			ui.Text(c, locales.CommonErrorShort()).FontSize(9.5).FontWeight(600).TextColor(pal.Danger)
+		}
+		if hovered {
+			del := iconButton(c, pal, iconTrash, locales.CommonRemoveHistory(), 20)
+			del.OnClick(func() { a.removeHistory(h.ID) })
 		}
 	})
 	row.ContextMenu(func(m *ui.Menu) {
@@ -295,6 +300,16 @@ func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 				a.prx.SetMITM(a.mitm)
 			}
 		}
+		throttle := ui.Row(c).Height(26).Gap(8)
+		throttle.Children(func() {
+			ui.Text(c, locales.SidebarThrottle()).FontSize(11.5).TextColor(pal.TextMuted).Grow(1)
+			label := throttleLabel(a.throttle)
+			sel := ui.Select(c, &label, throttleLabels()).Width(122).Height(24).
+				Label(locales.SidebarThrottle()).Tooltip(locales.SidebarThrottleHint())
+			if sel.Changed() {
+				a.setThrottle(throttleFromLabel(label))
+			}
+		})
 		caRow := ui.Row(c).Height(24).Gap(6).Padding(0, 4).Margin(0, -4).Radius(6).
 			Cursor(ui.CursorPointer).Label(locales.CaTitle())
 		if caRow.Hovered() {
@@ -377,8 +392,21 @@ func (a *app) inspectorSidebar(c *ui.Context, pal *uitokens.Palette) {
 	note.Children(func() {
 		ui.Text(c, locales.SidebarPointDevice()).FontSize(10.5).FontWeight(650).
 			TextColor(pal.Text)
-		ui.Text(c, locales.SidebarProxyHint("127.0.0.1:"+a.proxyPort)).
+		addr := "127.0.0.1:" + a.proxyPort
+		if a.lanAccess {
+			addr = a.lanProxyAddr()
+		}
+		ui.Text(c, locales.SidebarProxyHint(addr)).
 			FontSize(10).TextColor(pal.TextMuted).LineHeight(1.4)
+		ui.Row(c).Height(24).Children(func() {
+			ui.Spacer(c)
+			if ui.Button(c.Key("device-setup"), locales.SidebarDeviceSetup()).Height(24).Clicked() {
+				a.deviceSetupOpen = true
+				if a.lanAccess && a.setupSrv == nil {
+					_ = a.ensureSetupServer()
+				}
+			}
+		})
 	})
 }
 

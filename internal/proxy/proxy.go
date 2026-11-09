@@ -14,7 +14,10 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"net/url"
+	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -24,6 +27,46 @@ import (
 // MaxBody is how much of a body is kept for the inspector. The full body
 // still reaches the client; only the copy on screen is cut.
 const MaxBody = 4 << 20
+
+// Kinds of rule. They are the values model.ProxyRule.Kind holds.
+const (
+	RuleMapRemote      = "mapRemote"
+	RuleRequestHeader  = "requestHeader"
+	RuleResponseHeader = "responseHeader"
+)
+
+// Mock replaces a matching request's response with a file from disk. Path is
+// the URL's path only, so a mock keeps working while the query changes.
+type Mock struct {
+	Method      string
+	Host        string
+	Path        string
+	Status      int
+	ContentType string
+	File        string
+}
+
+// Rule changes matching traffic as it passes through the proxy. Method, Host
+// and PathPrefix narrow the match; an empty one matches everything. Host
+// accepts a leading "*." for a subdomain wildcard.
+type Rule struct {
+	Kind       string
+	Method     string
+	Host       string
+	PathPrefix string
+	// Target is the new origin for a Map Remote, or the header value for a
+	// header rule.
+	Target string
+	Header string
+	Remove bool
+}
+
+// Throttle simulates a slower network: latency before the answer, then a cap
+// on how fast its body reaches the client.
+type Throttle struct {
+	Latency     time.Duration
+	BytesPerSec int64
+}
 
 // Proxy is a capturing HTTP proxy listening on loopback.
 type Proxy struct {
@@ -38,6 +81,9 @@ type Proxy struct {
 	conns     map[net.Conn]struct{}
 	transport *http.Transport
 	nextID    atomic.Uint64
+	mocks     []Mock
+	rules     []Rule
+	throttle  Throttle
 }
 
 // New returns a proxy that signs with ca. Call Start before using it, and
@@ -82,8 +128,36 @@ func (p *Proxy) MITM() bool {
 	return p.mitm
 }
 
+// SetMocks replaces the rules that answer requests with a local file. A rule
+// whose file cannot be read falls through to the network.
+func (p *Proxy) SetMocks(mocks []Mock) {
+	p.mu.Lock()
+	p.mocks = append([]Mock(nil), mocks...)
+	p.mu.Unlock()
+}
+
+// SetRules replaces the rules that map origins and rewrite headers.
+func (p *Proxy) SetRules(rules []Rule) {
+	p.mu.Lock()
+	p.rules = append([]Rule(nil), rules...)
+	p.mu.Unlock()
+}
+
+// SetThrottle sets the simulated network conditions.
+func (p *Proxy) SetThrottle(t Throttle) {
+	p.mu.Lock()
+	p.throttle = t
+	p.mu.Unlock()
+}
+
 // Start listens on 127.0.0.1:port. It is safe to call when running.
 func (p *Proxy) Start(port string) (string, error) {
+	return p.StartOn("127.0.0.1", port)
+}
+
+// StartOn listens on host:port, so a device on the local network can use the
+// proxy. It is safe to call when running.
+func (p *Proxy) StartOn(host, port string) (string, error) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	if p.srv != nil {
@@ -92,9 +166,12 @@ func (p *Proxy) Start(port string) (string, error) {
 	if strings.TrimSpace(port) == "" {
 		port = "9090"
 	}
-	ln, err := net.Listen("tcp", net.JoinHostPort("127.0.0.1", port))
+	if strings.TrimSpace(host) == "" {
+		host = "127.0.0.1"
+	}
+	ln, err := net.Listen("tcp", net.JoinHostPort(host, port))
 	if err != nil {
-		return "", fmt.Errorf("the proxy could not listen on 127.0.0.1:%s: %w", port, err)
+		return "", fmt.Errorf("the proxy could not listen on %s:%s: %w", host, port, err)
 	}
 	srv := &http.Server{
 		Handler:           p,
@@ -378,10 +455,40 @@ func (p *Proxy) forward(in *http.Request, scheme, authority string, isTLS bool) 
 		flow.ReqSize = int64(len(reqBody))
 	}
 
+	pathname, _, _ := strings.Cut(flow.Path, "?")
+	throttle := p.currentThrottle()
+	if throttle.Latency > 0 {
+		time.Sleep(throttle.Latency)
+	}
+
+	mock, hasMock := p.mockFor(in.Method, host, flow.Path)
+	if !hasMock {
+		p.applyMapRemote(out, flow, in.Method, host, pathname)
+	}
+	p.applyRequestHeaders(out, in.Method, host, pathname)
+	flow.ReqHeaders = headerPairs(out.Header)
+
+	if hasMock {
+		if resp, err := mock.response(out); err == nil {
+			flow.Mocked = true
+			p.applyResponseHeaders(resp.Header, in.Method, host, pathname)
+			flow.Status = resp.StatusCode
+			flow.StatusText = http.StatusText(resp.StatusCode)
+			flow.RespHeaders = headerPairs(resp.Header)
+			flow.ContentType = resp.Header.Get("Content-Type")
+			flow.RespSize = resp.ContentLength
+			flow.Duration = time.Since(start)
+			body := &captureReader{r: throttleBody(resp.Body, throttle.BytesPerSec), limit: MaxBody}
+			return resp, flow, body, nil
+		}
+	}
+
 	resp, err := p.transport.RoundTrip(out)
 	if err != nil {
 		return nil, flow, nil, err
 	}
+	p.applyResponseHeaders(resp.Header, in.Method, host, pathname)
+	resp.Body = throttleBody(resp.Body, throttle.BytesPerSec)
 	flow.Status = resp.StatusCode
 	flow.StatusText = http.StatusText(resp.StatusCode)
 	flow.RespHeaders = headerPairs(resp.Header)
@@ -391,6 +498,213 @@ func (p *Proxy) forward(in *http.Request, scheme, authority string, isTLS bool) 
 
 	body := &captureReader{r: resp.Body, limit: MaxBody}
 	return resp, flow, body, nil
+}
+
+// mockFor returns the first mock that matches the request's method, host and
+// path. The query is not part of the match.
+func (p *Proxy) mockFor(method, host, path string) (Mock, bool) {
+	pathname, _, _ := strings.Cut(path, "?")
+	p.mu.Lock()
+	mocks := append([]Mock(nil), p.mocks...)
+	p.mu.Unlock()
+	for _, m := range mocks {
+		if m.Method != "" && !strings.EqualFold(m.Method, method) {
+			continue
+		}
+		if !strings.EqualFold(m.Host, host) {
+			continue
+		}
+		if m.Path != "" && m.Path != pathname {
+			continue
+		}
+		return m, true
+	}
+	return Mock{}, false
+}
+
+// response builds the response a mock answers with: its file's bytes, the
+// captured status and content type.
+func (m Mock) response(req *http.Request) (*http.Response, error) {
+	body, err := os.ReadFile(m.File)
+	if err != nil {
+		return nil, err
+	}
+	status := m.Status
+	if status == 0 {
+		status = http.StatusOK
+	}
+	contentType := m.ContentType
+	if contentType == "" {
+		contentType = http.DetectContentType(body)
+	}
+	header := make(http.Header)
+	header.Set("Content-Type", contentType)
+	header.Set("Content-Length", strconv.Itoa(len(body)))
+	return &http.Response{
+		StatusCode:    status,
+		Status:        fmt.Sprintf("%d %s", status, http.StatusText(status)),
+		Header:        header,
+		Body:          io.NopCloser(bytes.NewReader(body)),
+		ContentLength: int64(len(body)),
+		Request:       req,
+	}, nil
+}
+
+// currentThrottle reads the simulated network conditions once per request.
+func (p *Proxy) currentThrottle() Throttle {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	return p.throttle
+}
+
+// rulesSnapshot is the rule list as this request sees it, so a rule changed
+// mid-flight cannot split one exchange between two rule sets.
+func (p *Proxy) rulesSnapshot() []Rule {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	return append([]Rule(nil), p.rules...)
+}
+
+// applyMapRemote sends the request to the first matching rule's origin. The
+// path and query stay; a path in the target is put in front of them.
+func (p *Proxy) applyMapRemote(out *http.Request, flow *Flow, method, host, path string) {
+	for _, r := range p.rulesSnapshot() {
+		if r.Kind != RuleMapRemote || !ruleMatches(r, method, host, path) {
+			continue
+		}
+		target, err := url.Parse(strings.TrimSpace(r.Target))
+		if err != nil || target.Scheme == "" || target.Host == "" {
+			continue
+		}
+		out.URL.Scheme = target.Scheme
+		out.URL.Host = target.Host
+		out.Host = target.Host
+		if target.Path != "" && target.Path != "/" {
+			out.URL.Path = joinPath(target.Path, out.URL.Path)
+			out.URL.RawPath = ""
+		}
+		flow.Mapped = true
+		flow.MappedTo = target.Scheme + "://" + target.Host + out.URL.RequestURI()
+		return
+	}
+}
+
+// applyRequestHeaders sets or removes the headers of the request before it
+// leaves the proxy. Rules are applied oldest first, so the newest rule
+// matching a header is the one seen.
+func (p *Proxy) applyRequestHeaders(out *http.Request, method, host, path string) {
+	rules := p.rulesSnapshot()
+	for i := len(rules) - 1; i >= 0; i-- {
+		r := rules[i]
+		if r.Kind != RuleRequestHeader || !ruleMatches(r, method, host, path) {
+			continue
+		}
+		applyHeader(out.Header, out, r)
+	}
+}
+
+// applyResponseHeaders sets or removes the headers of the response before it
+// reaches the client, newest rule last.
+func (p *Proxy) applyResponseHeaders(h http.Header, method, host, path string) {
+	rules := p.rulesSnapshot()
+	for i := len(rules) - 1; i >= 0; i-- {
+		r := rules[i]
+		if r.Kind != RuleResponseHeader || !ruleMatches(r, method, host, path) {
+			continue
+		}
+		applyHeader(h, nil, r)
+	}
+}
+
+func applyHeader(h http.Header, req *http.Request, r Rule) {
+	name := strings.TrimSpace(r.Header)
+	if name == "" || protectedHeader(name) {
+		return
+	}
+	if r.Remove {
+		h.Del(name)
+		return
+	}
+	h.Set(name, r.Target)
+	if req != nil && strings.EqualFold(name, "Host") {
+		req.Host = r.Target
+	}
+}
+
+// protectedHeader keeps the handlers in charge of framing.
+func protectedHeader(name string) bool {
+	switch strings.ToLower(name) {
+	case "content-length", "transfer-encoding", "connection", "content-encoding",
+		"proxy-connection", "keep-alive", "te", "trailer", "upgrade":
+		return true
+	}
+	return false
+}
+
+// ruleMatches reports whether the rule narrows the request's method, host and
+// path as it asks.
+func ruleMatches(r Rule, method, host, path string) bool {
+	if r.Method != "" && !strings.EqualFold(r.Method, method) {
+		return false
+	}
+	if !hostMatches(r.Host, host) {
+		return false
+	}
+	if r.PathPrefix != "" && r.PathPrefix != "/" && !strings.HasPrefix(path, r.PathPrefix) {
+		return false
+	}
+	return true
+}
+
+func hostMatches(pattern, host string) bool {
+	pattern = strings.TrimSpace(pattern)
+	if pattern == "" || pattern == "*" {
+		return true
+	}
+	if strings.HasPrefix(pattern, "*.") {
+		return strings.HasSuffix(strings.ToLower(host), strings.ToLower(pattern[1:]))
+	}
+	return strings.EqualFold(pattern, host)
+}
+
+func joinPath(a, b string) string {
+	aslash := strings.HasSuffix(a, "/")
+	bslash := strings.HasPrefix(b, "/")
+	switch {
+	case aslash && bslash:
+		return a + b[1:]
+	case !aslash && !bslash:
+		return a + "/" + b
+	}
+	return a + b
+}
+
+// throttledBody slows a response body to at most bytesPerSec, timing from the
+// first read so it does not add the origin's own latency twice.
+type throttledBody struct {
+	io.ReadCloser
+	bytesPerSec int64
+	started     time.Time
+	read        int64
+}
+
+func throttleBody(r io.ReadCloser, bytesPerSec int64) io.ReadCloser {
+	if r == nil || bytesPerSec <= 0 {
+		return r
+	}
+	return &throttledBody{ReadCloser: r, bytesPerSec: bytesPerSec, started: time.Now()}
+}
+
+func (t *throttledBody) Read(p []byte) (int, error) {
+	n, err := t.ReadCloser.Read(p)
+	t.read += int64(n)
+	if n > 0 {
+		want := time.Duration(float64(t.read) / float64(t.bytesPerSec) * float64(time.Second))
+		if wait := want - time.Since(t.started); wait > 0 {
+			time.Sleep(wait)
+		}
+	}
+	return n, err
 }
 
 // finishFlow completes a flow's body sizes and hands it to the window. It
