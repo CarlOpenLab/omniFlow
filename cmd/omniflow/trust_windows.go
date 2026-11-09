@@ -12,6 +12,10 @@ import (
 
 func trustSupported() bool { return true }
 
+// trustCheckSupported reports whether the system can be asked whether it
+// trusts the certificate, which is separate from this app changing that.
+func trustCheckSupported() bool { return true }
+
 // systemTrusts asks Windows' own Root stores whether this certificate is
 // trusted. Both the current user's store and the machine's are checked: a
 // certificate imported without administrator rights lives in the former.
@@ -33,6 +37,10 @@ func systemTrusts(path string) (trusted, known bool) {
 		windows.CERT_SYSTEM_STORE_LOCAL_MACHINE,
 	}
 	opened := false
+	// CERT_FIND_SHA1_HASH reads pvFindPara as a CRYPT_HASH_BLOB, not as the
+	// raw digest: without the length and pointer wings Crypt32 reads hash
+	// bytes as a size and a pointer.
+	blob := windows.CryptHashBlob{Size: uint32(len(hash)), Data: &hash[0]}
 	for _, location := range locations {
 		store, err := windows.CertOpenStore(
 			windows.CERT_STORE_PROV_SYSTEM,
@@ -50,7 +58,7 @@ func systemTrusts(path string) (trusted, known bool) {
 			windows.X509_ASN_ENCODING|windows.PKCS_7_ASN_ENCODING,
 			0,
 			windows.CERT_FIND_SHA1_HASH,
-			unsafe.Pointer(&hash[0]),
+			unsafe.Pointer(&blob),
 			nil,
 		)
 		if err == nil && cert != nil {

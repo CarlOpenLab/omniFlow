@@ -27,7 +27,7 @@ const backupName = "system-proxy-backup.json"
 // settings are left untouched and the file is kept as .corrupt.
 var ErrCorruptBackup = errors.New("the system proxy backup is corrupt")
 
-const operationTimeout = 30 * time.Second
+var operationTimeout = 30 * time.Second
 
 // platformOps is what a platform does to the system proxy. Snapshot reads
 // the current settings; Apply points them at the local proxy; Restore puts
@@ -112,8 +112,12 @@ func (m *Manager) Enable(port int, captureHTTPS bool) error {
 	if err := m.ops.Apply(ctx, m.original, port, captureHTTPS); err != nil {
 		// A half-applied proxy is worse than the failure itself: put the
 		// snapshot back now, and keep it if that also fails so the next
-		// stop or start can try again.
-		if restoreErr := m.ops.Restore(ctx, m.original); restoreErr != nil {
+		// stop or start can try again. The rollback gets a fresh deadline:
+		// the failure may be the operation's own deadline running out, and
+		// an expired context would stop it before it changed anything.
+		restoreCtx, restoreCancel := context.WithTimeout(context.Background(), operationTimeout)
+		defer restoreCancel()
+		if restoreErr := m.ops.Restore(restoreCtx, m.original); restoreErr != nil {
 			m.active = true
 			return fmt.Errorf("%w (putting the previous proxy back also failed: %v)", err, restoreErr)
 		}

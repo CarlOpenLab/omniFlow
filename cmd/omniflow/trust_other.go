@@ -6,6 +6,9 @@ import "errors"
 
 func trustSupported() bool { return false }
 
+// trustCheckSupported is false here too: systemTrusts has no store to ask.
+func trustCheckSupported() bool { return false }
+
 // systemTrusts cannot ask away from macOS and Windows: whether the
 // certificate is trusted is not known.
 func systemTrusts(string) (trusted, known bool) { return false, false }

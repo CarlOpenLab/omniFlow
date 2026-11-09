@@ -117,13 +117,16 @@ func (windowsOps) Restore(_ context.Context, original json.RawMessage) error {
 		{"AutoConfigURL", state.AutoConfigURL},
 		{"AutoDetect", state.AutoDetect},
 	}
+	// Every value is tried even if one fails, so a failed ProxyEnable write
+	// cannot leave ProxyServer pointing at the capture proxy's closed port.
+	var errs []error
 	for _, v := range values {
 		if err := restoreValue(k, v.name, v.value); err != nil {
-			return err
+			errs = append(errs, err)
 		}
 	}
 	notifyWinINet()
-	return nil
+	return errors.Join(errs...)
 }
 
 func readString(k registry.Key, name string) (windowsValue, error) {

@@ -23,7 +23,7 @@ const (
 // checkTrust asks the system again whether it trusts the Root CA, off the
 // main thread, as the dialog opens and when asked to.
 func (a *app) checkTrust() {
-	if a.ca == nil || a.caTrust == trustChecking || !trustSupported() {
+	if a.ca == nil || a.caTrust == trustChecking || !trustCheckSupported() {
 		return
 	}
 	a.caTrust = trustChecking
@@ -38,14 +38,20 @@ func (a *app) checkTrust() {
 			state = trustNo
 		}
 		a.update(func() {
-			a.caTrust = state
 			// A certificate installed while capture runs lets the HTTPS
-			// proxy be taken over without a restart.
-			if state == trustYes {
-				a.syncSystemProxy()
-			}
+			// proxy be taken over without a restart; one removed from under
+			// it must give HTTPS back just as quickly.
+			a.recordTrust(state)
 		})
 	}()
+}
+
+// recordTrust saves what the system said about the Root CA and brings the
+// system proxy in line: HTTPS is only intercepted while the CA is trusted,
+// whether the change came from this app or from outside it.
+func (a *app) recordTrust(state trustState) {
+	a.caTrust = state
+	a.syncSystemProxy()
 }
 
 // trustCA installs the Root CA in the user's trust store, off the main
@@ -73,7 +79,7 @@ func (a *app) trustCA() {
 			state = trustNo
 		}
 		a.update(func() {
-			a.caTrust = state
+			a.recordTrust(state)
 			if state == trustYes {
 				a.setNotice(locales.NoticeCATrusted())
 			}
@@ -105,7 +111,7 @@ func (a *app) untrustCA() {
 			state = trustNo
 		}
 		a.update(func() {
-			a.caTrust = state
+			a.recordTrust(state)
 			if state == trustNo {
 				a.setNotice(locales.NoticeCAUntrusted())
 			}

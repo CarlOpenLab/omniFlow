@@ -199,6 +199,39 @@ func TestRecoverFailureIsReportedButDoesNotBlock(t *testing.T) {
 	}
 }
 
+// Losing the CA's trust must stop HTTPS interception at once, and regaining
+// it must start it again without waiting for an unrelated sync.
+func TestTrustChangesResyncTheSystemProxy(t *testing.T) {
+	a := newTestApp(t)
+	a.proxyPort = freePort(t)
+	a.autoProxy = true
+	a.mitm = true
+	fake := &fakeSystemProxy{}
+	a.sysproxy = fake
+	withTrust(t, true, true)
+	t.Cleanup(func() { a.prx.Stop() })
+
+	a.startProxy()
+	if len(fake.enables) != 1 || !fake.enables[0].https {
+		t.Fatalf("enables = %+v, want one HTTPS enable", fake.enables)
+	}
+
+	systemTrustCheck = trustAs(false, true)
+	a.recordTrust(trustNo)
+	if len(fake.enables) != 2 {
+		t.Fatalf("enables after trust was removed = %d, want 2", len(fake.enables))
+	}
+	if fake.enables[1].https {
+		t.Fatal("HTTPS is still proxied after the Root CA lost its trust")
+	}
+
+	systemTrustCheck = trustAs(true, true)
+	a.recordTrust(trustYes)
+	if len(fake.enables) != 3 || !fake.enables[2].https {
+		t.Fatalf("enables after trust returned = %+v, want an HTTPS enable", fake.enables)
+	}
+}
+
 func TestSetAutoProxyPersistsThePreference(t *testing.T) {
 	a := newTestApp(t)
 	fake := &fakeSystemProxy{}

@@ -11,6 +11,10 @@ import (
 
 func trustSupported() bool { return true }
 
+// trustCheckSupported reports whether the system can be asked whether it
+// trusts the certificate, which is separate from this app changing that.
+func trustCheckSupported() bool { return true }
+
 // systemTrusts asks macOS whether it trusts the certificate at path as a
 // root, as an app's TLS would, by the basic X.509 policy: it is read-only,
 // and changes nothing in the keychains. known is false when it could not ask.

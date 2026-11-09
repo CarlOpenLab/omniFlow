@@ -12,6 +12,10 @@ import (
 // or administrator tools this app does not drive.
 func trustSupported() bool { return false }
 
+// trustCheckSupported is true: the bundle can be read even though this app
+// cannot write to it, so the dialog still shows the live trust state.
+func trustCheckSupported() bool { return true }
+
 func installCA(string) error {
 	return errors.New("install the certificate in the system's trust store manually")
 }

@@ -124,35 +124,47 @@ func (d *darwinOps) Restore(ctx context.Context, original json.RawMessage) error
 	if err != nil {
 		return err
 	}
+	var errs []error
 	for _, svc := range state.Services {
 		if svc.Web.Auth || svc.Secure.Auth {
 			continue
 		}
-		if svc.AutoURL.Enabled && svc.AutoURL.URL != "" {
-			if err := d.set(ctx, "-setautoproxyurl", svc.Name, svc.AutoURL.URL); err != nil {
-				return err
-			}
-			if err := d.set(ctx, "-setautoproxystate", svc.Name, "on"); err != nil {
-				return err
-			}
-		} else if err := d.set(ctx, "-setautoproxystate", svc.Name, "off"); err != nil {
-			return err
-		}
-		discovery := "off"
-		if svc.AutoDiscovery {
-			discovery = "on"
-		}
-		if err := d.set(ctx, "-setproxyautodiscovery", svc.Name, discovery); err != nil {
-			return err
-		}
-		if err := d.restoreProxy(ctx, "-setwebproxy", "-setwebproxystate", svc.Name, svc.Web); err != nil {
-			return err
-		}
-		if err := d.restoreProxy(ctx, "-setsecurewebproxy", "-setsecurewebproxystate", svc.Name, svc.Secure); err != nil {
-			return err
+		if err := d.restoreService(ctx, svc); err != nil {
+			errs = append(errs, err)
 		}
 	}
-	return nil
+	return errors.Join(errs...)
+}
+
+// restoreService puts one service's PAC, discovery and proxies back. A failed
+// command does not stop the rest: every setting this app changed is tried, so
+// one awkward service cannot leave the others on the capture proxy's port.
+func (d *darwinOps) restoreService(ctx context.Context, svc darwinService) error {
+	var errs []error
+	if svc.AutoURL.Enabled && svc.AutoURL.URL != "" {
+		if err := d.set(ctx, "-setautoproxyurl", svc.Name, svc.AutoURL.URL); err != nil {
+			errs = append(errs, err)
+		}
+		if err := d.set(ctx, "-setautoproxystate", svc.Name, "on"); err != nil {
+			errs = append(errs, err)
+		}
+	} else if err := d.set(ctx, "-setautoproxystate", svc.Name, "off"); err != nil {
+		errs = append(errs, err)
+	}
+	discovery := "off"
+	if svc.AutoDiscovery {
+		discovery = "on"
+	}
+	if err := d.set(ctx, "-setproxyautodiscovery", svc.Name, discovery); err != nil {
+		errs = append(errs, err)
+	}
+	if err := d.restoreProxy(ctx, "-setwebproxy", "-setwebproxystate", svc.Name, svc.Web); err != nil {
+		errs = append(errs, err)
+	}
+	if err := d.restoreProxy(ctx, "-setsecurewebproxy", "-setsecurewebproxystate", svc.Name, svc.Secure); err != nil {
+		errs = append(errs, err)
+	}
+	return errors.Join(errs...)
 }
 
 func decodeDarwinState(raw json.RawMessage) (darwinState, error) {

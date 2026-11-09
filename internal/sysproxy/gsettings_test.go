@@ -64,6 +64,32 @@ func TestGsettingsSnapshotsAndApplies(t *testing.T) {
 	assertCalls(t, f.calls, wantRestore)
 }
 
+// A failed value must not leave the values after it still pointing at the
+// capture proxy.
+func TestGsettingsRestoreContinuesAfterAFailedValue(t *testing.T) {
+	f := newFakeRunner()
+	gsettingsFixture(f)
+	ops := newGsettingsOps(f)
+	ctx := context.Background()
+	snap, err := ops.Snapshot(ctx)
+	if err != nil {
+		t.Fatalf("snapshot: %v", err)
+	}
+
+	f.resetCalls()
+	f.fail([]string{"gsettings", "set", "org.gnome.system.proxy.http", "host", "'proxy.corp'"},
+		errors.New("dconf write failed"))
+	if err := ops.Restore(ctx, snap); err == nil {
+		t.Fatal("restore reported success after a failed write")
+	}
+	if got := f.callsStarting("set", "org.gnome.system.proxy.https", "host"); len(got) != 1 {
+		t.Fatalf("restore stopped before the HTTPS host: %v", f.calls)
+	}
+	if got := f.callsStarting("set", "org.gnome.system.proxy", "use-same-proxy"); len(got) != 1 {
+		t.Fatalf("restore stopped before use-same-proxy: %v", f.calls)
+	}
+}
+
 func TestGsettingsHTTPOnlyClearsTheSecureProxy(t *testing.T) {
 	f := newFakeRunner()
 	gsettingsFixture(f)

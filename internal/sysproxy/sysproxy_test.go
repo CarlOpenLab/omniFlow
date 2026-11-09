@@ -24,6 +24,9 @@ type fakeOps struct {
 	lastOriginal json.RawMessage
 	lastPort     int
 	lastHTTPS    bool
+	// restoreCtxErr is the rollback context's error, if any: a rollback that
+	// ran after the operation's deadline could not do its job.
+	restoreCtxErr error
 }
 
 func (f *fakeOps) Name() string { return f.name }
@@ -49,8 +52,9 @@ func (f *fakeOps) Apply(_ context.Context, original json.RawMessage, port int, c
 	return f.applyErr
 }
 
-func (f *fakeOps) Restore(_ context.Context, original json.RawMessage) error {
+func (f *fakeOps) Restore(ctx context.Context, original json.RawMessage) error {
 	f.restoreCalls++
+	f.restoreCtxErr = ctx.Err()
 	f.lastOriginal = append(json.RawMessage(nil), original...)
 	return f.restoreErr
 }
@@ -306,6 +310,27 @@ func TestApplyFailureRollsBackAndForgetsTheBackup(t *testing.T) {
 	}
 	if m.Active() {
 		t.Fatal("the manager is active after a rolled-back apply")
+	}
+}
+
+// A rollback must run even when the operation's own deadline is what failed:
+// otherwise the machine is left with half-applied settings.
+func TestRollbackRunsAfterTheOperationDeadline(t *testing.T) {
+	old := operationTimeout
+	operationTimeout = 20 * time.Millisecond
+	t.Cleanup(func() { operationTimeout = old })
+
+	f := &fakeOps{name: "darwin", applyErr: errors.New("apply failed")}
+	f.onApply = func() { time.Sleep(60 * time.Millisecond) }
+	m, _ := newTestManager(t, f)
+	if err := m.Enable(9090, false); err == nil {
+		t.Fatal("enable reported success after a failed apply")
+	}
+	if f.restoreCalls != 1 {
+		t.Fatalf("rollback ran %d times, want 1", f.restoreCalls)
+	}
+	if f.restoreCtxErr != nil {
+		t.Fatalf("the rollback ran with an expired context: %v", f.restoreCtxErr)
 	}
 }
 

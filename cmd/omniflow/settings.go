@@ -620,7 +620,7 @@ func (a *app) caDialog(c *ui.Context, pal *uitokens.Palette) {
 		trustRow := ui.Row(c).Height(24).Gap(8)
 		trustRow.Children(func() {
 			col, text := pal.TextFaint, locales.CaTrustUnknown()
-			if !trustSupported() {
+			if !trustCheckSupported() {
 				col, text = pal.TextFaint, locales.CaTrustUnavailable()
 			} else {
 				switch a.caTrust {
@@ -643,7 +643,7 @@ func (a *app) caDialog(c *ui.Context, pal *uitokens.Palette) {
 					a.trustCA()
 				}
 			}
-			if trustSupported() && a.caTrust != trustChecking {
+			if trustCheckSupported() && a.caTrust != trustChecking {
 				if ui.Button(c.Key("ca-recheck"), locales.CaCheckAgain()).Clicked() {
 					a.checkTrust()
 				}

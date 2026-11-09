@@ -3,6 +3,7 @@ package sysproxy
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -109,12 +110,15 @@ func (g *gsettingsOps) Restore(ctx context.Context, original json.RawMessage) er
 		{gsettingsProxySchema + ".https", "port", state.HTTPSPort},
 		{gsettingsProxySchema, "use-same-proxy", state.UseSameProxy},
 	}
+	// Every value is tried even if one fails, so the settings after a failed
+	// write are not left pointing at the capture proxy.
+	var errs []error
 	for _, v := range values {
 		if err := g.set(ctx, v.schema, v.key, v.value); err != nil {
-			return err
+			errs = append(errs, err)
 		}
 	}
-	return nil
+	return errors.Join(errs...)
 }
 
 func (g *gsettingsOps) get(ctx context.Context, schema, key string) (string, error) {

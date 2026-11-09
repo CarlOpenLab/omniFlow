@@ -97,6 +97,32 @@ func TestDarwinSnapshotsServicesAndAppliesTheProxy(t *testing.T) {
 	assertCalls(t, f.calls, wantRestore)
 }
 
+// A service's restore failing must not leave the services after it pointing
+// at the capture proxy's closed port.
+func TestDarwinRestoreContinuesAfterAFailedService(t *testing.T) {
+	f := newFakeRunner()
+	darwinFixture(f)
+	ops := newDarwinOps(f)
+	ctx := context.Background()
+	snap, err := ops.Snapshot(ctx)
+	if err != nil {
+		t.Fatalf("snapshot: %v", err)
+	}
+
+	f.resetCalls()
+	f.fail([]string{"networksetup", "-setproxyautodiscovery", "Wi-Fi", "on"},
+		errors.New("service disappeared"))
+	if err := ops.Restore(ctx, snap); err == nil {
+		t.Fatal("restore reported success after a failed command")
+	}
+	if got := f.callsStarting("-setwebproxy", "Ethernet"); len(got) != 1 {
+		t.Fatalf("restore stopped before Ethernet: %v", f.calls)
+	}
+	if got := f.callsStarting("-setsecurewebproxy", "Ethernet"); len(got) != 1 {
+		t.Fatalf("restore skipped Ethernet's secure proxy: %v", f.calls)
+	}
+}
+
 func TestDarwinHTTPOnlyTurnsTheSecureProxyOff(t *testing.T) {
 	f := newFakeRunner()
 	darwinFixture(f)
