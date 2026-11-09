@@ -323,6 +323,8 @@ func (a *app) settingsCapturePage(c *ui.Context, pal *uitokens.Palette) {
 		if a.prx != nil {
 			a.prx.SetMITM(a.mitm)
 		}
+		// The system HTTPS proxy follows decryption: off, HTTPS goes direct.
+		a.syncSystemProxy()
 	}
 	if a.prefs != before {
 		a.savePrefs()

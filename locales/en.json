@@ -783,6 +783,18 @@
 
   "noticeProxyStopped": "Proxy stopped",
 
+  "noticeSystemProxyFailed": "Could not set the system proxy: {error}",
+  "@noticeSystemProxyFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "the backup could not be read"
+      }
+    }
+  },
+
+  "noticeSystemProxyCorrupt": "The system proxy backup is damaged. Check the proxy settings in System Settings.",
+
   "noticeSessionCleared": "Session cleared",
 
   "noticeNoTraffic": "There is no traffic to export",

@@ -27,6 +27,13 @@ func (a *app) checkTrust() {
 		case known:
 			state = trustNo
 		}
-		a.update(func() { a.caTrust = state })
+		a.update(func() {
+			a.caTrust = state
+			// A certificate installed while capture runs lets the HTTPS
+			// proxy be taken over without a restart.
+			if state == trustYes {
+				a.syncSystemProxy()
+			}
+		})
 	}()
 }

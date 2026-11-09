@@ -656,6 +656,18 @@
 
   "noticeProxyStopped": "代理已停止",
 
+  "noticeSystemProxyFailed": "无法设置系统代理：{error}",
+  "@noticeSystemProxyFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "the backup could not be read"
+      }
+    }
+  },
+
+  "noticeSystemProxyCorrupt": "系统代理的备份已损坏。请检查系统设置里的代理配置。",
+
   "noticeSessionCleared": "已清空抓包会话",
 
   "noticeNoTraffic": "没有可导出的流量",

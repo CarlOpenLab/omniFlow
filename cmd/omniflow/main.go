@@ -19,6 +19,13 @@ func main() {
 	// history and the capture certificate live.
 	mygo.App.SetName("OmniFlow")
 
+	// One instance owns the system proxy and its backup; a second launch
+	// hands its arguments to the first instead of restoring the proxy from
+	// under a running capture.
+	if !mygo.App.RequestSingleInstanceLock() {
+		return
+	}
+
 	// Auto-update: the app checks its own release feed and offers new
 	// versions with their release notes. The native plugin draws that window
 	// with mygo's own UI rather than a web page, as the rest of this app is
@@ -34,12 +41,16 @@ func main() {
 		a.win = mygo.NewWindow(a.windowOptions(ui.View(a.view)))
 		a.win.OnClosed(func() {
 			a.persistOnClose()
-			if a.prx != nil {
-				a.prx.Stop()
-			}
+			a.stopProxy()
 			mygo.App.Quit()
 		})
 		a.installMenu()
+		mygo.App.OnSecondInstance(func([]string, string) {
+			if a.win != nil {
+				a.win.Show()
+				a.win.Focus()
+			}
+		})
 		// The app's own menu labels are built here, not by MyGo, so they
 		// are made again in the new language when the app shows another.
 		mygo.App.OnLocaleChanged(func(string) { a.installMenu() })
@@ -50,7 +61,5 @@ func main() {
 	if err := mygo.App.Run(); err != nil {
 		log.Fatal(err)
 	}
-	if a.prx != nil {
-		a.prx.Stop()
-	}
+	a.stopProxy()
 }

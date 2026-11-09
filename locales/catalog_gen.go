@@ -3453,6 +3453,28 @@ func (msgs Messages) NoticeProxyStopped() string {
 	return Catalog.Format(msgs.locale, "noticeProxyStopped", nil)
 }
 
+// NoticeSystemProxyFailed says "Could not set the system proxy: {error}"
+// in the language the app shows.
+func NoticeSystemProxyFailed(error string) string {
+	return In(i18n.Locale()).NoticeSystemProxyFailed(error)
+}
+
+// NoticeSystemProxyFailed says "Could not set the system proxy: {error}"
+// in the language of msgs.
+func (msgs Messages) NoticeSystemProxyFailed(error string) string {
+	return Catalog.Format(msgs.locale, "noticeSystemProxyFailed", map[string]any{"error": error})
+}
+
+// NoticeSystemProxyCorrupt says "The system proxy backup is damaged. Check the proxy settings in System Settings."
+// in the language the app shows.
+func NoticeSystemProxyCorrupt() string { return In(i18n.Locale()).NoticeSystemProxyCorrupt() }
+
+// NoticeSystemProxyCorrupt says "The system proxy backup is damaged. Check the proxy settings in System Settings."
+// in the language of msgs.
+func (msgs Messages) NoticeSystemProxyCorrupt() string {
+	return Catalog.Format(msgs.locale, "noticeSystemProxyCorrupt", nil)
+}
+
 // NoticeSessionCleared says "Session cleared"
 // in the language the app shows.
 func NoticeSessionCleared() string { return In(i18n.Locale()).NoticeSessionCleared() }

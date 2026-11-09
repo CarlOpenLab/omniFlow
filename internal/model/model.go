@@ -183,9 +183,13 @@ type Prefs struct {
 	// "" follows the system's preferred languages.
 	Language       string `json:"language,omitempty"`
 	ProxyAutostart bool   `json:"proxyAutostart"`
-	DecryptHTTPS   bool   `json:"decryptHTTPS"`
-	FollowFlows    bool   `json:"followFlows"`
-	KeepHistory    bool   `json:"keepHistory"`
+	// DisableAutoProxy turns off OmniFlow setting the machine's system proxy
+	// while capture runs. The zero value means the proxy is managed, so a
+	// file written before this setting existed behaves as the default.
+	DisableAutoProxy bool `json:"disableAutoProxy,omitempty"`
+	DecryptHTTPS     bool `json:"decryptHTTPS"`
+	FollowFlows      bool `json:"followFlows"`
+	KeepHistory      bool `json:"keepHistory"`
 
 	// Environment is the id of the environment the composer resolves
 	// {{variables}} from; "" for none.

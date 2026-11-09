@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -21,6 +22,7 @@ import (
 	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/internal/proxy"
 	"github.com/CarlOpenLab/omniflow/internal/store"
+	"github.com/CarlOpenLab/omniflow/internal/sysproxy"
 	"github.com/CarlOpenLab/omniflow/locales"
 )
 
@@ -52,6 +54,15 @@ const (
 	proxyCAUnavailable
 	proxyBadPort
 )
+
+// systemProxyManager is the app's handle on the machine's system proxy.
+// Tests replace it so no test changes the machine's real settings.
+type systemProxyManager interface {
+	Enable(port int, captureHTTPS bool) error
+	Restore() error
+	Recover() error
+	Reset()
+}
 
 // app is the window's state. It lives on the UI thread; the proxy publishes
 // to it through Window.Update, as everything off the main thread must.
@@ -129,7 +140,13 @@ type app struct {
 	proxyErr      string
 	proxyProblem  proxyProblem
 	mitm          bool
-	lastFlowAt    time.Time
+	autoProxy     bool
+	// sysproxy owns the machine's proxy settings while capture runs;
+	// sysproxyBlocked keeps a corrupt backup from being replaced by a fresh
+	// snapshot until the person explicitly turns the setting back on.
+	sysproxy        systemProxyManager
+	sysproxyBlocked bool
+	lastFlowAt      time.Time
 
 	// dialogs
 	settingsOpen bool
@@ -170,6 +187,7 @@ func newApp() *app {
 	a.envs = data.Environments
 	a.proxyPort = a.prefs.ProxyPort
 	a.mitm = a.prefs.DecryptHTTPS
+	a.autoProxy = !a.prefs.DisableAutoProxy
 	a.follow = a.prefs.FollowFlows
 	a.timeoutText = strconv.Itoa(int(a.prefs.Timeout() / time.Second))
 	if a.prefs.ComposerSplit > 0 {
@@ -198,6 +216,12 @@ func newApp() *app {
 			}
 			a.win.Update(func() { a.addFlow(f) })
 		})
+	}
+	if st != nil {
+		// The backup lives beside the rest of the app's data, and a
+		// leftover one is put back before a new capture can start.
+		a.sysproxy = sysproxy.New(filepath.Dir(st.Path()))
+		a.recoverSystemProxy()
 	}
 	return a
 }
@@ -912,17 +936,91 @@ func flowCurl(f proxy.Flow) string {
 
 // --- proxy ----------------------------------------------------------------
 
+// systemTrustCheck is the live Root CA trust query. Tests replace it so the
+// app's own tests never depend on what this machine trusts.
+var systemTrustCheck = systemTrusts
+
+// recoverSystemProxy puts back the system proxy a previous run left behind.
+// A corrupt backup blocks automatic control for this session; the person
+// turns the setting off and on again to take a fresh snapshot.
+func (a *app) recoverSystemProxy() {
+	if a.sysproxy == nil {
+		return
+	}
+	if err := a.sysproxy.Recover(); err != nil {
+		if errors.Is(err, sysproxy.ErrCorruptBackup) {
+			a.sysproxyBlocked = true
+			a.setNotice(locales.NoticeSystemProxyCorrupt())
+			return
+		}
+		a.setNotice(locales.NoticeSystemProxyFailed(err.Error()))
+	}
+}
+
+// syncSystemProxy makes the machine follow the capture: while it runs and
+// automatic proxy control is on, the system proxy points at OmniFlow. Any
+// other state puts the machine's own settings back.
+func (a *app) syncSystemProxy() {
+	if a.sysproxy == nil {
+		return
+	}
+	if !a.autoProxy || !a.proxyRunning() {
+		if err := a.sysproxy.Restore(); err != nil {
+			a.setNotice(locales.NoticeSystemProxyFailed(err.Error()))
+		}
+		return
+	}
+	if a.sysproxyBlocked {
+		return
+	}
+	port, err := strconv.Atoi(strings.TrimSpace(a.proxyPort))
+	if err != nil {
+		return
+	}
+	trusted := false
+	if a.ca != nil {
+		ok, known := systemTrustCheck(a.ca.CertPath())
+		switch {
+		case known && ok:
+			a.caTrust, trusted = trustYes, true
+		case known:
+			a.caTrust = trustNo
+		default:
+			a.caTrust = trustUnknown
+		}
+	}
+	if err := a.sysproxy.Enable(port, a.mitm && trusted); err != nil {
+		a.setNotice(locales.NoticeSystemProxyFailed(err.Error()))
+	}
+}
+
+// setAutoProxy is the settings switch: the next sync either takes the
+// machine's proxy or gives it back. Turning it on is also the explicit
+// retry that takes a fresh snapshot after a corrupt backup.
+func (a *app) setAutoProxy(on bool) {
+	a.autoProxy = on
+	a.prefs.DisableAutoProxy = !on
+	a.savePrefs()
+	if a.sysproxy != nil {
+		a.sysproxy.Reset()
+	}
+	a.sysproxyBlocked = false
+	a.syncSystemProxy()
+}
+
 func (a *app) startProxy() {
 	if a.prx == nil {
 		a.proxyErr = ""
 		a.proxyProblem = proxyCAUnavailable
 		a.setNotice(a.proxyProblemText())
+		a.syncSystemProxy()
 		return
 	}
 	if !validPort(a.proxyPort) {
 		a.proxyErr = ""
 		a.proxyProblem = proxyBadPort
 		a.setNotice(a.proxyProblemText())
+		a.syncSystemProxy()
 		return
 	}
 	a.prx.SetMITM(a.mitm)
@@ -931,6 +1029,7 @@ func (a *app) startProxy() {
 		a.proxyErr = err.Error()
 		a.proxyProblem = proxyOK
 		a.setNotice(err.Error())
+		a.syncSystemProxy()
 		return
 	}
 	a.proxyErr = ""
@@ -939,14 +1038,21 @@ func (a *app) startProxy() {
 		a.proxyPort = port
 	}
 	a.setNotice(locales.NoticeProxyListening(addr))
+	a.syncSystemProxy()
 }
 
 func (a *app) stopProxy() {
-	if a.prx == nil {
-		return
+	var restoreErr error
+	if a.sysproxy != nil {
+		restoreErr = a.sysproxy.Restore()
 	}
-	a.prx.Stop()
-	a.setNotice(locales.NoticeProxyStopped())
+	if a.prx != nil {
+		a.prx.Stop()
+		a.setNotice(locales.NoticeProxyStopped())
+	}
+	if restoreErr != nil {
+		a.setNotice(locales.NoticeSystemProxyFailed(restoreErr.Error()))
+	}
 }
 
 func (a *app) toggleProxy() {
@@ -958,11 +1064,8 @@ func (a *app) toggleProxy() {
 }
 
 func (a *app) restartProxy() {
-	if a.prx == nil {
-		return
-	}
-	was := a.prx.Running()
-	a.prx.Stop()
+	was := a.proxyRunning()
+	a.stopProxy()
 	if was {
 		a.startProxy()
 	}
