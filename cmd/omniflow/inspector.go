@@ -374,19 +374,24 @@ func (a *app) captureEmpty(c *ui.Context, pal *uitokens.Palette) {
 	})
 }
 
+// flowDetailPane is the chosen exchange on the left and the mock rules the
+// capture made on the right: a response and the replacement that answers for
+// it, side by side.
 func (a *app) flowDetailPane(c *ui.Context, pal *uitokens.Palette) {
-	f := a.selectedFlow()
-	if f == nil {
-		ui.Box(c).Fill().Children(func() {
-			emptyState(c, pal, iconGlobe, locales.InspectorSelectFlow(), locales.InspectorSelectFlowHint())
+	ui.Row(c).Fill().MinHeight(0).AlignItems(ui.Stretch).Children(func() {
+		ui.Column(c).Grow(1).MinWidth(0).MinHeight(0).Children(func() {
+			f := a.selectedFlow()
+			if f == nil {
+				ui.Box(c).Fill().Children(func() {
+					emptyState(c, pal, iconGlobe, locales.InspectorSelectFlow(), locales.InspectorSelectFlowHint())
+				})
+				return
+			}
+			a.flowDetailHeader(c, pal, f)
+			lineTabs(c, pal, &a.detailTab, []string{locales.InspectorTabRequest(), locales.InspectorTabResponse()})
+			a.flowDetailBody(c, pal, f)
 		})
-		return
-	}
-	col := ui.Column(c).Fill().MinHeight(0)
-	col.Children(func() {
-		a.flowDetailHeader(c, pal, f)
-		lineTabs(c, pal, &a.detailTab, []string{locales.InspectorTabRequest(), locales.InspectorTabResponse()})
-		a.flowDetailBody(c, pal, f)
+		a.mockRulesPanel(c, pal)
 	})
 }
 

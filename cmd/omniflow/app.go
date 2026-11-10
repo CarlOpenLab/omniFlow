@@ -140,19 +140,19 @@ type app struct {
 	follow        bool
 	// flowRev changes whenever the capture does, so the filter's result can be
 	// reused within a frame and between frames that changed nothing.
-	flowRev       uint64
-	flowCache     string
-	flowCached    []int
-	detailTab     int
-	detailSub     int
-	inspectSplit  float32
-	flowList      ui.ListState
-	searchFocus   ui.Handle
-	proxyPort     string
-	proxyErr      string
-	proxyProblem  proxyProblem
-	mitm          bool
-	autoProxy     bool
+	flowRev      uint64
+	flowCache    string
+	flowCached   []int
+	detailTab    int
+	detailSub    int
+	inspectSplit float32
+	flowList     ui.ListState
+	searchFocus  ui.Handle
+	proxyPort    string
+	proxyErr     string
+	proxyProblem proxyProblem
+	mitm         bool
+	autoProxy    bool
 	// sysproxy owns the machine's proxy settings while capture runs;
 	// sysproxyBlocked keeps a corrupt backup from being replaced by a fresh
 	// snapshot until the person explicitly turns the setting back on.
@@ -184,9 +184,21 @@ type app struct {
 	ruleValue  string
 	ruleRemove bool
 	ruleErr    string
-	caOpen     bool
-	caWasOpen  bool
-	caTrust    trustState
+	// mock dialog: the rule whose response is being edited, its fields as
+	// typed, and the body's buffer, kept across frames so its caret, selection
+	// and undo survive. mockEditable is false for a body that is not text, or
+	// is too large to hold here.
+	mockOpen     bool
+	mockEditID   string
+	mockStatus   string
+	mockContent  string
+	mockBody     *ui.TextBuffer
+	mockEditable bool
+	mockNote     string
+	mockErr      string
+	caOpen       bool
+	caWasOpen    bool
+	caTrust      trustState
 
 	notice   string
 	noticeAt time.Time

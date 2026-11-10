@@ -798,6 +798,18 @@
   "settingsMockDelete": "删除此 Mock",
   "settingsMocksFolder": "打开 Mock 文件夹",
 
+  "mockEditTitle": "编辑 Mock 响应",
+  "mockEditStatus": "状态",
+  "mockEditContentType": "内容类型",
+  "mockEditBody": "响应体",
+  "mockEditStatusLabel": "Mock 状态",
+  "mockEditContentTypeLabel": "Mock 内容类型",
+  "mockEditBodyLabel": "Mock 响应体",
+  "mockEditInvalidStatus": "状态码必须是 100 到 599 之间的数字。",
+  "mockEditBinary": "该响应的正文是二进制，请打开文件编辑。",
+  "mockEditTooLarge": "该响应的正文太大，无法在这里编辑。",
+  "mockEditReadFailed": "无法读取 Mock 文件：{error}",
+
   "noticeFlowSaved": "已将“{name}”保存到集合",
   "noticeMockCreated": "已用本地文件 Mock“{name}”",
   "noticeMockUpdated": "已更新“{name}”的 Mock",

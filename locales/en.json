@@ -937,6 +937,23 @@
   "settingsMockDelete": "Delete this mock",
   "settingsMocksFolder": "Show Mocks Folder",
 
+  "mockEditTitle": "Edit Mock Response",
+  "mockEditStatus": "Status",
+  "mockEditContentType": "Content Type",
+  "mockEditBody": "Response Body",
+  "mockEditStatusLabel": "Mock status",
+  "mockEditContentTypeLabel": "Mock content type",
+  "mockEditBodyLabel": "Mock response body",
+  "mockEditInvalidStatus": "Status must be a number from 100 to 599.",
+  "mockEditBinary": "This response is binary. Show the file to edit it.",
+  "mockEditTooLarge": "This response is too large to edit here.",
+  "mockEditReadFailed": "The mock file could not be read: {error}",
+  "@mockEditReadFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
   "noticeFlowSaved": "Saved “{name}” to the collection",
   "@noticeFlowSaved": {
     "placeholders": {

@@ -47,6 +47,8 @@ var acrylicOwners = map[string]string{
 	"composer.go:bodyTab":                "the JSON and text editor is a code canvas, so code keeps its contrast",
 	"env.go:envDialog":                   "the environment manager is a dialog on its solid Popover",
 	"devicesetup.go:deviceSetupDialog":   "device setup is a dialog on its solid Popover",
+	"mocks.go:mockDialog":                "the mock response editor is a dialog on its solid Popover, with the body on its code canvas",
+	"mocks.go:mockField":                 "the mock editor's fields are read on the dialog's code canvas",
 	"rules.go:ruleDialog":                "the rule editor is a dialog on its solid Popover",
 	"rules.go:ruleField":                 "the rule editor's fields are read on the dialog's code canvas",
 	"settings.go:settingsDialog":         "settings is a dialog on its solid Popover",

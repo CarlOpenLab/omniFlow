@@ -6,6 +6,7 @@ import (
 	"image/color"
 	"image/png"
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -107,6 +108,26 @@ func TestSnapshots(t *testing.T) {
 	tester.SetDark(true)
 	saveSnapshot(t, tester, out+"/omniflow-inspector-dark.png")
 	tester.SetDark(false)
+
+	// The Inspector's mock rules panel, and the dialog that edits a mock's
+	// response where it lives.
+	mockFile := filepath.Join(t.TempDir(), "users.json")
+	if err := os.WriteFile(mockFile, []byte("{\n  \"users\": []\n}"), 0o644); err != nil {
+		t.Fatalf("write mock file: %v", err)
+	}
+	a.mocks = []model.MockRule{{
+		ID: "mock_demo", Enabled: true, Name: "GET api.github.com/repos/egoist/mygo",
+		Method: "GET", Host: "api.github.com", Path: "/repos/egoist/mygo",
+		Status: 200, ContentType: "application/json", File: mockFile,
+		CreatedAt: time.Now(),
+	}}
+	tester.Frame()
+	saveSnapshot(t, tester, out+"/omniflow-inspector-mocks.png")
+	a.openMockEditor(a.mocks[0])
+	tester.Frame()
+	saveSnapshot(t, tester, out+"/omniflow-mock-editor.png")
+	a.mockOpen, a.mockEditID, a.mockBody = false, "", nil
+	a.mocks = nil
 
 	a.mode = modeComposer
 	a.settingsOpen = true
@@ -268,6 +289,20 @@ func TestSnapshots(t *testing.T) {
 	a.mode = modeInspector
 	tester.Frame()
 	saveSnapshot(t, tester, out+"/omniflow-inspector-zh.png")
+
+	a.mocks = []model.MockRule{{
+		ID: "mock_demo", Enabled: true, Name: "GET api.github.com/repos/egoist/mygo",
+		Method: "GET", Host: "api.github.com", Path: "/repos/egoist/mygo",
+		Status: 200, ContentType: "application/json", File: mockFile,
+		CreatedAt: time.Now(),
+	}}
+	tester.Frame()
+	saveSnapshot(t, tester, out+"/omniflow-inspector-mocks-zh.png")
+	a.openMockEditor(a.mocks[0])
+	tester.Frame()
+	saveSnapshot(t, tester, out+"/omniflow-mock-editor-zh.png")
+	a.mockOpen, a.mockEditID, a.mockBody = false, "", nil
+	a.mocks = nil
 
 	a.settingsOpen = true
 	tester.Frame()

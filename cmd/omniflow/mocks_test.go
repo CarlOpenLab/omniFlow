@@ -1,11 +1,15 @@
 package main
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
 	"slices"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/egoist/mygo/ui"
 
 	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/internal/proxy"
@@ -158,6 +162,269 @@ func TestSettingsListsMocks(t *testing.T) {
 	tt.Frame()
 	if !tt.HasText(a.mocks[0].Name) {
 		t.Fatalf("the Mocks page does not list %q; texts = %v", a.mocks[0].Name, tt.Texts())
+	}
+}
+
+// seedMockRule puts one mock rule and its file in the app, without going
+// through a capture.
+func seedMockRule(t *testing.T, a *app, body string) model.MockRule {
+	t.Helper()
+	file := filepath.Join(t.TempDir(), "users.json")
+	if err := os.WriteFile(file, []byte(body), 0o644); err != nil {
+		t.Fatalf("write mock: %v", err)
+	}
+	rule := model.MockRule{
+		ID: "m1", Enabled: true, Name: "GET api.example/users",
+		Method: "GET", Host: "api.example", Path: "/users",
+		Status: 200, ContentType: "application/json", File: file,
+		CreatedAt: time.Now(),
+	}
+	a.mocks = []model.MockRule{rule}
+	a.persistMocks()
+	return rule
+}
+
+// The Inspector keeps the mock rules beside the traffic, so a rule made from
+// a response can be found and changed without leaving the capture.
+func TestTheInspectorShowsTheMockRulesPanel(t *testing.T) {
+	a := newStoredTestApp(t)
+	rule := seedMockRule(t, a, `{"users":[]}`)
+	a.mode = modeInspector
+
+	tt := newTester(t, a)
+	tt.Frame()
+	if !tt.HasText(locales.SettingsMocks()) {
+		t.Fatalf("the Inspector has no mocks panel: %v", tt.Texts())
+	}
+	if !tt.HasText(rule.Name) {
+		t.Errorf("the panel does not list %q: %v", rule.Name, tt.Texts())
+	}
+}
+
+// Clicking a rule in the panel opens the dialog that edits its response.
+func TestClickingAMockOpensTheResponseEditor(t *testing.T) {
+	a := newStoredTestApp(t)
+	rule := seedMockRule(t, a, `{"users":[]}`)
+	a.mode = modeInspector
+
+	tt := newTester(t, a)
+	tt.Frame()
+	if err := tt.Click(rule.Name); err != nil {
+		t.Fatalf("click the mock rule: %v", err)
+	}
+	tt.Frame()
+	if !tt.HasText(locales.MockEditTitle()) {
+		t.Fatalf("the response editor did not open: %v", tt.Texts())
+	}
+	for _, want := range []string{locales.MockEditStatus(), locales.MockEditContentType(), locales.CommonSave()} {
+		if !tt.HasText(want) {
+			t.Errorf("the editor is missing %q", want)
+		}
+	}
+}
+
+// The dialog edits the response body itself: Save writes what the editor
+// holds back to the file the proxy serves.
+func TestSavingTheMockEditorWritesTheBody(t *testing.T) {
+	a := newStoredTestApp(t)
+	rule := seedMockRule(t, a, `{"users":[]}`)
+	a.mode = modeInspector
+
+	tt := newTester(t, a)
+	tt.Frame()
+	if err := tt.Click(rule.Name); err != nil {
+		t.Fatalf("click the mock rule: %v", err)
+	}
+	tt.Frame()
+	if err := tt.Click(locales.MockEditBodyLabel()); err != nil {
+		t.Fatalf("click the body editor: %v", err)
+	}
+	tt.Key(ui.Cmd, ui.KeyA)
+	tt.Type(`{"users":[{"id":1}]}`)
+	tt.Frame()
+	if err := tt.Click(locales.CommonSave()); err != nil {
+		t.Fatalf("save the mock: %v", err)
+	}
+	tt.Frame()
+
+	body, err := os.ReadFile(rule.File)
+	if err != nil {
+		t.Fatalf("read the mock file: %v", err)
+	}
+	if string(body) != `{"users":[{"id":1}]}` {
+		t.Errorf("the mock file is %q", body)
+	}
+	if tt.HasText(locales.MockEditTitle()) {
+		t.Error("the editor stayed open after saving")
+	}
+}
+
+// Status and content type are edited beside the body and saved with it.
+func TestTheMockEditorSavesStatusAndContentType(t *testing.T) {
+	a := newStoredTestApp(t)
+	rule := seedMockRule(t, a, `{"users":[]}`)
+	a.mode = modeInspector
+
+	tt := newTester(t, a)
+	tt.Frame()
+	if err := tt.Click(rule.Name); err != nil {
+		t.Fatalf("click the mock rule: %v", err)
+	}
+	tt.Frame()
+	if err := tt.Click(locales.MockEditStatusLabel()); err != nil {
+		t.Fatalf("click the status field: %v", err)
+	}
+	tt.Key(ui.Cmd, ui.KeyA)
+	tt.Type("418")
+	if err := tt.Click(locales.MockEditContentTypeLabel()); err != nil {
+		t.Fatalf("click the content type field: %v", err)
+	}
+	tt.Key(ui.Cmd, ui.KeyA)
+	tt.Type("application/problem+json")
+	tt.Frame()
+	if err := tt.Click(locales.CommonSave()); err != nil {
+		t.Fatalf("save the mock: %v", err)
+	}
+	tt.Frame()
+
+	if a.mocks[0].Status != 418 {
+		t.Errorf("status = %d, want 418", a.mocks[0].Status)
+	}
+	if a.mocks[0].ContentType != "application/problem+json" {
+		t.Errorf("content type = %q", a.mocks[0].ContentType)
+	}
+	if body, _ := os.ReadFile(rule.File); string(body) != `{"users":[]}` {
+		t.Errorf("editing the fields changed the body: %q", body)
+	}
+}
+
+// A status that is not one keeps the dialog open with the reason under the
+// fields; nothing is written.
+func TestTheMockEditorKeepsItselfOpenOnABadStatus(t *testing.T) {
+	a := newStoredTestApp(t)
+	rule := seedMockRule(t, a, `{"users":[]}`)
+	a.mode = modeInspector
+
+	tt := newTester(t, a)
+	tt.Frame()
+	if err := tt.Click(rule.Name); err != nil {
+		t.Fatalf("click the mock rule: %v", err)
+	}
+	tt.Frame()
+	if err := tt.Click(locales.MockEditStatusLabel()); err != nil {
+		t.Fatalf("click the status field: %v", err)
+	}
+	tt.Key(ui.Cmd, ui.KeyA)
+	tt.Type("abc")
+	tt.Frame()
+	if err := tt.Click(locales.CommonSave()); err != nil {
+		t.Fatalf("save the mock: %v", err)
+	}
+	tt.Frame()
+
+	if a.mocks[0].Status != 200 {
+		t.Errorf("status = %d, want the captured 200", a.mocks[0].Status)
+	}
+	if !tt.HasText(locales.MockEditTitle()) {
+		t.Error("the editor closed on a bad status")
+	}
+	if !tt.HasText(locales.MockEditInvalidStatus()) {
+		t.Errorf("the editor does not say what is wrong: %v", tt.Texts())
+	}
+}
+
+// A body that is not text is not loaded into the dialog; Save keeps the file
+// as it was, so an image rule can change its status without being corrupted.
+func TestTheMockEditorLeavesABinaryBodyInItsFile(t *testing.T) {
+	a := newStoredTestApp(t)
+	file := filepath.Join(t.TempDir(), "logo.png")
+	body := []byte{0x89, 'P', 'N', 'G', 0x00, 0x01, 0x02, 0xff}
+	if err := os.WriteFile(file, body, 0o644); err != nil {
+		t.Fatalf("write mock: %v", err)
+	}
+	a.mocks = []model.MockRule{{
+		ID: "m1", Enabled: true, Name: "GET api.example/logo",
+		Method: "GET", Host: "api.example", Path: "/logo",
+		Status: 200, ContentType: "image/png", File: file, CreatedAt: time.Now(),
+	}}
+	a.mode = modeInspector
+
+	tt := newTester(t, a)
+	tt.Frame()
+	if err := tt.Click(a.mocks[0].Name); err != nil {
+		t.Fatalf("click the mock rule: %v", err)
+	}
+	tt.Frame()
+	if !tt.HasText(locales.MockEditBinary()) {
+		t.Fatalf("the editor does not say the body is binary: %v", tt.Texts())
+	}
+	if err := tt.Click(locales.CommonSave()); err != nil {
+		t.Fatalf("save the mock: %v", err)
+	}
+	tt.Frame()
+
+	got, err := os.ReadFile(file)
+	if err != nil {
+		t.Fatalf("read the mock file: %v", err)
+	}
+	if !bytes.Equal(got, body) {
+		t.Errorf("the binary body was changed: %v", got)
+	}
+}
+
+// A body past what the dialog holds is refused with a note, not read into
+// memory, and saving the fields leaves the file whole.
+func TestTheMockEditorLeavesAnOversizedBodyInItsFile(t *testing.T) {
+	a := newStoredTestApp(t)
+	file := filepath.Join(t.TempDir(), "large.txt")
+	body := strings.Repeat("x", mockEditMax+1)
+	if err := os.WriteFile(file, []byte(body), 0o644); err != nil {
+		t.Fatalf("write mock: %v", err)
+	}
+	a.mocks = []model.MockRule{{
+		ID: "m1", Enabled: true, Name: "GET api.example/large",
+		Method: "GET", Host: "api.example", Path: "/large",
+		Status: 200, ContentType: "text/plain", File: file, CreatedAt: time.Now(),
+	}}
+	a.mode = modeInspector
+
+	tt := newTester(t, a)
+	tt.Frame()
+	if err := tt.Click(a.mocks[0].Name); err != nil {
+		t.Fatalf("click the mock rule: %v", err)
+	}
+	tt.Frame()
+	if !tt.HasText(locales.MockEditTooLarge()) {
+		t.Fatalf("the editor does not say the body is too large: %v", tt.Texts())
+	}
+	if err := tt.Click(locales.CommonSave()); err != nil {
+		t.Fatalf("save the mock: %v", err)
+	}
+	tt.Frame()
+
+	info, err := os.Stat(file)
+	if err != nil {
+		t.Fatalf("stat the mock file: %v", err)
+	}
+	if info.Size() != int64(len(body)) {
+		t.Errorf("the body was rewritten to %d bytes, want %d", info.Size(), len(body))
+	}
+}
+
+// Making a mock from a response opens its editor at once: the point of
+// mocking is to change what the server said.
+func TestMockingAResponseOpensTheEditor(t *testing.T) {
+	a := newStoredTestApp(t)
+	a.mode = modeInspector
+	a.mockFlow(proxy.Flow{
+		Method: "GET", Host: "api.example", Path: "/users", Status: 200,
+		ContentType: "application/json", RespBody: []byte(`{"users":[]}`),
+	})
+
+	tt := newTester(t, a)
+	tt.Frame()
+	if !tt.HasText(locales.MockEditTitle()) {
+		t.Fatalf("mocking a response did not open its editor: %v", tt.Texts())
 	}
 }
 

@@ -3967,6 +3967,116 @@ func (msgs Messages) SettingsMocksFolder() string {
 	return Catalog.Format(msgs.locale, "settingsMocksFolder", nil)
 }
 
+// MockEditTitle says "Edit Mock Response"
+// in the language the app shows.
+func MockEditTitle() string { return In(i18n.Locale()).MockEditTitle() }
+
+// MockEditTitle says "Edit Mock Response"
+// in the language of msgs.
+func (msgs Messages) MockEditTitle() string {
+	return Catalog.Format(msgs.locale, "mockEditTitle", nil)
+}
+
+// MockEditStatus says "Status"
+// in the language the app shows.
+func MockEditStatus() string { return In(i18n.Locale()).MockEditStatus() }
+
+// MockEditStatus says "Status"
+// in the language of msgs.
+func (msgs Messages) MockEditStatus() string {
+	return Catalog.Format(msgs.locale, "mockEditStatus", nil)
+}
+
+// MockEditContentType says "Content Type"
+// in the language the app shows.
+func MockEditContentType() string { return In(i18n.Locale()).MockEditContentType() }
+
+// MockEditContentType says "Content Type"
+// in the language of msgs.
+func (msgs Messages) MockEditContentType() string {
+	return Catalog.Format(msgs.locale, "mockEditContentType", nil)
+}
+
+// MockEditBody says "Response Body"
+// in the language the app shows.
+func MockEditBody() string { return In(i18n.Locale()).MockEditBody() }
+
+// MockEditBody says "Response Body"
+// in the language of msgs.
+func (msgs Messages) MockEditBody() string {
+	return Catalog.Format(msgs.locale, "mockEditBody", nil)
+}
+
+// MockEditStatusLabel says "Mock status"
+// in the language the app shows.
+func MockEditStatusLabel() string { return In(i18n.Locale()).MockEditStatusLabel() }
+
+// MockEditStatusLabel says "Mock status"
+// in the language of msgs.
+func (msgs Messages) MockEditStatusLabel() string {
+	return Catalog.Format(msgs.locale, "mockEditStatusLabel", nil)
+}
+
+// MockEditContentTypeLabel says "Mock content type"
+// in the language the app shows.
+func MockEditContentTypeLabel() string { return In(i18n.Locale()).MockEditContentTypeLabel() }
+
+// MockEditContentTypeLabel says "Mock content type"
+// in the language of msgs.
+func (msgs Messages) MockEditContentTypeLabel() string {
+	return Catalog.Format(msgs.locale, "mockEditContentTypeLabel", nil)
+}
+
+// MockEditBodyLabel says "Mock response body"
+// in the language the app shows.
+func MockEditBodyLabel() string { return In(i18n.Locale()).MockEditBodyLabel() }
+
+// MockEditBodyLabel says "Mock response body"
+// in the language of msgs.
+func (msgs Messages) MockEditBodyLabel() string {
+	return Catalog.Format(msgs.locale, "mockEditBodyLabel", nil)
+}
+
+// MockEditInvalidStatus says "Status must be a number from 100 to 599."
+// in the language the app shows.
+func MockEditInvalidStatus() string { return In(i18n.Locale()).MockEditInvalidStatus() }
+
+// MockEditInvalidStatus says "Status must be a number from 100 to 599."
+// in the language of msgs.
+func (msgs Messages) MockEditInvalidStatus() string {
+	return Catalog.Format(msgs.locale, "mockEditInvalidStatus", nil)
+}
+
+// MockEditBinary says "This response is binary. Show the file to edit it."
+// in the language the app shows.
+func MockEditBinary() string { return In(i18n.Locale()).MockEditBinary() }
+
+// MockEditBinary says "This response is binary. Show the file to edit it."
+// in the language of msgs.
+func (msgs Messages) MockEditBinary() string {
+	return Catalog.Format(msgs.locale, "mockEditBinary", nil)
+}
+
+// MockEditTooLarge says "This response is too large to edit here."
+// in the language the app shows.
+func MockEditTooLarge() string { return In(i18n.Locale()).MockEditTooLarge() }
+
+// MockEditTooLarge says "This response is too large to edit here."
+// in the language of msgs.
+func (msgs Messages) MockEditTooLarge() string {
+	return Catalog.Format(msgs.locale, "mockEditTooLarge", nil)
+}
+
+// MockEditReadFailed says "The mock file could not be read: {error}"
+// in the language the app shows.
+func MockEditReadFailed(error string) string { return In(i18n.Locale()).MockEditReadFailed(error) }
+
+// MockEditReadFailed says "The mock file could not be read: {error}"
+// in the language of msgs.
+func (msgs Messages) MockEditReadFailed(error string) string {
+	return Catalog.Format(msgs.locale, "mockEditReadFailed", map[string]any{"error": error})
+}
+
 // NoticeFlowSaved says "Saved “{name}” to the collection"
 // in the language the app shows.
 func NoticeFlowSaved(name string) string { return In(i18n.Locale()).NoticeFlowSaved(name) }
