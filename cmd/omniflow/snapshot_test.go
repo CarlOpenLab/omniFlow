@@ -325,6 +325,31 @@ func TestSnapshots(t *testing.T) {
 	a.envOpen = false
 }
 
+// TestSnapshotLaunchState renders what the window shows when it opens: capture
+// paused, and a Capture settings page that no longer offers to start the
+// proxy with the app. Run with OMNIFLOW_SNAPSHOT=1 to write the pictures.
+func TestSnapshotLaunchState(t *testing.T) {
+	if os.Getenv("OMNIFLOW_SNAPSHOT") == "" {
+		t.Skip("set OMNIFLOW_SNAPSHOT=1 to write snapshots")
+	}
+	out := os.Getenv("OMNIFLOW_SNAPSHOT_DIR")
+	if out == "" {
+		out = "/tmp"
+	}
+	a := newTestApp(t)
+	a.mode = modeInspector
+	tester := ui.NewTester(a.view, 1280, 820)
+	tester.SetTitleBar(ui.TitleBar{Height: 52, Left: 78})
+	tester.SetVibrancy(false)
+	tester.Frame()
+	saveSnapshot(t, tester, out+"/omniflow-launch-paused.png")
+
+	a.settingsOpen = true
+	tester.Frame()
+	clickSettingsPage(t, tester, settingsPaneCapture)
+	saveSnapshot(t, tester, out+"/omniflow-settings-capture.png")
+}
+
 // TestStressLayers renders the window over a magenta ground with the card at
 // 30%: wherever the frost should show through, a solid fill shows up as a
 // patch that keeps the magenta out. Only code canvases and popovers may be
