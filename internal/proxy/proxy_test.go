@@ -249,6 +249,90 @@ func TestARefusedCertificateBecomesAFlow(t *testing.T) {
 	}
 }
 
+// A mock answers with the response headers it was captured with, so a
+// browser's CORS checks see the same permission the real server gave.
+func TestAMockKeepsTheCapturedResponseHeaders(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "users.json")
+	if err := os.WriteFile(file, []byte(`{"mocked":true}`), 0o644); err != nil {
+		t.Fatalf("write mock: %v", err)
+	}
+
+	p, addr := newTestProxy(t)
+	p.SetMocks([]Mock{{
+		Method: "GET", Host: "mock.example", Path: "/users",
+		Status: http.StatusOK, ContentType: "application/json", File: file,
+		Headers: []HeaderPair{
+			{Key: "Access-Control-Allow-Origin", Value: "https://app.example"},
+			{Key: "Access-Control-Allow-Credentials", Value: "true"},
+			{Key: "X-Trace", Value: "abc"},
+			{Key: "Connection", Value: "keep-alive"},
+			{Key: "Content-Length", Value: "999"},
+		},
+	}})
+
+	proxyURL, _ := url.Parse("http://" + addr)
+	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyURL)}}
+	req, _ := http.NewRequest("GET", "http://mock.example/users", nil)
+	req.Header.Set("Origin", "https://app.example")
+	resp, err := client.Do(req)
+	if err != nil {
+		t.Fatalf("request through proxy: %v", err)
+	}
+	body, _ := io.ReadAll(resp.Body)
+	resp.Body.Close()
+	if got := resp.Header.Get("Access-Control-Allow-Origin"); got != "https://app.example" {
+		t.Errorf("Access-Control-Allow-Origin = %q, want the captured value", got)
+	}
+	if got := resp.Header.Get("Access-Control-Allow-Credentials"); got != "true" {
+		t.Errorf("Access-Control-Allow-Credentials = %q, want true", got)
+	}
+	if got := resp.Header.Get("X-Trace"); got != "abc" {
+		t.Errorf("X-Trace = %q, want the captured value", got)
+	}
+	if got := resp.Header.Get("Connection"); got != "" {
+		t.Errorf("Connection = %q, want it dropped", got)
+	}
+	if resp.ContentLength != int64(len(body)) {
+		t.Errorf("Content-Length = %d, want %d", resp.ContentLength, len(body))
+	}
+}
+
+// A mock made before headers were kept has no CORS header of its own; it
+// answers the page that asked, so the browser does not block the response.
+func TestAMockWithoutCORSHeadersAllowsTheRequestingOrigin(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "users.json")
+	if err := os.WriteFile(file, []byte(`{"mocked":true}`), 0o644); err != nil {
+		t.Fatalf("write mock: %v", err)
+	}
+
+	p, addr := newTestProxy(t)
+	p.SetMocks([]Mock{{
+		Method: "GET", Host: "mock.example", Path: "/users",
+		Status: http.StatusOK, ContentType: "application/json", File: file,
+	}})
+
+	proxyURL, _ := url.Parse("http://" + addr)
+	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyURL)}}
+	req, _ := http.NewRequest("GET", "http://mock.example/users", nil)
+	req.Header.Set("Origin", "https://app.example")
+	req.Header.Set("Cookie", "session=abc")
+	resp, err := client.Do(req)
+	if err != nil {
+		t.Fatalf("request through proxy: %v", err)
+	}
+	io.Copy(io.Discard, resp.Body)
+	resp.Body.Close()
+	if got := resp.Header.Get("Access-Control-Allow-Origin"); got != "https://app.example" {
+		t.Errorf("Access-Control-Allow-Origin = %q, want the requesting origin", got)
+	}
+	if got := resp.Header.Get("Access-Control-Allow-Credentials"); got != "true" {
+		t.Errorf("Access-Control-Allow-Credentials = %q, want true for a credentialed request", got)
+	}
+	if got := resp.Header.Get("Vary"); !strings.Contains(got, "Origin") {
+		t.Errorf("Vary = %q, want Origin", got)
+	}
+}
+
 func TestAMockAnswersFromItsFile(t *testing.T) {
 	file := filepath.Join(t.TempDir(), "users.json")
 	if err := os.WriteFile(file, []byte(`{"mocked":true}`), 0o644); err != nil {

@@ -31,6 +31,7 @@ func (a *app) applyMocks() {
 			Status:      r.Status,
 			ContentType: r.ContentType,
 			File:        r.File,
+			Headers:     mockHeaderPairs(r.RespHeaders),
 		})
 	}
 	a.prx.SetMocks(mocks)
@@ -40,6 +41,30 @@ func (a *app) persistMocks() {
 	if a.store != nil {
 		_ = a.store.SetMocks(a.mocks)
 	}
+}
+
+// mockHeaders saves a capture's response headers with the rule.
+func mockHeaders(headers []proxy.HeaderPair) []model.Header {
+	if len(headers) == 0 {
+		return nil
+	}
+	out := make([]model.Header, len(headers))
+	for i, h := range headers {
+		out[i] = model.Header{Key: h.Key, Value: h.Value}
+	}
+	return out
+}
+
+// mockHeaderPairs hands a rule's saved headers to the proxy.
+func mockHeaderPairs(headers []model.Header) []proxy.HeaderPair {
+	if len(headers) == 0 {
+		return nil
+	}
+	out := make([]proxy.HeaderPair, len(headers))
+	for i, h := range headers {
+		out[i] = proxy.HeaderPair{Key: h.Key, Value: h.Value}
+	}
+	return out
 }
 
 // mockFlow turns a captured response into a Map Local rule: the body is
@@ -74,6 +99,7 @@ func (a *app) mockFlow(f proxy.Flow) {
 		}
 		r.Enabled, r.Name = true, name
 		r.Status, r.ContentType = f.Status, f.ContentType
+		r.RespHeaders = mockHeaders(f.RespHeaders)
 		a.persistMocks()
 		a.applyMocks()
 		a.setNotice(mockNotice(name, f.RespTruncated, true))
@@ -101,6 +127,7 @@ func (a *app) mockFlow(f proxy.Flow) {
 		Status:      f.Status,
 		ContentType: f.ContentType,
 		File:        file,
+		RespHeaders: mockHeaders(f.RespHeaders),
 		CreatedAt:   time.Now(),
 	}}, a.mocks...)
 	a.limitMocks()

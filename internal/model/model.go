@@ -176,16 +176,26 @@ type HistoryEntry struct {
 // MockRule answers a matching request from a file instead of the network.
 // Path is the URL's path only, so a mock keeps working while the query
 // changes. Status and ContentType are the captured response's.
+// Header is one header line a mocked response keeps from the capture.
+type Header struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
 type MockRule struct {
-	ID          string    `json:"id"`
-	Enabled     bool      `json:"enabled"`
-	Name        string    `json:"name"`
-	Method      string    `json:"method"`
-	Host        string    `json:"host"`
-	Path        string    `json:"path"`
-	Status      int       `json:"status"`
-	ContentType string    `json:"contentType,omitempty"`
-	File        string    `json:"file"`
+	ID          string `json:"id"`
+	Enabled     bool   `json:"enabled"`
+	Name        string `json:"name"`
+	Method      string `json:"method"`
+	Host        string `json:"host"`
+	Path        string `json:"path"`
+	Status      int    `json:"status"`
+	ContentType string `json:"contentType,omitempty"`
+	File        string `json:"file"`
+	// RespHeaders are the response headers the captured flow had, replayed
+	// with the file: browsers need the server's CORS headers even when the
+	// body comes from disk.
+	RespHeaders []Header  `json:"respHeaders,omitempty"`
 	CreatedAt   time.Time `json:"createdAt"`
 }
 

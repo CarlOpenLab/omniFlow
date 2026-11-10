@@ -44,6 +44,9 @@ type Mock struct {
 	Status      int
 	ContentType string
 	File        string
+	// Headers are the captured response's headers, replayed with the file so
+	// CORS and the rest of the server's contract still hold.
+	Headers []HeaderPair
 }
 
 // Rule changes matching traffic as it passes through the proxy. Method, Host
@@ -523,7 +526,7 @@ func (p *Proxy) mockFor(method, host, path string) (Mock, bool) {
 }
 
 // response builds the response a mock answers with: its file's bytes, the
-// captured status and content type.
+// captured status, content type and headers.
 func (m Mock) response(req *http.Request) (*http.Response, error) {
 	body, err := os.ReadFile(m.File)
 	if err != nil {
@@ -533,13 +536,31 @@ func (m Mock) response(req *http.Request) (*http.Response, error) {
 	if status == 0 {
 		status = http.StatusOK
 	}
+	header := make(http.Header)
+	for _, h := range m.Headers {
+		header.Add(h.Key, h.Value)
+	}
+	// Framing belongs to this response, not the captured one: the body is
+	// read from a file here.
+	removeHopHeaders(header)
+	header.Del("Content-Length")
 	contentType := m.ContentType
+	if contentType == "" {
+		contentType = header.Get("Content-Type")
+	}
 	if contentType == "" {
 		contentType = http.DetectContentType(body)
 	}
-	header := make(http.Header)
 	header.Set("Content-Type", contentType)
 	header.Set("Content-Length", strconv.Itoa(len(body)))
+	// A mock made before headers were kept has no CORS header of its own.
+	// Answer the page that asked rather than let the browser block a
+	// response that never went to the network.
+	if origin := req.Header.Get("Origin"); origin != "" && header.Get("Access-Control-Allow-Origin") == "" {
+		header.Set("Access-Control-Allow-Origin", origin)
+		header.Set("Access-Control-Allow-Credentials", "true")
+		header.Add("Vary", "Origin")
+	}
 	return &http.Response{
 		StatusCode:    status,
 		Status:        fmt.Sprintf("%d %s", status, http.StatusText(status)),

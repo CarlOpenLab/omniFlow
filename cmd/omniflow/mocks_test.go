@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/CarlOpenLab/omniflow/internal/model"
 	"github.com/CarlOpenLab/omniflow/internal/proxy"
 	"github.com/CarlOpenLab/omniflow/internal/store"
 	"github.com/CarlOpenLab/omniflow/locales"
@@ -92,6 +93,38 @@ func TestMockFlowWritesAFileAndUpdatesTheSameRule(t *testing.T) {
 	}
 	if _, err := os.Stat(rule.File); !os.IsNotExist(err) {
 		t.Errorf("the mock file still exists: %v", err)
+	}
+}
+
+// A mock keeps the response headers it was made from, so CORS and the rest
+// of the server's contract survive the replacement.
+func TestMockFlowKeepsTheCapturedResponseHeaders(t *testing.T) {
+	a := newStoredTestApp(t)
+	flow := proxy.Flow{
+		Method: "GET", Host: "api.example", Path: "/users", Status: 200,
+		ContentType: "application/json", RespBody: []byte(`{}`),
+		RespHeaders: []proxy.HeaderPair{
+			{Key: "Access-Control-Allow-Origin", Value: "https://app.example"},
+			{Key: "X-Trace", Value: "abc"},
+		},
+	}
+	a.mockFlow(flow)
+	if len(a.mocks) != 1 {
+		t.Fatalf("mocks = %d, want one", len(a.mocks))
+	}
+	want := []model.Header{
+		{Key: "Access-Control-Allow-Origin", Value: "https://app.example"},
+		{Key: "X-Trace", Value: "abc"},
+	}
+	if !slices.Equal(a.mocks[0].RespHeaders, want) {
+		t.Fatalf("headers = %+v, want %+v", a.mocks[0].RespHeaders, want)
+	}
+
+	// Capturing the same request again refreshes the headers too.
+	flow.RespHeaders = []proxy.HeaderPair{{Key: "X-Trace", Value: "def"}}
+	a.mockFlow(flow)
+	if got := a.mocks[0].RespHeaders; !slices.Equal(got, []model.Header{{Key: "X-Trace", Value: "def"}}) {
+		t.Fatalf("headers after recapture = %+v", got)
 	}
 }
 
