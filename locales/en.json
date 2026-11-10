@@ -403,8 +403,6 @@
 
   "settingsSkipTLS": "Skip certificate verification",
 
-  "settingsAutostart": "Start the proxy when OmniFlow opens",
-
   "settingsDecrypt": "Decrypt HTTPS with the Root CA",
 
   "settingsSystemProxy": "Set the system proxy automatically",

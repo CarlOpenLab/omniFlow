@@ -79,8 +79,8 @@ if SmartScreen appears. Each release also carries a `checksums.txt`.
   the interface language (follow the system, English or 简体中文), the card's
   opacity (30–100%) and the material's strength (none, subtle, medium, deep),
   the request timeout, whether redirects are followed and whether TLS
-  certificates are verified, proxy port, autostart, automatic system proxy,
-  HTTPS decryption, the rules, history and the data folder.
+  certificates are verified, proxy port, automatic system proxy, HTTPS
+  decryption, the rules, history and the data folder.
 
 ## Build and run
 

@@ -232,8 +232,7 @@ type Prefs struct {
 	ProxyPort string `json:"proxyPort"` // loopback port
 	// Language is the language the app shows: "", "en" or "zh-Hans";
 	// "" follows the system's preferred languages.
-	Language       string `json:"language,omitempty"`
-	ProxyAutostart bool   `json:"proxyAutostart"`
+	Language string `json:"language,omitempty"`
 	// DisableAutoProxy turns off OmniFlow setting the machine's system proxy
 	// while capture runs. The zero value means the proxy is managed, so a
 	// file written before this setting existed behaves as the default.
@@ -283,12 +282,11 @@ func (p Prefs) Timeout() time.Duration {
 // proxy on 9090 with HTTPS decryption ready to start.
 func DefaultPrefs() Prefs {
 	return Prefs{
-		Theme:          "",
-		ProxyPort:      "9090",
-		ProxyAutostart: true,
-		DecryptHTTPS:   true,
-		FollowFlows:    true,
-		KeepHistory:    true,
+		Theme:        "",
+		ProxyPort:    "9090",
+		DecryptHTTPS: true,
+		FollowFlows:  true,
+		KeepHistory:  true,
 	}
 }
 

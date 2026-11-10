@@ -276,8 +276,6 @@
 
   "settingsSkipTLS": "跳过证书校验",
 
-  "settingsAutostart": "打开 OmniFlow 时启动代理",
-
   "settingsDecrypt": "使用根证书解密 HTTPS",
 
   "settingsSystemProxy": "自动配置系统代理",

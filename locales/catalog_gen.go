@@ -2525,16 +2525,6 @@ func (msgs Messages) SettingsSkipTLS() string {
 	return Catalog.Format(msgs.locale, "settingsSkipTLS", nil)
 }
 
-// SettingsAutostart says "Start the proxy when OmniFlow opens"
-// in the language the app shows.
-func SettingsAutostart() string { return In(i18n.Locale()).SettingsAutostart() }
-
-// SettingsAutostart says "Start the proxy when OmniFlow opens"
-// in the language of msgs.
-func (msgs Messages) SettingsAutostart() string {
-	return Catalog.Format(msgs.locale, "settingsAutostart", nil)
-}
-
 // SettingsDecrypt says "Decrypt HTTPS with the Root CA"
 // in the language the app shows.
 func SettingsDecrypt() string { return In(i18n.Locale()).SettingsDecrypt() }

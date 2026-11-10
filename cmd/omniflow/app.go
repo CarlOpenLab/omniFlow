@@ -314,6 +314,17 @@ func (a *app) applyPreferences() {
 	applyAppearance(a.prefs.Theme)
 }
 
+// onReady is the work the app does for itself when its window opens. Capture
+// is not among it: the proxy starts when the person starts it, never with the
+// window.
+func (a *app) onReady() {
+	if a.lanAccess {
+		if err := a.ensureSetupServer(); err != nil {
+			a.setupErr = err.Error()
+		}
+	}
+}
+
 // persistOnClose keeps what changes too often to write as it changes: where
 // the panes were split, and the environments being edited.
 func (a *app) persistOnClose() {

@@ -322,8 +322,6 @@ func (a *app) settingsCapturePage(c *ui.Context, pal *uitokens.Palette) {
 				&a.prefs.StopAtRedirects, "switch:redirects")
 			a.settingsSwitchField(c, pal, locales.SettingsSkipTLS(),
 				&a.prefs.SkipTLSVerify, "switch:tls")
-			a.settingsSwitchField(c, pal, locales.SettingsAutostart(),
-				&a.prefs.ProxyAutostart, "switch:autostart")
 			a.settingsSwitchField(c, pal, locales.SettingsDecrypt(), &a.mitm, "switch:decrypt")
 			ui.Field(c, locales.SettingsSystemProxy(), func() {
 				ui.Row(c).Gap(8).Children(func() {
