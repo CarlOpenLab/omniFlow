@@ -4,6 +4,11 @@ Notable changes per release. The release workflow lifts the section matching the
 pushed tag straight into the GitHub release notes, so keep the headings exactly
 `## <version>`.
 
+## 0.2.2
+
+**Mock responses are edited beside the capture, and capture waits for you to start it.** The Inspector now lists its mock rules in a panel beside the captured exchange; clicking a rule edits its status, content type and response body in the same window, and Mock This Response opens that editor at once. A mocked response replays the headers it was captured with, so CORS and the server's other response headers survive the replaced body. Opening OmniFlow no longer starts capture: the Inspector opens paused and the proxy starts only when you press Start Capture; the old "start the proxy when OmniFlow opens" setting is gone.
+— Mock 响应可以直接在抓包旁边编辑，抓包也改为由你手动启动：Inspector 右侧新增「Mock 规则」列表，点击规则即可在同一窗口编辑状态码、Content-Type 与响应体，右键「Mock 此响应」会直接打开这个编辑器。Mock 响应会回放抓取时保存的响应头，替换正文后 CORS 等服务器约定仍然保留。打开 OmniFlow 不再自动开始抓包：Inspector 以暂停状态打开，只有点击「开始抓包」才会启动代理；原「打开 OmniFlow 时启动代理」设置已移除。
+
 ## 0.2.1
 
 **Windows HTTPS capture works, and the proxy always gives the machine back.** The Windows trust check now asks the certificate store the way it expects, so installing the Root CA makes HTTPS capture start at once and removing its trust stops it at once, on every platform. Restoring the previous proxy now tries every network service and value even when one fails, each system command has its own five-second limit, and a failed takeover is rolled back with a fresh deadline instead of the one that just expired. On Linux the certificate dialog shows the live trust state and Check Again again. This release also carries the work that reached main after 0.2.0: Map Remote and header rules, response mocking, Slow 3G/Fast 3G/4G throttling, saving a captured exchange to the collection, body search in the traffic filter, a device setup page that installs the Root CA on a phone, one-click CA trust on Windows and macOS, LAN access, and window controls drawn on Windows and Linux.
