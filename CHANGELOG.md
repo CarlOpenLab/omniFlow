@@ -4,6 +4,11 @@ Notable changes per release. The release workflow lifts the section matching the
 pushed tag straight into the GitHub release notes, so keep the headings exactly
 `## <version>`.
 
+## 0.2.1
+
+**Windows HTTPS capture works, and the proxy always gives the machine back.** The Windows trust check now asks the certificate store the way it expects, so installing the Root CA makes HTTPS capture start at once and removing its trust stops it at once, on every platform. Restoring the previous proxy now tries every network service and value even when one fails, each system command has its own five-second limit, and a failed takeover is rolled back with a fresh deadline instead of the one that just expired. On Linux the certificate dialog shows the live trust state and Check Again again. This release also carries the work that reached main after 0.2.0: Map Remote and header rules, response mocking, Slow 3G/Fast 3G/4G throttling, saving a captured exchange to the collection, body search in the traffic filter, a device setup page that installs the Root CA on a phone, one-click CA trust on Windows and macOS, LAN access, and window controls drawn on Windows and Linux.
+— Windows 的 HTTPS 抓包恢复可用，系统代理也总能还给机器：Windows 的证书信任查询现在按 CryptoAPI 要求的方式传参，安装根证书后 HTTPS 抓包立即开始，移除信任后立即停止，所有平台一致。还原原有代理时会逐条尝试每个网络服务与设置值，单条失败不再中断其余；每条系统命令有独立的 5 秒上限，接管失败后的回滚使用新的超时，而不是刚过期的那个。Linux 的证书对话框恢复了实时信任状态与「重新检查」。本版同时包含 0.2.0 之后进入 main 的工作：Map Remote 与请求头规则、响应 Mock、慢速 3G/快速 3G/4G 限速、把抓到的交换存入集合、流量过滤器的正文搜索、给手机安装根证书的设备接入页、Windows 与 macOS 的一键信任根证书、局域网访问，以及 Windows 与 Linux 上自绘的窗口控件。
+
 ## 0.2.0
 
 **Capture takes the machine's system proxy by itself.** Starting the proxy now points the system's HTTP and HTTPS proxies at OmniFlow on macOS, Windows and GNOME, so browsers and apps that follow the system proxy are captured without configuring anything. The settings in force before capture are saved to a backup file and restored when capture stops, when the app quits, and after a crash on the next launch; a second launch hands over to the running instance rather than touching the proxy. HTTPS is only routed through the proxy once the Root CA is known to be trusted — otherwise capture stays on HTTP, and the app checks again when you install it. Settings → Capture has a switch to turn this off, and says that Firefox keeps its own proxy settings.
